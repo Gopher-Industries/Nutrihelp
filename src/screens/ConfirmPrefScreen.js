@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  FlatList,
   Button,
   Dimensions,
   SafeAreaView,
@@ -15,8 +16,24 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 
 // const SCREENHEIGHT = Dimensions.get('window').height;
-// const SCREENWIDTH = Dimensions.get('window').width;
-
+const SCREENWIDTH = Dimensions.get('window').width;
+const DIET_DATA = [
+  {id: '1', title: 'None'},
+  {id: '2', title: 'Mushrooms'},
+];
+const ALLERGY_DATA = [
+  {id: '1', title: 'None'},
+  {id: '2', title: 'Mushrooms'},
+];
+const DISLIKES_DATA = [
+  {id: '1', title: 'None'},
+  {id: '2', title: 'Mushrooms'},
+];
+const HEALTH_DATA = [
+  {id: '1', title: 'None'},
+  {id: '2', title: 'Mushrooms'},
+];
+// next trim need to get values from the previous pages and output it here.
 const ConfirmPrefScreen = () => {
   const navigation = useNavigation();
 
@@ -36,12 +53,66 @@ const ConfirmPrefScreen = () => {
         <Text style={styles.text}>Please confirm your selections</Text>
       </View>
       <View style={styles.columnView}>
-        <View style={styles.item}>
+        
           <Text style={styles.preference}>Special dietary requirement</Text>
+          <View>
+          <FlatList
+        data={DIET_DATA}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <TouchableOpacity>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      
+      />
+      </View>
           <Text style={styles.preference}>Allergies</Text>
-          <Text style={styles.preference}>Dislikes</Text>
-          <Text style={styles.preference}>Health Conditions</Text>
+          <View>
+          <FlatList
+        data={ALLERGY_DATA}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <TouchableOpacity>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}/>
         </View>
+          <Text style={styles.preference}>Dislikes</Text>
+          <View>
+          <FlatList
+        data={DISLIKES_DATA}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <TouchableOpacity>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        />
+        </View>
+          <Text style={styles.preference}>Health Conditions</Text>
+          <View>
+          <FlatList
+        data={HEALTH_DATA}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <View style={styles.item}>
+            <TouchableOpacity>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        />
       </View>
       <View>
         <TouchableOpacity
@@ -56,7 +127,7 @@ const ConfirmPrefScreen = () => {
           accessibilityLabel="Redo your preference selection">
           <Text style={styles.altButtonText}>Redo</Text>
         </TouchableOpacity>
-      </View>
+        </View></View>
     </SafeAreaView>
   );
 };
@@ -85,8 +156,8 @@ const styles = StyleSheet.create({
   preference: {
     fontWeight: 'bold',
     fontSize: 18,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   button: {
     backgroundColor: '#8d71ad',
@@ -123,10 +194,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   columnView: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
+    // flex: 1,
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
+    // alignItems: 'flex-start',
   },
 
   // item: {
@@ -136,4 +207,21 @@ const styles = StyleSheet.create({
   //   flexWrap: 'wrap',
   //   alignItems: 'flex-start',
   // }
+  item: {
+    marginTop: 10,
+    // backgroundColor: 'green',
+    borderColor: 'black',
+    borderWidth: 1,
+    maxWidth: SCREENWIDTH / 2 - 40,
+    padding: 8,
+    alignItems: 'center',
+    borderRadius: 10,
+    justifyContent: 'space-around',
+    margin: 5,
+    flex: 0.5,
+  },
+  itemText: {
+    color: 'black',
+    // fontFamily: 'Times',
+  },
 });

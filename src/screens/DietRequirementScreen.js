@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
 import {
-  Pressable,
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   Dimensions,
   SafeAreaView,
   TouchableOpacity,
@@ -12,12 +10,13 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
-import SearchBar from '../assets/components/SearchBar.js';
+import {Searchbar} from 'react-native-paper';
 
 const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get('window').width;
 
-const DATA = [
+//hardcoded for now but we should be pulling from DB
+const DIET_DATA = [
   {id: '1', title: 'None'},
   {id: '2', title: 'Vegetarian'},
   {id: '3', title: 'Vegan'},
@@ -27,12 +26,59 @@ const DATA = [
   {id: '7', title: 'Test'},
 ];
 
-const DislikesScreen = () => {
+const DietScreen = () => {
   const navigation = useNavigation();
-  const [selectedId, setSelectedId] = useState(null);
-  //   const [diet, setDiet] = useState("")
+  const [diet, setDiet] = useState([]);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [isSelected, setIsSelected] = useState(false)
 
-  // trialing out pressable instead of touchable
+  const searchFilterFunction = text => {
+    // Check if searched text is not blank
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const newData = DIET_DATA.filter(function (item) {
+        // Applying filter for the inserted text in search bar
+        const itemData = item.title
+          ? item.title.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(newData);
+      setSearchQuery(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setFilteredDataSource(DIET_DATA);
+      setSearchQuery(text);
+    }
+  };
+
+  const ItemView = ({ item }) => {
+    
+    if (searchQuery.length > 0) {
+    return (
+      // Flat List Item
+      <Text style={styles.listStyle} onPress={() => getItem(item)}>
+        {item.title}
+      </Text>
+    );
+  } else {return(<View></View>)}};
+
+  const getItem = (item) => {
+    // Function for click on an item
+   setDiet(prevDiet => [...prevDiet, item.id]);
+   setSearchQuery("")
+   // BUG: Need to hide flatlist everytime after an item is added.
+  };
+
+  //For troubleshooting
+  //console.log(diet);
+  console.log(searchQuery);
+  // console.log(item);
+ // console.log(isSelected)
   return (
     <SafeAreaView style={styles.container}>
       <Icon
@@ -45,18 +91,37 @@ const DislikesScreen = () => {
       <View>
         <Text style={styles.title}>Dietary Requirements</Text>
       </View>
-      <SearchBar />
+      <Searchbar
+        placeholder="Search Dietary Requirements"
+        onChangeText={text => searchFilterFunction(text)}
+        value={searchQuery}
+      />
+      <View >
+      <FlatList
+        data={filteredDataSource}
+        keyExtractor={item => item.id}
+        renderItem={ItemView}
+      />
+      </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
-        data={DATA}
+        data={DIET_DATA}
         numColumns={2}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
           <View style={styles.item}>
-            <Pressable onPress={() => alert('Pressed')}>
+            <TouchableOpacity
+              style={styles.preference}
+              onPress={() => {
+                setIsSelected(!isSelected)
+                
+                // BUG: need to remove item.id if its already selected before
+                setDiet(prevDiet => [...prevDiet, item.id]);
+                // BUG: need to change colour when selected
+
+              }}>
               <Text style={styles.itemText}>{item.title}</Text>
-            </Pressable>
-            {/* <Text style={styles.itemText}>{item.title}</Text> */}
+            </TouchableOpacity>
           </View>
         )}
       />
@@ -70,7 +135,7 @@ const DislikesScreen = () => {
   );
 };
 
-export default DislikesScreen;
+export default DietScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -120,9 +185,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     margin: 5,
     flex: 0.5,
+    //backgroundColor: 'pink',
   },
   itemText: {
     color: 'black',
     // fontFamily: 'Times',
+  },
+
+  listStyle : {
+    paddingTop: 10,
   },
 });

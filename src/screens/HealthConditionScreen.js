@@ -11,12 +11,12 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
-import SearchBar from '../assets/components/SearchBar.js';
+import {Searchbar} from 'react-native-paper';
 
 const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get('window').width;
 
-const DATA = [
+const HEALTH_DATA = [
   {id: '1', title: 'None'},
   {id: '2', title: 'Vitamin B6 deficiency'},
   {id: '3', title: 'Vitamin D deficiency'},
@@ -29,11 +29,106 @@ const DATA = [
   {id: '10', title: 'Iron deficiency'},
 ];
 
+const searchFilterFunction = text => {
+  // Check if searched text is not blank
+  if (text) {
+    // Inserted text is not blank
+    // Filter the masterDataSource and update FilteredDataSource
+    const newData = HEALTH_DATA.filter(function (item) {
+      // Applying filter for the inserted text in search bar
+      const itemData = item.title
+        ? item.title.toUpperCase()
+        : ''.toUpperCase();
+      const textData = text.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    setFilteredDataSource(newData);
+    setSearchQuery(text);
+  } else {
+    // Inserted text is blank
+    // Update FilteredDataSource with masterDataSource
+    setFilteredDataSource(HEALTH_DATA);
+    setSearchQuery(text);
+  }
+};
+
+const ItemView = ({ item }) => {
+  
+  if (searchQuery.length > 0) {
+  return (
+    // Flat List Item
+    <Text style={styles.listStyle} onPress={() => getItem(item)}>
+      {item.title}
+    </Text>
+  );
+} else {return(<View></View>)}};
+
+const getItem = (item) => {
+  // Function for click on an item
+ setHealthCondition(prevHealth => [...prevHealth, item.id]);
+ setSearchQuery("")
+ // BUG: Need to hide flatlist everytime after an item is added.
+};
+
+//For troubleshooting
+//console.log(health);
+//console.log(searchQuery);
+// console.log(item);
+// console.log(isSelected)
+
 const HealthConditionScreen = () => {
   const navigation = useNavigation();
-  const [selectedId, setSelectedId] = useState(null);
-  //   const [healthCondition, setHealthCondition] = useState("")
+  const [healthCondition, setHealthCondition] = useState([]);
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
+  const [isSelected, setIsSelected] = useState(false)
 
+  const searchFilterFunction = text => {
+    // Check if searched text is not blank
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const newData = HEALTH_DATA.filter(function (item) {
+        // Applying filter for the inserted text in search bar
+        const itemData = item.title
+          ? item.title.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(newData);
+      setSearchQuery(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setFilteredDataSource(HEALTH_DATA);
+      setSearchQuery(text);
+    }
+  };
+
+  const ItemView = ({ item }) => {
+    
+    if (searchQuery.length > 0) {
+    return (
+      // Flat List Item
+      <Text style={styles.listStyle} onPress={() => getItem(item)}>
+        {item.title}
+      </Text>
+    );
+  } else {return(<View></View>)}};
+
+  const getItem = (item) => {
+    // Function for click on an item
+   setHealthCondition(prevHealthCondition => [...prevHealthCondition, item.id]);
+   setSearchQuery("")
+   // BUG: Need to hide flatlist everytime after an item is added.
+  };
+
+  //For troubleshooting
+  //console.log(diet);
+  console.log(searchQuery);
+  // console.log(item);
+ // console.log(isSelected)
   return (
     <SafeAreaView style={styles.container}>
       <Icon
@@ -46,19 +141,38 @@ const HealthConditionScreen = () => {
       <View>
         <Text style={styles.title}>Health Conditions</Text>
       </View>
-      <SearchBar />
+      <Searchbar
+        placeholder="Search Health Conditions"
+        onChangeText={text => searchFilterFunction(text)}
+        value={searchQuery}
+      />
+      <View >
+      <FlatList
+        data={filteredDataSource}
+        keyExtractor={item => item.id}
+        renderItem={ItemView}
+      />
+      </View>
       <Text style={styles.text}>Added by you</Text>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
-        data={DATA}
+        data={HEALTH_DATA}
         numColumns={2}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
           <View style={styles.item}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              style={styles.preference}
+              onPress={() => {
+                setIsSelected(!isSelected)
+                
+                // BUG: need to remove item.id if its already selected before
+                setHealthCondition(prevHealthCondition=> [...prevHealthCondition, item.id]);
+                // BUG: need to change colour when selected
+
+              }}>
               <Text style={styles.itemText}>{item.title}</Text>
             </TouchableOpacity>
-            {/* <Text style={styles.itemText}>{item.title}</Text> */}
           </View>
         )}
       />
@@ -122,9 +236,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     margin: 5,
     flex: 0.5,
+    //backgroundColor: 'pink',
   },
   itemText: {
     color: 'black',
     // fontFamily: 'Times',
+  },
+
+  listStyle : {
+    paddingTop: 10,
   },
 });

@@ -12,8 +12,32 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const CreateAccountScreen2 = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
+  const [emailConfirm, setEmailConfirm] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfrim, setPasswordConfirm] = useState('');
+  const [checkValidEmail, setCheckValidEmail] = useState('');
+
+  const handleCheckEmail = val => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+
+    if (val.length === 0) {
+      setCheckValidEmail('Email address must be entered');
+    } else if (reg.test(val) === false) {
+      setCheckValidEmail('Please enter valid email address');
+    } else if (reg.test(val) === true) {
+      setCheckValidEmail('');
+    }
+  };
+
+  const handleEmailConfirm = val => {
+    console.log(email);
+    console.log(val);
+    if (val !== email) {
+      setEmailConfirm('doesnt match');
+    } else {
+      setCheckValidEmail('');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -32,18 +56,25 @@ const CreateAccountScreen2 = () => {
           style={styles.TextInput}
           placeholder="Email address*"
           placeholderTextColor="gray"
-          onChangeText={email => setEmail(email)}
+          keyboardType="email-address"
+          onChangeText={value => {
+            setEmail(value);
+            handleCheckEmail(value);
+          }}
         />
       </View>
+
+      {checkValidEmail ? (
+        <Text style={styles.emailValidationText}>{checkValidEmail}</Text>
+      ) : null}
 
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
           placeholder="Confirm Email Address*"
           placeholderTextColor="gray"
-          secureTextEntry={true}
-          onChangeText={password => setPassword(password)}
-        />
+          keyboardType="email-address"
+          onChangeText={emailConfirm => setEmailConfirm(emailConfirm)}/>
       </View>
       <View style={styles.inputView}>
         <TextInput
@@ -114,6 +145,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingBottom: 10,
     color: 'green',
+  },
+
+  emailValidationText: {
+    color: 'red',
+    marginBottom: 10,
   },
 
   button: {
