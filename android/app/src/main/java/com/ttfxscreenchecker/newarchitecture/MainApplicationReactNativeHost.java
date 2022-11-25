@@ -1,4 +1,4 @@
-package com.ttfx.newarchitecture;
+package com.ttfxscreenchecker.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.ttfx.BuildConfig;
-import com.ttfx.newarchitecture.components.MainComponentsRegistry;
-import com.ttfx.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.ttfxscreenchecker.BuildConfig;
+import com.ttfxscreenchecker.newarchitecture.components.MainComponentsRegistry;
+import com.ttfxscreenchecker.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

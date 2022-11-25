@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 //StackScreens
-import SplashScreen from './src/screens/SplashScreen.js';
+//import SplashScreen from './src/screens/SplashScreen.js';
 import ConfirmPrefScreen from './src/screens/ConfirmPrefScreen.js';
 import LoginScreen from './src/screens/LoginScreen.js';
 import TermScreen from './src/screens/TermScreen.js';
@@ -82,7 +82,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
           options={{headerShown: false}}
@@ -96,7 +96,7 @@ function App() {
           name="TermScreen"
           component={TermScreen}
           options={{headerShown: false}}
-        />
+        /> */}
         <Stack.Screen
           name="CreateAccountScreen"
           component={CreateAccountScreen}
