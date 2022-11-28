@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import {Searchbar} from 'react-native-paper';
+import { purple100 } from 'react-native-paper/lib/typescript/styles/colors';
 
 const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get('window').width;
@@ -26,6 +27,8 @@ const DIET_DATA = [
   {id: '7', title: 'Test'},
 ];
 
+var selected_items = [{}];
+
 const DietScreen = () => {
   const navigation = useNavigation();
   const [diet, setDiet] = useState([]);
@@ -38,6 +41,10 @@ const DietScreen = () => {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
+      const searchData = DIET_DATA.filter(DIET_DATA => DIET_DATA.title == text).map(data => {
+        {data.title};
+      }) ;
+
       const newData = DIET_DATA.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
@@ -46,7 +53,7 @@ const DietScreen = () => {
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
-      setFilteredDataSource(newData);
+      setFilteredDataSource(searchData);
       setSearchQuery(text);
     } else {
       // Inserted text is blank

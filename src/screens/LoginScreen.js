@@ -74,11 +74,6 @@ const LoginScreen = () => {
           onPress={() => alert('Setup TBC')}>
           <Text style={styles.altButtonText}>Continue with Google</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.altButton}
-          onPress={() => alert('Setup TBC')}>
-          <Text style={styles.altButtonText}>Continue with Facebook</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

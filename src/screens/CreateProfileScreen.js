@@ -66,6 +66,7 @@ const CreateProfileScreen = () => {
           buttonStyle={styles.inputView}
           data={genderList}
           onSelect={() => alert('Test')}
+          // why alert?
         />
         {/* <TextInput
           style={styles.TextInput}
@@ -77,7 +78,7 @@ const CreateProfileScreen = () => {
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="Weight*"
+          placeholder="Weight in Kgs*"
           placeholderTextColor="gray"
           onChangeText={weight => setWeight(weight)}
           keyboardType={'number-pad'}
@@ -86,7 +87,7 @@ const CreateProfileScreen = () => {
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="Height*"
+          placeholder="Height in cms*"
           placeholderTextColor="gray"
           onChangeText={height => setHeight(height)}
           keyboardType={'number-pad'}
