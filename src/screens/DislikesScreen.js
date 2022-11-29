@@ -26,6 +26,8 @@ const DISLIKES_DATA = [
   {id: '7', title: 'Test'},
 ];
 
+export const selected_items_dislikes =[];
+
 
 const DislikesScreen = () => {
   const navigation = useNavigation();
@@ -104,6 +106,22 @@ const DislikesScreen = () => {
         renderItem={ItemView}
       />
       </View>
+      <Text style={styles.text}>Added by you</Text>
+      <View>
+      <FlatList
+        data={selected_items_dislikes}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <TouchableOpacity
+              style={styles.preference}>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+      </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
         data={DISLIKES_DATA}
@@ -114,8 +132,22 @@ const DislikesScreen = () => {
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                setIsSelected(!isSelected)
-                
+                // setIsSelected(!isSelected)
+                if(item.title=="None")
+                {
+                  navigation.navigate('HealthConditionScreen');
+                  return;
+                }
+                if (selected_items_dislikes.includes(item)) {
+                  var index = selected_items_dislikes.indexOf(item);
+                  selected_items_dislikes.splice(index, 1);
+                  console.log(selected_items_dislikes);
+                }
+                else {
+                  
+                  selected_items_dislikes.push(item);
+                  console.log(selected_items_dislikes);
+                }
                 // BUG: need to remove item.id if its already selected before
                 setDislikes(prevDislikes=> [...prevDislikes, item.id]);
                 // BUG: need to change colour when selected

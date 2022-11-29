@@ -27,6 +27,8 @@ const ALLERGY_DATA = [
   {id: '7', title: 'Test'},
 ];
 
+export const selected_items_allergy = [];
+
 const searchFilterFunction = text => {
   // Check if searched text is not blank
   if (text) {
@@ -151,6 +153,22 @@ const AllergyScreen = () => {
         renderItem={ItemView}
       />
       </View>
+      <Text style={styles.text}>Added by you</Text>
+      <View>
+      <FlatList
+        data={selected_items_allergy}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <TouchableOpacity
+              style={styles.preference}>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+      </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
         data={ALLERGY_DATA}
@@ -161,7 +179,22 @@ const AllergyScreen = () => {
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                setIsSelected(!isSelected)
+                //setIsSelected(!isSelected)
+                if(item.title=="None")
+                {
+                  navigation.navigate('DislikesScreen');
+                  return;
+                }
+                if (selected_items_allergy.includes(item)) {
+                  var index = selected_items_allergy.indexOf(item);
+                  selected_items_allergy.splice(index, 1);
+                  console.log(selected_items_allergy);
+                }
+                else {
+                  
+                  selected_items_allergy.push(item);
+                  console.log(selected_items_allergy);
+                }
                 
                 // BUG: need to remove item.id if its already selected before
                 setAllergy(prevAllergy => [...prevAllergy, item.id]);

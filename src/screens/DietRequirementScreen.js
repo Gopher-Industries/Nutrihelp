@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,8 +9,8 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useNavigation} from '@react-navigation/native';
-import {Searchbar} from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { Searchbar } from 'react-native-paper';
 import { purple100 } from 'react-native-paper/lib/typescript/styles/colors';
 
 const SCREENHEIGHT = Dimensions.get('window').height;
@@ -18,23 +18,23 @@ const SCREENWIDTH = Dimensions.get('window').width;
 
 //hardcoded for now but we should be pulling from DB
 const DIET_DATA = [
-  {id: '1', title: 'None'},
-  {id: '2', title: 'Vegetarian'},
-  {id: '3', title: 'Vegan'},
-  {id: '4', title: 'Keto'},
-  {id: '5', title: 'Pescetarian'},
-  {id: '6', title: 'Low Carb'},
-  {id: '7', title: 'Test'},
+  { id: '1', title: 'None' },
+  { id: '2', title: 'Vegetarian' },
+  { id: '3', title: 'Vegan' },
+  { id: '4', title: 'Keto' },
+  { id: '5', title: 'Pescetarian' },
+  { id: '6', title: 'Low Carb' },
+  { id: '7', title: 'Test' },
 ];
 
-var selected_items = [{}];
+export const selected_items_diet = [];
 
 const DietScreen = () => {
   const navigation = useNavigation();
   const [diet, setDiet] = useState([]);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [filteredDataSource, setFilteredDataSource] = useState([]);
-  const [isSelected, setIsSelected] = useState(false)
+  const [isSelected, setIsSelected] = useState(false);
 
   const searchFilterFunction = text => {
     // Check if searched text is not blank
@@ -42,8 +42,8 @@ const DietScreen = () => {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
       const searchData = DIET_DATA.filter(DIET_DATA => DIET_DATA.title == text).map(data => {
-        {data.title};
-      }) ;
+        { data.title };
+      });
 
       const newData = DIET_DATA.filter(function (item) {
         // Applying filter for the inserted text in search bar
@@ -64,28 +64,30 @@ const DietScreen = () => {
   };
 
   const ItemView = ({ item }) => {
-    
+
     if (searchQuery.length > 0) {
-    return (
-      // Flat List Item
-      <Text style={styles.listStyle} onPress={() => getItem(item)}>
-        {item.title}
-      </Text>
-    );
-  } else {return(<View></View>)}};
+      return (
+        // Flat List Item
+        <Text style={styles.listStyle} onPress={() => getItem(item)}>
+          {item.title}
+        </Text>
+      );
+    } else { return (<View></View>) }
+  };
 
   const getItem = (item) => {
     // Function for click on an item
-   setDiet(prevDiet => [...prevDiet, item.id]);
-   setSearchQuery("")
-   // BUG: Need to hide flatlist everytime after an item is added.
+    setDiet(prevDiet => [...prevDiet, item.id]);
+    setSearchQuery("")
+    // BUG: Need to hide flatlist everytime after an item is added.
   };
+
 
   //For troubleshooting
   //console.log(diet);
   console.log(searchQuery);
   // console.log(item);
- // console.log(isSelected)
+  // console.log(isSelected)
   return (
     <SafeAreaView style={styles.container}>
       <Icon
@@ -104,10 +106,26 @@ const DietScreen = () => {
         value={searchQuery}
       />
       <View >
+        <FlatList
+          data={filteredDataSource}
+          keyExtractor={item => item.id}
+          renderItem={ItemView}
+        />
+      </View>
+      <Text style={styles.text}>Added by you</Text>
+      <View>
       <FlatList
-        data={filteredDataSource}
+        data={selected_items_diet}
+        numColumns={2}
         keyExtractor={item => item.id}
-        renderItem={ItemView}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <TouchableOpacity
+              style={styles.preference}>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       />
       </View>
       <Text style={styles.text}>Most Common</Text>
@@ -115,13 +133,28 @@ const DietScreen = () => {
         data={DIET_DATA}
         numColumns={2}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <View style={styles.item}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                setIsSelected(!isSelected)
-                
+                //setIsSelected(!isSelected)
+                if(item.title=="None")
+                {
+                  navigation.navigate('AllergyScreen');
+                  return;
+                }
+                if (selected_items_diet.includes(item)) {
+                  var index = selected_items_diet.indexOf(item);
+                  selected_items_diet.splice(index, 1);
+                  console.log(selected_items_diet);
+                }
+                else {
+                  
+                  selected_items_diet.push(item);
+                  console.log(selected_items_diet);
+                }
+
                 // BUG: need to remove item.id if its already selected before
                 setDiet(prevDiet => [...prevDiet, item.id]);
                 // BUG: need to change colour when selected
@@ -141,7 +174,6 @@ const DietScreen = () => {
     </SafeAreaView>
   );
 };
-
 export default DietScreen;
 
 const styles = StyleSheet.create({
@@ -199,7 +231,7 @@ const styles = StyleSheet.create({
     // fontFamily: 'Times',
   },
 
-  listStyle : {
+  listStyle: {
     paddingTop: 10,
   },
 });

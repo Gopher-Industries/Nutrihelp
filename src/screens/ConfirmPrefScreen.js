@@ -14,25 +14,21 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
+import { selected_items_diet } from './DietRequirementScreen';
+import { selected_items_allergy } from './AllergyScreen';
+import { selected_items_dislikes } from './DislikesScreen';
+import { selected_items_health } from './HealthConditionScreen';
 
 // const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get('window').width;
-const DIET_DATA = [
-  {id: '1', title: 'None'},
-  {id: '2', title: 'Mushrooms'},
-];
-const ALLERGY_DATA = [
-  {id: '1', title: 'None'},
-  {id: '2', title: 'Mushrooms'},
-];
-const DISLIKES_DATA = [
-  {id: '1', title: 'None'},
-  {id: '2', title: 'Mushrooms'},
-];
-const HEALTH_DATA = [
-  {id: '1', title: 'None'},
-  {id: '2', title: 'Mushrooms'},
-];
+const DIET_DATA = selected_items_diet;
+
+const ALLERGY_DATA = selected_items_allergy;
+
+const DISLIKES_DATA = selected_items_dislikes;
+
+const HEALTH_DATA = selected_items_health;
+
 // next trim need to get values from the previous pages and output it here.
 const ConfirmPrefScreen = () => {
   const navigation = useNavigation();

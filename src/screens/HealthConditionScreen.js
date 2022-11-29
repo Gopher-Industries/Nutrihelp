@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,24 +10,26 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useNavigation} from '@react-navigation/native';
-import {Searchbar} from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { Searchbar } from 'react-native-paper';
 
 const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get('window').width;
 
 const HEALTH_DATA = [
-  {id: '1', title: 'None'},
-  {id: '2', title: 'Vitamin B6 deficiency'},
-  {id: '3', title: 'Vitamin D deficiency'},
-  {id: '4', title: 'Limit Sodium 2400mg'},
-  {id: '5', title: 'Limit Cholesterol 2800mg'},
-  {id: '6', title: 'Hypertension'},
-  {id: '7', title: 'Heart Disease'},
-  {id: '8', title: 'Diabetes type 2'},
-  {id: '9', title: 'Cardiovascular'},
-  {id: '10', title: 'Iron deficiency'},
+  { id: '1', title: 'None' },
+  { id: '2', title: 'Vitamin B6 deficiency' },
+  { id: '3', title: 'Vitamin D deficiency' },
+  { id: '4', title: 'Limit Sodium 2400mg' },
+  { id: '5', title: 'Limit Cholesterol 2800mg' },
+  { id: '6', title: 'Hypertension' },
+  { id: '7', title: 'Heart Disease' },
+  { id: '8', title: 'Diabetes type 2' },
+  { id: '9', title: 'Cardiovascular' },
+  { id: '10', title: 'Iron deficiency' },
 ];
+
+export const selected_items_health = [];
 
 const searchFilterFunction = text => {
   // Check if searched text is not blank
@@ -53,21 +55,22 @@ const searchFilterFunction = text => {
 };
 
 const ItemView = ({ item }) => {
-  
+
   if (searchQuery.length > 0) {
-  return (
-    // Flat List Item
-    <Text style={styles.listStyle} onPress={() => getItem(item)}>
-      {item.title}
-    </Text>
-  );
-} else {return(<View></View>)}};
+    return (
+      // Flat List Item
+      <Text style={styles.listStyle} onPress={() => getItem(item)}>
+        {item.title}
+      </Text>
+    );
+  } else { return (<View></View>) }
+};
 
 const getItem = (item) => {
   // Function for click on an item
- setHealthCondition(prevHealth => [...prevHealth, item.id]);
- setSearchQuery("")
- // BUG: Need to hide flatlist everytime after an item is added.
+  setHealthCondition(prevHealth => [...prevHealth, item.id]);
+  setSearchQuery("")
+  // BUG: Need to hide flatlist everytime after an item is added.
 };
 
 //For troubleshooting
@@ -107,28 +110,29 @@ const HealthConditionScreen = () => {
   };
 
   const ItemView = ({ item }) => {
-    
+
     if (searchQuery.length > 0) {
-    return (
-      // Flat List Item
-      <Text style={styles.listStyle} onPress={() => getItem(item)}>
-        {item.title}
-      </Text>
-    );
-  } else {return(<View></View>)}};
+      return (
+        // Flat List Item
+        <Text style={styles.listStyle} onPress={() => getItem(item)}>
+          {item.title}
+        </Text>
+      );
+    } else { return (<View></View>) }
+  };
 
   const getItem = (item) => {
     // Function for click on an item
-   setHealthCondition(prevHealthCondition => [...prevHealthCondition, item.id]);
-   setSearchQuery("")
-   // BUG: Need to hide flatlist everytime after an item is added.
+    setHealthCondition(prevHealthCondition => [...prevHealthCondition, item.id]);
+    setSearchQuery("")
+    // BUG: Need to hide flatlist everytime after an item is added.
   };
 
   //For troubleshooting
   //console.log(diet);
   console.log(searchQuery);
   // console.log(item);
- // console.log(isSelected)
+  // console.log(isSelected)
   return (
     <SafeAreaView style={styles.container}>
       <Icon
@@ -147,27 +151,55 @@ const HealthConditionScreen = () => {
         value={searchQuery}
       />
       <View >
-      <FlatList
-        data={filteredDataSource}
-        keyExtractor={item => item.id}
-        renderItem={ItemView}
-      />
+        <FlatList
+          data={filteredDataSource}
+          keyExtractor={item => item.id}
+          renderItem={ItemView}
+        />
       </View>
       <Text style={styles.text}>Added by you</Text>
+      <View>
+      <FlatList
+        data={selected_items_health}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <TouchableOpacity
+              style={styles.preference}>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+      </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
         data={HEALTH_DATA}
         numColumns={2}
         keyExtractor={item => item.id}
-        renderItem={({item}) => (
+        renderItem={({ item }) => (
           <View style={styles.item}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                setIsSelected(!isSelected)
-                
+                //setIsSelected(!isSelected)
+                if (item.title == "None") {
+                  navigation.navigate('ConfirmPrefScreen');
+                  return;
+                }
+                if (selected_items_health.includes(item)) {
+                  var index = selected_items_health.indexOf(item);
+                  selected_items_health.splice(index, 1);
+                  console.log(selected_items_health);
+                }
+                else {
+                  selected_items_health.push(item);
+                  console.log(selected_items_health);
+                }
+
                 // BUG: need to remove item.id if its already selected before
-                setHealthCondition(prevHealthCondition=> [...prevHealthCondition, item.id]);
+                setHealthCondition(prevHealthCondition => [...prevHealthCondition, item.id]);
                 // BUG: need to change colour when selected
 
               }}>
@@ -243,7 +275,7 @@ const styles = StyleSheet.create({
     // fontFamily: 'Times',
   },
 
-  listStyle : {
+  listStyle: {
     paddingTop: 10,
   },
 });
