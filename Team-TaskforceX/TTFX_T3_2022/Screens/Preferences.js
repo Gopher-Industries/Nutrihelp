@@ -14,10 +14,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
-import { selected_items_diet } from './DietRequirementScreen';
-import { selected_items_allergy } from './AllergyScreen';
-import { selected_items_dislikes } from './DislikesScreen';
-import { selected_items_health } from './HealthConditionScreen';
+import { selected_items_diet } from './DietryRequirements';
+import { selected_items_allergy } from './Allergies';
+import { selected_items_dislikes } from './Dislikes';
+import { selected_items_health } from './HealthConditions';
 
 // const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get('window').width;
@@ -113,13 +113,13 @@ const ConfirmPrefScreen = () => {
       <View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('DailyNutritionPlanScreen')}
+          onPress={() => navigation.navigate('NutritionalReport')}
           accessibilityLabel="Confirm your preference selection">
           <Text style={styles.buttonText}>Confirm Choices</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.altButton}
-          onPress={() => navigation.navigate('DietRequirementScreen')}
+          onPress={() => navigation.navigate('DietryRequirements')}
           accessibilityLabel="Redo your preference selection">
           <Text style={styles.altButtonText}>Redo</Text>
         </TouchableOpacity>

@@ -1,70 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
+  TouchableHighlight,
   Dimensions,
   SafeAreaView,
   TouchableOpacity,
   FlatList,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
-import { Searchbar } from 'react-native-paper';
-import { purple100 } from 'react-native-paper/lib/typescript/styles/colors';
+} from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { Searchbar } from "react-native-paper";
 
-const SCREENHEIGHT = Dimensions.get('window').height;
-const SCREENWIDTH = Dimensions.get('window').width;
+const SCREENHEIGHT = Dimensions.get("window").height;
+const SCREENWIDTH = Dimensions.get("window").width;
 
-//hardcoded for now but we should be pulling from DB
-const DIET_DATA = [
-  { id: '1', title: 'None' },
-  { id: '2', title: 'Vegetarian' },
-  { id: '3', title: 'Vegan' },
-  { id: '4', title: 'Keto' },
-  { id: '5', title: 'Pescetarian' },
-  { id: '6', title: 'Low Carb' },
-  { id: '7', title: 'Test' },
+const DISLIKES_DATA = [
+  { id: "1", title: "None" },
+  { id: "2", title: "Mushrooms" },
+  { id: "3", title: "Ginger" },
+  { id: "4", title: "Raisins" },
+  { id: "5", title: "Tofu" },
+  { id: "6", title: "Anchovies" },
+  { id: "7", title: "Test" },
 ];
+export const selected_items_dislikes =[];
 
-export const selected_items_diet = [];
-
-const DietScreen = () => {
-  const navigation = useNavigation();
-  const [diet, setDiet] = useState([]);
-  const [searchQuery, setSearchQuery] = React.useState('');
+export default function Dislikes({ navigation }) {
+  const [dislikes, setDislikes] = useState([]);
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
 
-  const searchFilterFunction = text => {
+  const searchFilterFunction = (text) => {
     // Check if searched text is not blank
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const searchData = DIET_DATA.filter(DIET_DATA => DIET_DATA.title == text).map(data => {
-        { data.title };
-      });
-
-      const newData = DIET_DATA.filter(function (item) {
+      const newData = DISLIKES_DATA.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
           ? item.title.toUpperCase()
-          : ''.toUpperCase();
+          : "".toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
-      setFilteredDataSource(searchData);
+      setFilteredDataSource(newData);
       setSearchQuery(text);
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(DIET_DATA);
+      setFilteredDataSource(DISLIKES_DATA);
       setSearchQuery(text);
     }
   };
 
   const ItemView = ({ item }) => {
-
     if (searchQuery.length > 0) {
       return (
         // Flat List Item
@@ -72,19 +63,20 @@ const DietScreen = () => {
           {item.title}
         </Text>
       );
-    } else { return (<View></View>) }
+    } else {
+      return <View></View>;
+    }
   };
 
   const getItem = (item) => {
     // Function for click on an item
-    setDiet(prevDiet => [...prevDiet, item.id]);
-    setSearchQuery("")
+    setDislikes((prevDislikes) => [...prevDislikes, item.id]);
+    setSearchQuery("");
     // BUG: Need to hide flatlist everytime after an item is added.
   };
 
-
   //For troubleshooting
-  //console.log(diet);
+  //console.log(dislikes);
   console.log(searchQuery);
   // console.log(item);
   // console.log(isSelected)
@@ -95,27 +87,27 @@ const DietScreen = () => {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.navigate("LandingPage")}
       />
       <View>
-        <Text style={styles.title}>Dietary Requirements</Text>
+        <Text style={styles.title}>Dislikes</Text>
       </View>
       <Searchbar
-        placeholder="Search Dietary Requirements"
-        onChangeText={text => searchFilterFunction(text)}
+        placeholder="Search Dislikes"
+        onChangeText={(text) => searchFilterFunction(text)}
         value={searchQuery}
       />
-      <View >
+      <View>
         <FlatList
           data={filteredDataSource}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           renderItem={ItemView}
         />
       </View>
       <Text style={styles.text}>Added by you</Text>
       <View>
       <FlatList
-        data={selected_items_diet}
+        data={selected_items_dislikes}
         numColumns={2}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
@@ -130,33 +122,32 @@ const DietScreen = () => {
       </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
-        data={DIET_DATA}
+        data={DISLIKES_DATA}
         numColumns={2}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => (
+        renderItem={({item}) => (
           <View style={styles.item}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                //setIsSelected(!isSelected)
+                // setIsSelected(!isSelected)
                 if(item.title=="None")
                 {
-                  navigation.navigate('AllergyScreen');
+                  navigation.navigate('HealthConditions');
                   return;
                 }
-                if (selected_items_diet.includes(item)) {
-                  var index = selected_items_diet.indexOf(item);
-                  selected_items_diet.splice(index, 1);
-                  console.log(selected_items_diet);
+                if (selected_items_dislikes.includes(item)) {
+                  var index = selected_items_dislikes.indexOf(item);
+                  selected_items_dislikes.splice(index, 1);
+                  console.log(selected_items_dislikes);
                 }
                 else {
                   
-                  selected_items_diet.push(item);
-                  console.log(selected_items_diet);
+                  selected_items_dislikes.push(item);
+                  console.log(selected_items_dislikes);
                 }
-
                 // BUG: need to remove item.id if its already selected before
-                setDiet(prevDiet => [...prevDiet, item.id]);
+                setDislikes(prevDislikes=> [...prevDislikes, item.id]);
                 // BUG: need to change colour when selected
 
               }}>
@@ -168,23 +159,23 @@ const DietScreen = () => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('AllergyScreen')}>
+        onPress={() => navigation.navigate("HealthConditions")}
+      >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
-};
-export default DietScreen;
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 30,
   },
   title: {
     fontSize: 25,
-    color: 'black',
+    color: "black",
     marginTop: 20,
     marginBottom: 20,
   },
@@ -192,15 +183,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     marginTop: 20,
-    fontWeight: 'bold',
-    color: 'black',
+    fontWeight: "bold",
+    color: "black",
   },
 
   button: {
-    backgroundColor: '#8d71ad',
+    backgroundColor: "#8d71ad",
     height: 55,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 25,
     top: 10,
     marginBottom: 50,
@@ -208,26 +199,26 @@ const styles = StyleSheet.create({
 
   buttonText: {
     fontSize: 18,
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
 
   item: {
     marginTop: 10,
     // backgroundColor: 'green',
-    borderColor: 'black',
+    borderColor: "black",
     borderWidth: 1,
     maxWidth: SCREENWIDTH / 2 - 40,
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 10,
-    justifyContent: 'space-around',
+    justifyContent: "space-around",
     margin: 5,
     flex: 0.5,
     //backgroundColor: 'pink',
   },
   itemText: {
-    color: 'black',
+    color: "black",
     // fontFamily: 'Times',
   },
 
@@ -235,3 +226,31 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
 });
+
+// import { StatusBar } from "expo-status-bar";
+// import { Button, StyleSheet, Text, View } from "react-native";
+
+// export default function Dislikes({ navigation }) {
+//   return (
+//     <View style={styles.container}>
+//       <View style={{ marginLeft: 10, marginTop: 30 }}>
+//         <Text style={{ fontWeight: "bold", fontSize: 30 }}>Dislikes</Text>
+//       </View>
+//       <Button
+//         title="Continue"
+//         onPress={() => navigation.navigate("HealthConditions")}
+//       />
+//       <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
+//       <StatusBar style="auto" />
+//     </View>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: "#fff",
+//     alignItems: "center",
+//     justifyContent: "center",
+//   },
+// });
