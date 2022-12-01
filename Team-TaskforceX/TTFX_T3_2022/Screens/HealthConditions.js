@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Pressable,
   StyleSheet,
   Text,
   View,
@@ -16,22 +15,25 @@ import { Searchbar } from "react-native-paper";
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
-const ALLERGY_DATA = [
+const HEALTH_DATA = [
   { id: "1", title: "None" },
-  { id: "2", title: "Soy" },
-  { id: "3", title: "Dairy" },
-  { id: "4", title: "Fish" },
-  { id: "5", title: "Eggs" },
-  { id: "6", title: "Gluten" },
-  { id: "7", title: "Test" },
+  { id: "2", title: "Vitamin B6 deficiency" },
+  { id: "3", title: "Vitamin D deficiency" },
+  { id: "4", title: "Limit Sodium 2400mg" },
+  { id: "5", title: "Limit Cholesterol 2800mg" },
+  { id: "6", title: "Hypertension" },
+  { id: "7", title: "Heart Disease" },
+  { id: "8", title: "Diabetes type 2" },
+  { id: "9", title: "Cardiovascular" },
+  { id: "10", title: "Iron deficiency" },
 ];
-
+export const selected_items_health=[];
 const searchFilterFunction = (text) => {
   // Check if searched text is not blank
   if (text) {
     // Inserted text is not blank
     // Filter the masterDataSource and update FilteredDataSource
-    const newData = ALLERGY_DATA.filter(function (item) {
+    const newData = HEALTH_DATA.filter(function (item) {
       // Applying filter for the inserted text in search bar
       const itemData = item.title ? item.title.toUpperCase() : "".toUpperCase();
       const textData = text.toUpperCase();
@@ -42,7 +44,7 @@ const searchFilterFunction = (text) => {
   } else {
     // Inserted text is blank
     // Update FilteredDataSource with masterDataSource
-    setFilteredDataSource(ALLERGY_DATA);
+    setFilteredDataSource(HEALTH_DATA);
     setSearchQuery(text);
   }
 };
@@ -62,19 +64,19 @@ const ItemView = ({ item }) => {
 
 const getItem = (item) => {
   // Function for click on an item
-  setAllergy((prevAllergy) => [...prevAllergy, item.id]);
+  setHealthCondition((prevHealth) => [...prevHealth, item.id]);
   setSearchQuery("");
   // BUG: Need to hide flatlist everytime after an item is added.
 };
 
 //For troubleshooting
-//console.log(allergy);
+//console.log(health);
 //console.log(searchQuery);
 // console.log(item);
 // console.log(isSelected)
 
-export default function Allergies({ navigation }) {
-  const [allergy, setAllergy] = useState([]);
+export default function HealthConditions({ navigation }) {
+  const [healthCondition, setHealthCondition] = useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
@@ -84,7 +86,7 @@ export default function Allergies({ navigation }) {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = ALLERGY_DATA.filter(function (item) {
+      const newData = HEALTH_DATA.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
           ? item.title.toUpperCase()
@@ -97,7 +99,7 @@ export default function Allergies({ navigation }) {
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(ALLERGY_DATA);
+      setFilteredDataSource(HEALTH_DATA);
       setSearchQuery(text);
     }
   };
@@ -117,7 +119,10 @@ export default function Allergies({ navigation }) {
 
   const getItem = (item) => {
     // Function for click on an item
-    setAllergy((prevAllergy) => [...prevAllergy, item.id]);
+    setHealthCondition((prevHealthCondition) => [
+      ...prevHealthCondition,
+      item.id,
+    ]);
     setSearchQuery("");
     // BUG: Need to hide flatlist everytime after an item is added.
   };
@@ -137,10 +142,10 @@ export default function Allergies({ navigation }) {
         onPress={() => navigation.navigate("LandingPage")}
       />
       <View>
-        <Text style={styles.title}>Allergies</Text>
+        <Text style={styles.title}>Health Conditions</Text>
       </View>
       <Searchbar
-        placeholder="Search Allergies"
+        placeholder="Search Health Conditions"
         onChangeText={(text) => searchFilterFunction(text)}
         value={searchQuery}
       />
@@ -151,23 +156,52 @@ export default function Allergies({ navigation }) {
           renderItem={ItemView}
         />
       </View>
+      <Text style={styles.text}>Added by you</Text>
+      <View>
+      <FlatList
+        data={selected_items_health}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <TouchableOpacity
+              style={styles.preference}>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+      </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
-        data={ALLERGY_DATA}
+        data={HEALTH_DATA}
         numColumns={2}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                setIsSelected(!isSelected);
+                //setIsSelected(!isSelected)
+                if (item.title == "None") {
+                  navigation.navigate('Preferences');
+                  return;
+                }
+                if (selected_items_health.includes(item)) {
+                  var index = selected_items_health.indexOf(item);
+                  selected_items_health.splice(index, 1);
+                  console.log(selected_items_health);
+                }
+                else {
+                  selected_items_health.push(item);
+                  console.log(selected_items_health);
+                }
 
                 // BUG: need to remove item.id if its already selected before
-                setAllergy((prevAllergy) => [...prevAllergy, item.id]);
+                setHealthCondition(prevHealthCondition => [...prevHealthCondition, item.id]);
                 // BUG: need to change colour when selected
-              }}
-            >
+
+              }}>
               <Text style={styles.itemText}>{item.title}</Text>
             </TouchableOpacity>
           </View>
@@ -176,7 +210,7 @@ export default function Allergies({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Dislikes")}
+        onPress={() => navigation.navigate("Preferences")}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -247,15 +281,17 @@ const styles = StyleSheet.create({
 // import { StatusBar } from "expo-status-bar";
 // import { Button, StyleSheet, Text, View } from "react-native";
 
-// export default function Allergies({ navigation }) {
+// export default function HealthConditions({ navigation }) {
 //   return (
 //     <View style={styles.container}>
 //       <View style={{ marginLeft: 10, marginTop: 30 }}>
-//         <Text style={{ fontWeight: "bold", fontSize: 30 }}>Allergies</Text>
+//         <Text style={{ fontWeight: "bold", fontSize: 30 }}>
+//           Health Conditions
+//         </Text>
 //       </View>
 //       <Button
 //         title="Continue"
-//         onPress={() => navigation.navigate("Dislikes")}
+//         onPress={() => navigation.navigate("Preferences")}
 //       />
 //       <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
 //       <StatusBar style="auto" />

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Pressable,
   StyleSheet,
   Text,
   View,
@@ -15,18 +16,67 @@ import { Searchbar } from "react-native-paper";
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
-const DISLIKES_DATA = [
+const ALLERGY_DATA = [
   { id: "1", title: "None" },
-  { id: "2", title: "Mushrooms" },
-  { id: "3", title: "Ginger" },
-  { id: "4", title: "Raisins" },
-  { id: "5", title: "Tofu" },
-  { id: "6", title: "Anchovies" },
+  { id: "2", title: "Soy" },
+  { id: "3", title: "Dairy" },
+  { id: "4", title: "Fish" },
+  { id: "5", title: "Eggs" },
+  { id: "6", title: "Gluten" },
   { id: "7", title: "Test" },
 ];
 
-export default function Dislikes({ navigation }) {
-  const [dislikes, setDislikes] = useState([]);
+export const selected_items_allergy = [];
+
+const searchFilterFunction = (text) => {
+  // Check if searched text is not blank
+  if (text) {
+    // Inserted text is not blank
+    // Filter the masterDataSource and update FilteredDataSource
+    const newData = ALLERGY_DATA.filter(function (item) {
+      // Applying filter for the inserted text in search bar
+      const itemData = item.title ? item.title.toUpperCase() : "".toUpperCase();
+      const textData = text.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    setFilteredDataSource(newData);
+    setSearchQuery(text);
+  } else {
+    // Inserted text is blank
+    // Update FilteredDataSource with masterDataSource
+    setFilteredDataSource(ALLERGY_DATA);
+    setSearchQuery(text);
+  }
+};
+
+const ItemView = ({ item }) => {
+  if (searchQuery.length > 0) {
+    return (
+      // Flat List Item
+      <Text style={styles.listStyle} onPress={() => getItem(item)}>
+        {item.title}
+      </Text>
+    );
+  } else {
+    return <View></View>;
+  }
+};
+
+const getItem = (item) => {
+  // Function for click on an item
+  setAllergy((prevAllergy) => [...prevAllergy, item.id]);
+  setSearchQuery("");
+  // BUG: Need to hide flatlist everytime after an item is added.
+};
+
+//For troubleshooting
+//console.log(allergy);
+//console.log(searchQuery);
+// console.log(item);
+// console.log(isSelected)
+
+export default function Allergies({ navigation }) {
+  const [allergy, setAllergy] = useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
@@ -36,7 +86,7 @@ export default function Dislikes({ navigation }) {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = DISLIKES_DATA.filter(function (item) {
+      const newData = ALLERGY_DATA.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
           ? item.title.toUpperCase()
@@ -49,7 +99,7 @@ export default function Dislikes({ navigation }) {
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(DISLIKES_DATA);
+      setFilteredDataSource(ALLERGY_DATA);
       setSearchQuery(text);
     }
   };
@@ -69,13 +119,13 @@ export default function Dislikes({ navigation }) {
 
   const getItem = (item) => {
     // Function for click on an item
-    setDislikes((prevDislikes) => [...prevDislikes, item.id]);
+    setAllergy((prevAllergy) => [...prevAllergy, item.id]);
     setSearchQuery("");
     // BUG: Need to hide flatlist everytime after an item is added.
   };
 
   //For troubleshooting
-  //console.log(dislikes);
+  //console.log(diet);
   console.log(searchQuery);
   // console.log(item);
   // console.log(isSelected)
@@ -89,10 +139,10 @@ export default function Dislikes({ navigation }) {
         onPress={() => navigation.navigate("LandingPage")}
       />
       <View>
-        <Text style={styles.title}>Dislikes</Text>
+        <Text style={styles.title}>Allergies</Text>
       </View>
       <Searchbar
-        placeholder="Search Dislikes"
+        placeholder="Search Allergies"
         onChangeText={(text) => searchFilterFunction(text)}
         value={searchQuery}
       />
@@ -103,23 +153,54 @@ export default function Dislikes({ navigation }) {
           renderItem={ItemView}
         />
       </View>
+      <Text style={styles.text}>Added by you</Text>
+      <View>
+      <FlatList
+        data={selected_items_allergy}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <TouchableOpacity
+              style={styles.preference}>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+      </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
-        data={DISLIKES_DATA}
+        data={ALLERGY_DATA}
         numColumns={2}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
           <View style={styles.item}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                setIsSelected(!isSelected);
-
+                //setIsSelected(!isSelected)
+                if(item.title=="None")
+                {
+                  navigation.navigate('Dislikes');
+                  return;
+                }
+                if (selected_items_allergy.includes(item)) {
+                  var index = selected_items_allergy.indexOf(item);
+                  selected_items_allergy.splice(index, 1);
+                  console.log(selected_items_allergy);
+                }
+                else {
+                  
+                  selected_items_allergy.push(item);
+                  console.log(selected_items_allergy);
+                }
+                
                 // BUG: need to remove item.id if its already selected before
-                setDislikes((prevDislikes) => [...prevDislikes, item.id]);
+                setAllergy(prevAllergy => [...prevAllergy, item.id]);
                 // BUG: need to change colour when selected
-              }}
-            >
+
+              }}>
               <Text style={styles.itemText}>{item.title}</Text>
             </TouchableOpacity>
           </View>
@@ -128,7 +209,7 @@ export default function Dislikes({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("HealthConditions")}
+        onPress={() => navigation.navigate("Dislikes")}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -199,15 +280,15 @@ const styles = StyleSheet.create({
 // import { StatusBar } from "expo-status-bar";
 // import { Button, StyleSheet, Text, View } from "react-native";
 
-// export default function Dislikes({ navigation }) {
+// export default function Allergies({ navigation }) {
 //   return (
 //     <View style={styles.container}>
 //       <View style={{ marginLeft: 10, marginTop: 30 }}>
-//         <Text style={{ fontWeight: "bold", fontSize: 30 }}>Dislikes</Text>
+//         <Text style={{ fontWeight: "bold", fontSize: 30 }}>Allergies</Text>
 //       </View>
 //       <Button
 //         title="Continue"
-//         onPress={() => navigation.navigate("HealthConditions")}
+//         onPress={() => navigation.navigate("Dislikes")}
 //       />
 //       <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
 //       <StatusBar style="auto" />

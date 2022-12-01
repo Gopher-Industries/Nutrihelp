@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   Dimensions,
   SafeAreaView,
   TouchableOpacity,
@@ -15,68 +14,20 @@ import { Searchbar } from "react-native-paper";
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
-const HEALTH_DATA = [
+//hardcoded for now but we should be pulling from DB
+const DIET_DATA = [
   { id: "1", title: "None" },
-  { id: "2", title: "Vitamin B6 deficiency" },
-  { id: "3", title: "Vitamin D deficiency" },
-  { id: "4", title: "Limit Sodium 2400mg" },
-  { id: "5", title: "Limit Cholesterol 2800mg" },
-  { id: "6", title: "Hypertension" },
-  { id: "7", title: "Heart Disease" },
-  { id: "8", title: "Diabetes type 2" },
-  { id: "9", title: "Cardiovascular" },
-  { id: "10", title: "Iron deficiency" },
+  { id: "2", title: "Vegetarian" },
+  { id: "3", title: "Vegan" },
+  { id: "4", title: "Keto" },
+  { id: "5", title: "Pescetarian" },
+  { id: "6", title: "Low Carb" },
+  { id: "7", title: "Test" },
 ];
+export const selected_items_diet = [];
 
-const searchFilterFunction = (text) => {
-  // Check if searched text is not blank
-  if (text) {
-    // Inserted text is not blank
-    // Filter the masterDataSource and update FilteredDataSource
-    const newData = HEALTH_DATA.filter(function (item) {
-      // Applying filter for the inserted text in search bar
-      const itemData = item.title ? item.title.toUpperCase() : "".toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    setFilteredDataSource(newData);
-    setSearchQuery(text);
-  } else {
-    // Inserted text is blank
-    // Update FilteredDataSource with masterDataSource
-    setFilteredDataSource(HEALTH_DATA);
-    setSearchQuery(text);
-  }
-};
-
-const ItemView = ({ item }) => {
-  if (searchQuery.length > 0) {
-    return (
-      // Flat List Item
-      <Text style={styles.listStyle} onPress={() => getItem(item)}>
-        {item.title}
-      </Text>
-    );
-  } else {
-    return <View></View>;
-  }
-};
-
-const getItem = (item) => {
-  // Function for click on an item
-  setHealthCondition((prevHealth) => [...prevHealth, item.id]);
-  setSearchQuery("");
-  // BUG: Need to hide flatlist everytime after an item is added.
-};
-
-//For troubleshooting
-//console.log(health);
-//console.log(searchQuery);
-// console.log(item);
-// console.log(isSelected)
-
-export default function HealthConditions({ navigation }) {
-  const [healthCondition, setHealthCondition] = useState([]);
+export default function DietryRequirements({ navigation }) {
+  const [diet, setDiet] = useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
@@ -86,20 +37,24 @@ export default function HealthConditions({ navigation }) {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = HEALTH_DATA.filter(function (item) {
+      const searchData = DIET_DATA.filter(DIET_DATA => DIET_DATA.title == text).map(data => {
+        { data.title };
+      });
+
+      const newData = DIET_DATA.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
           ? item.title.toUpperCase()
-          : "".toUpperCase();
+          : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
-      setFilteredDataSource(newData);
+      setFilteredDataSource(searchData);
       setSearchQuery(text);
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(HEALTH_DATA);
+      setFilteredDataSource(DIET_DATA);
       setSearchQuery(text);
     }
   };
@@ -119,10 +74,7 @@ export default function HealthConditions({ navigation }) {
 
   const getItem = (item) => {
     // Function for click on an item
-    setHealthCondition((prevHealthCondition) => [
-      ...prevHealthCondition,
-      item.id,
-    ]);
+    setDiet((prevDiet) => [...prevDiet, item.id]);
     setSearchQuery("");
     // BUG: Need to hide flatlist everytime after an item is added.
   };
@@ -142,10 +94,10 @@ export default function HealthConditions({ navigation }) {
         onPress={() => navigation.navigate("LandingPage")}
       />
       <View>
-        <Text style={styles.title}>Health Conditions</Text>
+        <Text style={styles.title}>Dietary Requirements</Text>
       </View>
       <Searchbar
-        placeholder="Search Health Conditions"
+        placeholder="Search Dietary Requirements"
         onChangeText={(text) => searchFilterFunction(text)}
         value={searchQuery}
       />
@@ -157,26 +109,53 @@ export default function HealthConditions({ navigation }) {
         />
       </View>
       <Text style={styles.text}>Added by you</Text>
+      <View>
+      <FlatList
+        data={selected_items_diet}
+        numColumns={2}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <TouchableOpacity
+              style={styles.preference}>
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+      </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
-        data={HEALTH_DATA}
+        data={DIET_DATA}
         numColumns={2}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                setIsSelected(!isSelected);
+                //setIsSelected(!isSelected)
+                if(item.title=="None")
+                {
+                  navigation.navigate('Allergies');
+                  return;
+                }
+                if (selected_items_diet.includes(item)) {
+                  var index = selected_items_diet.indexOf(item);
+                  selected_items_diet.splice(index, 1);
+                  console.log(selected_items_diet);
+                }
+                else {
+                  
+                  selected_items_diet.push(item);
+                  console.log(selected_items_diet);
+                }
 
                 // BUG: need to remove item.id if its already selected before
-                setHealthCondition((prevHealthCondition) => [
-                  ...prevHealthCondition,
-                  item.id,
-                ]);
+                setDiet(prevDiet => [...prevDiet, item.id]);
                 // BUG: need to change colour when selected
-              }}
-            >
+
+              }}>
               <Text style={styles.itemText}>{item.title}</Text>
             </TouchableOpacity>
           </View>
@@ -185,7 +164,7 @@ export default function HealthConditions({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Preferences")}
+        onPress={() => navigation.navigate("Allergies")}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -256,17 +235,17 @@ const styles = StyleSheet.create({
 // import { StatusBar } from "expo-status-bar";
 // import { Button, StyleSheet, Text, View } from "react-native";
 
-// export default function HealthConditions({ navigation }) {
+// export default function DietryRequirements({ navigation }) {
 //   return (
 //     <View style={styles.container}>
 //       <View style={{ marginLeft: 10, marginTop: 30 }}>
 //         <Text style={{ fontWeight: "bold", fontSize: 30 }}>
-//           Health Conditions
+//           DietryRequirements
 //         </Text>
 //       </View>
 //       <Button
 //         title="Continue"
-//         onPress={() => navigation.navigate("Preferences")}
+//         onPress={() => navigation.navigate("Allergies")}
 //       />
 //       <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
 //       <StatusBar style="auto" />
