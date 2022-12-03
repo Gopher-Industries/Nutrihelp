@@ -1,4 +1,4 @@
-package com.ttfxscreenchecker.newarchitecture.components;
+package com.ttfx.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
