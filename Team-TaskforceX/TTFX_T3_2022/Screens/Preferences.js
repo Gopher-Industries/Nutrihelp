@@ -1,7 +1,5 @@
 import * as React from 'react';
 import {StatusBar} from 'expo-status-bar';
-import {NavigationContainer} from '@react-navigator/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
   StyleSheet,
   Text,
@@ -13,7 +11,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useNavigation} from '@react-navigation/native';
 import { selected_items_diet } from './DietryRequirements';
 import { selected_items_allergy } from './Allergies';
 import { selected_items_dislikes } from './Dislikes';
@@ -30,8 +27,8 @@ const DISLIKES_DATA = selected_items_dislikes;
 const HEALTH_DATA = selected_items_health;
 
 // next trim need to get values from the previous pages and output it here.
-const ConfirmPrefScreen = () => {
-  const navigation = useNavigation();
+export default function Preferences({ navigation })
+ {
 
   return (
     <SafeAreaView style={styles.container}>
@@ -127,8 +124,6 @@ const ConfirmPrefScreen = () => {
     </SafeAreaView>
   );
 };
-
-export default ConfirmPrefScreen;
 
 const styles = StyleSheet.create({
   container: {
