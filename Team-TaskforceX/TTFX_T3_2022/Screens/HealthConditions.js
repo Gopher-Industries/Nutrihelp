@@ -27,7 +27,7 @@ const HEALTH_DATA = [
   { id: "9", title: "Cardiovascular" },
   { id: "10", title: "Iron deficiency" },
 ];
-export const selected_items_health=[];
+export const selected_items_health = [];
 const searchFilterFunction = (text) => {
   // Check if searched text is not blank
   if (text) {
@@ -139,7 +139,7 @@ export default function HealthConditions({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.navigate("LandingPage")}
+        onPress={() => navigation.goBack()}
       />
       <View>
         <Text style={styles.title}>Health Conditions</Text>
@@ -158,25 +158,24 @@ export default function HealthConditions({ navigation }) {
       </View>
       <Text style={styles.text}>Added by you</Text>
       <View>
-      <FlatList
-        data={selected_items_health}
-        numColumns={2}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <TouchableOpacity
-              style={styles.preference}>
-              <Text style={styles.itemText}>{item.title}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+        <FlatList
+          data={selected_items_health}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <TouchableOpacity style={styles.preference}>
+                <Text style={styles.itemText}>{item.title}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
       </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
         data={HEALTH_DATA}
         numColumns={2}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <TouchableOpacity
@@ -184,24 +183,26 @@ export default function HealthConditions({ navigation }) {
               onPress={() => {
                 //setIsSelected(!isSelected)
                 if (item.title == "None") {
-                  navigation.navigate('Preferences');
+                  navigation.navigate("Preferences");
                   return;
                 }
                 if (selected_items_health.includes(item)) {
                   var index = selected_items_health.indexOf(item);
                   selected_items_health.splice(index, 1);
                   console.log(selected_items_health);
-                }
-                else {
+                } else {
                   selected_items_health.push(item);
                   console.log(selected_items_health);
                 }
 
                 // BUG: need to remove item.id if its already selected before
-                setHealthCondition(prevHealthCondition => [...prevHealthCondition, item.id]);
+                setHealthCondition((prevHealthCondition) => [
+                  ...prevHealthCondition,
+                  item.id,
+                ]);
                 // BUG: need to change colour when selected
-
-              }}>
+              }}
+            >
               <Text style={styles.itemText}>{item.title}</Text>
             </TouchableOpacity>
           </View>

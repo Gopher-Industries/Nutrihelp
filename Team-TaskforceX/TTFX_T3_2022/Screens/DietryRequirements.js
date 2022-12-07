@@ -37,15 +37,19 @@ export default function DietryRequirements({ navigation }) {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const searchData = DIET_DATA.filter(DIET_DATA => DIET_DATA.title == text).map(data => {
-        { data.title };
+      const searchData = DIET_DATA.filter(
+        (DIET_DATA) => DIET_DATA.title == text
+      ).map((data) => {
+        {
+          data.title;
+        }
       });
 
       const newData = DIET_DATA.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
           ? item.title.toUpperCase()
-          : ''.toUpperCase();
+          : "".toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
@@ -91,7 +95,7 @@ export default function DietryRequirements({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.navigate("LandingPage")}
+        onPress={() => navigation.goBack()}
       />
       <View>
         <Text style={styles.title}>Dietary Requirements</Text>
@@ -110,52 +114,48 @@ export default function DietryRequirements({ navigation }) {
       </View>
       <Text style={styles.text}>Added by you</Text>
       <View>
-      <FlatList
-        data={selected_items_diet}
-        numColumns={2}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <TouchableOpacity
-              style={styles.preference}>
-              <Text style={styles.itemText}>{item.title}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+        <FlatList
+          data={selected_items_diet}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <TouchableOpacity style={styles.preference}>
+                <Text style={styles.itemText}>{item.title}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
       </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
         data={DIET_DATA}
         numColumns={2}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
                 //setIsSelected(!isSelected)
-                if(item.title=="None")
-                {
-                  navigation.navigate('Allergies');
+                if (item.title == "None") {
+                  navigation.navigate("Allergies");
                   return;
                 }
                 if (selected_items_diet.includes(item)) {
                   var index = selected_items_diet.indexOf(item);
                   selected_items_diet.splice(index, 1);
                   console.log(selected_items_diet);
-                }
-                else {
-                  
+                } else {
                   selected_items_diet.push(item);
                   console.log(selected_items_diet);
                 }
 
                 // BUG: need to remove item.id if its already selected before
-                setDiet(prevDiet => [...prevDiet, item.id]);
+                setDiet((prevDiet) => [...prevDiet, item.id]);
                 // BUG: need to change colour when selected
-
-              }}>
+              }}
+            >
               <Text style={styles.itemText}>{item.title}</Text>
             </TouchableOpacity>
           </View>

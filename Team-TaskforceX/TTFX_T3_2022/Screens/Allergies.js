@@ -136,7 +136,7 @@ export default function Allergies({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.navigate("LandingPage")}
+        onPress={() => navigation.goBack()}
       />
       <View>
         <Text style={styles.title}>Allergies</Text>
@@ -155,52 +155,48 @@ export default function Allergies({ navigation }) {
       </View>
       <Text style={styles.text}>Added by you</Text>
       <View>
-      <FlatList
-        data={selected_items_allergy}
-        numColumns={2}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <TouchableOpacity
-              style={styles.preference}>
-              <Text style={styles.itemText}>{item.title}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+        <FlatList
+          data={selected_items_allergy}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <TouchableOpacity style={styles.preference}>
+                <Text style={styles.itemText}>{item.title}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
       </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
         data={ALLERGY_DATA}
         numColumns={2}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
           <View style={styles.item}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
                 //setIsSelected(!isSelected)
-                if(item.title=="None")
-                {
-                  navigation.navigate('Dislikes');
+                if (item.title == "None") {
+                  navigation.navigate("Dislikes");
                   return;
                 }
                 if (selected_items_allergy.includes(item)) {
                   var index = selected_items_allergy.indexOf(item);
                   selected_items_allergy.splice(index, 1);
                   console.log(selected_items_allergy);
-                }
-                else {
-                  
+                } else {
                   selected_items_allergy.push(item);
                   console.log(selected_items_allergy);
                 }
-                
-                // BUG: need to remove item.id if its already selected before
-                setAllergy(prevAllergy => [...prevAllergy, item.id]);
-                // BUG: need to change colour when selected
 
-              }}>
+                // BUG: need to remove item.id if its already selected before
+                setAllergy((prevAllergy) => [...prevAllergy, item.id]);
+                // BUG: need to change colour when selected
+              }}
+            >
               <Text style={styles.itemText}>{item.title}</Text>
             </TouchableOpacity>
           </View>

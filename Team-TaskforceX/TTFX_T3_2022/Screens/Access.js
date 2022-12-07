@@ -11,7 +11,7 @@ export default function Access({ navigation }) {
         title="Continue"
         onPress={() => navigation.navigate("Notifications")}
       />
-      <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
+      <Button title="Back" onPress={() => navigation.goBack()} />
       <StatusBar style="auto" />
     </View>
   );

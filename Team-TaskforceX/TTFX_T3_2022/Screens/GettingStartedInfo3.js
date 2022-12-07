@@ -11,7 +11,7 @@ export default function GettingStartedInfo3({ navigation }) {
         title="Continue"
         onPress={() => navigation.navigate("Accessibility")}
       />
-      <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
+      <Button title="Back" onPress={() => navigation.goBack()} />
       <StatusBar style="auto" />
     </View>
   );
