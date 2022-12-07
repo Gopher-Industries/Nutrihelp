@@ -134,6 +134,7 @@ export default function Dislikes({ navigation }) {
                 if(item.title=="None")
                 {
                   navigation.navigate('HealthConditions');
+                  selected_items_dislikes.splice(0,selected_items_dislikes.length);
                   return;
                 }
                 if (selected_items_dislikes.includes(item)) {

@@ -138,6 +138,7 @@ export default function DietryRequirements({ navigation }) {
                 if(item.title=="None")
                 {
                   navigation.navigate('Allergies');
+                  selected_items_diet.splice(0,selected_items_diet.length);
                   return;
                 }
                 if (selected_items_diet.includes(item)) {

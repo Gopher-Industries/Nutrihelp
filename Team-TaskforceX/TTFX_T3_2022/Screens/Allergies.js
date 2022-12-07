@@ -183,6 +183,7 @@ export default function Allergies({ navigation }) {
                 if(item.title=="None")
                 {
                   navigation.navigate('Dislikes');
+                  selected_items_allergy.splice(0,selected_items_allergy.length);
                   return;
                 }
                 if (selected_items_allergy.includes(item)) {

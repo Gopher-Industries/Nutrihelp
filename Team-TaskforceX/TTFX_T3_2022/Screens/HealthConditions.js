@@ -185,6 +185,7 @@ export default function HealthConditions({ navigation }) {
                 //setIsSelected(!isSelected)
                 if (item.title == "None") {
                   navigation.navigate('Preferences');
+                  selected_items_health.splice(0,selected_items_health);
                   return;
                 }
                 if (selected_items_health.includes(item)) {
