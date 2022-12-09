@@ -11,7 +11,7 @@ export default function TodaysPlan({ navigation }) {
         title="Nutritional Report"
         onPress={() => navigation.navigate("NutritionalReport")}
       />
-      <Button title="Home" onPress={() => navigation.navigate("LandingPage")} />
+      <Button title="Home" onPress={() => navigation.popToTop()} />
     </View>
   );
 }

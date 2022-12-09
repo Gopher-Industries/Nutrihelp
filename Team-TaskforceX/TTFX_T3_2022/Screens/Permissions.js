@@ -8,7 +8,7 @@ export default function Permissions({ navigation }) {
         <Text style={{ fontWeight: "bold", fontSize: 30 }}>Permissions</Text>
       </View>
       <Button title="Continue" onPress={() => navigation.navigate("Access")} />
-      <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
+      <Button title="Back" onPress={() => navigation.goBack()} />
       <StatusBar style="auto" />
     </View>
   );

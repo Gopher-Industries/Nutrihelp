@@ -28,7 +28,7 @@ export default function Profile({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.navigate("LandingPage")}
+        onPress={() => navigation.goBack()}
       />
       <View>
         <Text style={styles.title}>Create Profile</Text>

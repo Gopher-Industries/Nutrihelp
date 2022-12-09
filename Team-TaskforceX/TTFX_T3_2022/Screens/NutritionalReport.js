@@ -9,7 +9,7 @@ export default function NutritionalReport({ navigation }) {
           Nutritional Report
         </Text>
       </View>
-      <Button title="Home" onPress={() => navigation.navigate("LandingPage")} />
+      <Button title="Home" onPress={() => navigation.popToTop()} />
       <StatusBar style="auto" />
     </View>
   );
