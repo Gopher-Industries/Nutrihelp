@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   },
   buttonPressable: {
     position: 'absolute',
-    bottom: 16,
+    bottom: 32,
     left: 16,
     borderRadius: 100,
     backgroundColor: '#8273a9',
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
 
   leadingIconPressable: {
     position: 'relative',
-    marginTop: 20,
+    marginTop: 52,
     marginLeft: 16,
     width: 24,
     height: 24,
