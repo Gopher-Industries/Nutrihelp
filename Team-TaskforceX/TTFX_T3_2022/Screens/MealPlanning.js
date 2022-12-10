@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   Text,
   StyleSheet,
@@ -7,11 +7,12 @@ import {
   Pressable,
   FlatList,
   Dimensions,
-} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {FilterChip} from './Components/FilterChip';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { FilterChip } from "./Components/FilterChip";
+import { firebase } from "../config";
 
-const windowWidth = Dimensions.get('window').width;
+const windowWidth = Dimensions.get("window").width;
 
 const MealPlanning = () => {
   const navigation = useNavigation();
@@ -21,45 +22,59 @@ const MealPlanning = () => {
   const [dinner, setDinner] = useState(false);
   const [desert, setDesert] = useState(false);
 
+  const CommitMealPlanData = () => {
+    const mealPlanData = {
+      userId: "so3ntivvUkAifQlZTYOb",
+      breakfast: breakfast,
+      lunch: lunch,
+      dnner: dinner,
+      desert: desert,
+    };
+    const uploadMealPlan = firebase.firestore().collection("MealPlans");
+    uploadMealPlan.add(mealPlanData).catch((error) => {
+      alert(error);
+    });
+  };
+
   const DATA = [
     {
-      label: 'None',
+      label: "None",
       checked: none,
-      getData: {getName},
+      getData: { getName },
       invisible: false,
     },
     {
-      label: 'Breakfast',
+      label: "Breakfast",
       checked: breakfast,
-      getData: {getName},
+      getData: { getName },
       invisible: false,
     },
     {
-      label: 'Lunch',
+      label: "Lunch",
       checked: lunch,
-      getData: {getName},
+      getData: { getName },
       invisible: false,
     },
     {
-      label: 'Dinner',
+      label: "Dinner",
       checked: dinner,
-      getData: {getName},
+      getData: { getName },
       invisible: false,
     },
     {
-      label: 'Desert',
+      label: "Desert",
       checked: desert,
-      getData: {getName},
+      getData: { getName },
       invisible: false,
     },
     {
-      label: 'Invisible',
+      label: "Invisible",
       checked: false,
       invisible: true,
     },
   ];
 
-  const Item = ({label, checked, invisible}) => (
+  const Item = ({ label, checked, invisible }) => (
     <FilterChip
       label={label}
       checked={checked}
@@ -68,7 +83,7 @@ const MealPlanning = () => {
     />
   );
 
-  const renderItem = ({item}) => (
+  const renderItem = ({ item }) => (
     <Item
       label={item.label}
       checked={item.checked}
@@ -79,7 +94,7 @@ const MealPlanning = () => {
 
   function getName(label) {
     switch (label) {
-      case 'None':
+      case "None":
         {
           if (none === false) {
             setBreakfast(false);
@@ -92,7 +107,7 @@ const MealPlanning = () => {
           }
         }
         break;
-      case 'Breakfast':
+      case "Breakfast":
         {
           if (breakfast === false) {
             setNone(false);
@@ -102,7 +117,7 @@ const MealPlanning = () => {
           setBreakfast(!breakfast);
         }
         break;
-      case 'Lunch':
+      case "Lunch":
         {
           if (lunch === false) {
             setNone(false);
@@ -112,7 +127,7 @@ const MealPlanning = () => {
           setLunch(!lunch);
         }
         break;
-      case 'Dinner':
+      case "Dinner":
         {
           if (dinner === false) {
             setNone(false);
@@ -122,7 +137,7 @@ const MealPlanning = () => {
           setDinner(!dinner);
         }
         break;
-      case 'Desert':
+      case "Desert":
         {
           if (desert === false) {
             setNone(false);
@@ -140,11 +155,12 @@ const MealPlanning = () => {
       <Pressable style={styles.topAppBarPressable}>
         <Pressable
           style={styles.leadingIconPressable}
-          onPress={() => navigation.navigate('DailyNutritionPlan')}>
+          onPress={() => navigation.navigate("DailyNutritionPlan")}
+        >
           <Image
             style={styles.icon}
             resizeMode="cover"
-            source={require('../assets/images/leadingicon.png')}
+            source={require("../assets/images/leadingicon.png")}
           />
           <Text style={styles.headlineText}>Meal Planning</Text>
         </Pressable>
@@ -161,15 +177,19 @@ const MealPlanning = () => {
         data={DATA}
         renderItem={renderItem}
         numColumns={2}
-        columnWrapperStyle={{justifyContent: 'space-between'}}
+        columnWrapperStyle={{ justifyContent: "space-between" }}
         ItemSeparatorComponent={() => (
-          <View style={{height: 16, marginHorizontal: 16}} />
+          <View style={{ height: 16, marginHorizontal: 16 }} />
         )}
       />
 
       <Pressable
         style={styles.buttonPressable}
-        onPress={() => navigation.navigate('Permissions')}>
+        onPress={() => {
+          CommitMealPlanData();
+          navigation.navigate("Permissions");
+        }}
+      >
         <Text style={styles.continueLabel}>Continue</Text>
       </Pressable>
     </View>
@@ -178,85 +198,85 @@ const MealPlanning = () => {
 
 const styles = StyleSheet.create({
   paragraphText: {
-    position: 'relative',
+    position: "relative",
     letterSpacing: -0.2,
     lineHeight: 24,
-    fontFamily: 'OpenSans_400Regular',
-    color: '#000',
-    textAlign: 'left',
+    fontFamily: "OpenSans_400Regular",
+    color: "#000",
+    textAlign: "left",
     height: 74,
     marginLeft: 16,
     marginRight: 16,
     marginTop: 68,
   },
   mealPlanningView: {
-    position: 'relative',
-    backgroundColor: '#fffbfe',
+    position: "relative",
+    backgroundColor: "#fffbfe",
     flex: 1,
-    width: '100%',
-    height: '100%',
-    overflow: 'hidden',
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
   },
   column: {
     flexShrink: 1,
   },
   buttonPressable: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 32,
     left: 16,
     borderRadius: 100,
-    backgroundColor: '#8273a9',
+    backgroundColor: "#8273a9",
     width: windowWidth - 32,
-    overflow: 'hidden',
-    flexDirection: 'column',
+    overflow: "hidden",
+    flexDirection: "column",
     paddingHorizontal: 24,
     paddingVertical: 10,
-    boxSizing: 'border-box',
-    alignItems: 'center',
-    justifyContent: 'center',
+    boxSizing: "border-box",
+    alignItems: "center",
+    justifyContent: "center",
     paddingLeft: 16,
     paddingRight: 16,
   },
   continueLabel: {
-    position: 'relative',
+    position: "relative",
     fontSize: 16,
     letterSpacing: 0.1,
     lineHeight: 20,
-    fontWeight: '700',
-    fontFamily: 'OpenSans_400Regular',
-    color: '#fff',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
+    fontWeight: "700",
+    fontFamily: "OpenSans_400Regular",
+    color: "#fff",
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   leadingIconPressable: {
-    position: 'relative',
+    position: "relative",
     marginTop: 52,
     marginLeft: 16,
     width: 24,
     height: 24,
   },
   icon: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   headlineText: {
-    position: 'absolute',
+    position: "absolute",
     top: 36,
     left: 0,
     fontSize: 24,
     lineHeight: 32,
-    fontFamily: 'OpenSans_400Regular',
-    color: '#000',
-    textAlign: 'left',
-    display: 'flex',
-    alignItems: 'center',
+    fontFamily: "OpenSans_400Regular",
+    color: "#000",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
     width: 328,
   },
 
   list: {
-    position: 'relative',
+    position: "relative",
     marginTop: 25,
     marginLeft: 8,
     marginRight: 8,
