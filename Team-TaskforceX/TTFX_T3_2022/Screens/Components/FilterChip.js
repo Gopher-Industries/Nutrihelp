@@ -36,6 +36,7 @@ const FilterChip = props => {
             boxSizing: 'border-box',
             alignItems: 'center',
             justifyContent: 'center',
+            height: 32,
           }}
           onPress={OnClick}>
           <Image
@@ -64,6 +65,7 @@ const FilterChip = props => {
             justifyContent: 'center',
             marginLeft: 8,
             marginRight: 8,
+            height: 32,
           }}
           onPress={OnClick}>
           <Text style={styles.unchecked}>{props.label}</Text>
