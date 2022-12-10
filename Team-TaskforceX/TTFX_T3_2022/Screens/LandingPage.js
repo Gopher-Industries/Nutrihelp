@@ -16,15 +16,13 @@ export default function LandingPage({ navigation }) {
   return (
     <View>
       <ImageBackground
-        source={require("../assets/images/square-logo-blue-text-black.png")}
+        source={require("../assets/images/SplashScreen.png")}
         style={styles.image}
       >
-        <Text style={styles.header}>NutriHelp</Text>
-
         <View style={styles.textContainer}>
           <Text style={styles.text}>
             Nutrihelp supports you in managing your general wellbeing,
-            nutrient-related diseases and deficiencies through personalized
+            nutrient-related diseases and deficiencies through personalised
             nutrition advice.
           </Text>
           <TouchableOpacity
@@ -42,7 +40,7 @@ export default function LandingPage({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.termButton}
-            onPress={() => navigation.navigate("LogIn")}
+            onPress={() => navigation.navigate("")} //no terms of service page yet.
           >
             <Text style={{ textDecorationLine: "underline" }}>
               Terms of Service
@@ -61,107 +59,74 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  header: {
-    fontSize: 40,
-    color: "black",
-    padding: 30,
-    top: SCREENHEIGHT / 10,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-
   textContainer: {
     width: SCREENWIDTH,
     height: SCREENHEIGHT - SCREENHEIGHT / 3,
-    backgroundColor: "white",
     marginTop: SCREENHEIGHT / 3,
+    backgroundColor: "transparent",
   },
 
-  text: {
-    fontSize: 18,
+  //Description text  
+  text: { 
+    fontSize: 16,
+    fontFamily: "OpenSans_400Regular",
     color: "black",
     justifyContent: "center",
     padding: 20,
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingLeft: 30, //visually better with 30 padding
+    paddingRight: 30, //visually better with 30 padding
     textAlign: "center",
+    top: 195,
   },
 
+  //Get Started button
   button: {
-    backgroundColor: "#8d71ad",
-    width: "80%",
-    height: 55,
+    backgroundColor: "#8273A9",
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
-    borderRadius: 15,
-    top: 10,
+    borderRadius: 100,
+    marginBottom: 16,
+    width: "90%",
+    top: 210,
   },
 
+  //Already have account button
   altButton: {
-    backgroundColor: "white",
-    width: "80%",
-    height: 55,
+    backgroundColor: "#FFFBFE",
+    width: "90%",
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
-    borderRadius: 15,
+    borderRadius: 100,
     borderWidth: 1,
-    borderColor: "gray",
-    top: 10,
-    margin: 10,
+    borderColor: "#79747E",
+    top: 210,
+    marginBottom: 16,
   },
 
+  //Get Started text
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     color: "white",
-    fontWeight: "bold",
+    fontFamily: "OpenSans_700Bold",
   },
 
+  //Already have account text
   altButtonText: {
-    fontSize: 18,
-    color: "#8d71ad",
-    fontWeight: "bold",
-    top: 0,
+    fontSize: 16,
+    color: "#8273A9",
+    fontFamily: "OpenSans_700Bold",
     alignSelf: "center",
-    padding: 10,
   },
 
+  //terms of service
   termButton: {
-    height: 55,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
+    top: 210,
   },
 });
-
-// import { StatusBar } from "expo-status-bar";
-// import { Button, StyleSheet, Text, View } from "react-native";
-
-// export default function LandingPage({ navigation }) {
-//   return (
-//     <View style={styles.container}>
-//       <View style={{ marginLeft: 10, marginTop: 30 }}>
-//         <Text style={{ fontWeight: "bold", fontSize: 30 }}>NutriHealth</Text>
-//       </View>
-//       <Button
-//         title="Get Started"
-//         onPress={() => navigation.navigate("GettingStartedInfo1")}
-//       />
-//       <Button
-//         title="I already have an account"
-//         onPress={() => navigation.navigate("LogIn")}
-//       />
-//       {/* <StatusBar style="auto" /> */}
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
