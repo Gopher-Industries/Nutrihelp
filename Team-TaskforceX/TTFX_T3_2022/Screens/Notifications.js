@@ -11,7 +11,7 @@ export default function Notifications({ navigation }) {
         title="Continue"
         onPress={() => navigation.navigate("TodaysPlan")}
       />
-      <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
+      <Button title="Exit" onPress={() => navigation.goBack()} />
       <StatusBar style="auto" />
     </View>
   );

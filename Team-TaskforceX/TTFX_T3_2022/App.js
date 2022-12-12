@@ -23,116 +23,147 @@ import TodaysPlan from "./Screens/TodaysPlan";
 import NutritionalReport from "./Screens/NutritionalReport";
 import LogIn from "./Screens/LogIn";
 
+import {
+  useFonts,
+  OpenSans_300Light,
+  OpenSans_400Regular,
+  OpenSans_500Medium,
+  OpenSans_600SemiBold,
+  OpenSans_700Bold,
+  OpenSans_800ExtraBold,
+  OpenSans_300Light_Italic,
+  OpenSans_400Regular_Italic,
+  OpenSans_500Medium_Italic,
+  OpenSans_600SemiBold_Italic,
+  OpenSans_700Bold_Italic,
+  OpenSans_800ExtraBold_Italic,
+} from "@expo-google-fonts/open-sans";
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    OpenSans_300Light,
+    OpenSans_400Regular,
+    OpenSans_500Medium,
+    OpenSans_600SemiBold,
+    OpenSans_700Bold,
+    OpenSans_800ExtraBold,
+    OpenSans_300Light_Italic,
+    OpenSans_400Regular_Italic,
+    OpenSans_500Medium_Italic,
+    OpenSans_600SemiBold_Italic,
+    OpenSans_700Bold_Italic,
+    OpenSans_800ExtraBold_Italic,
+  });
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="LandingPage"
           component={LandingPage}
-          option={{ title: "welcome" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="GettingStartedInfo1"
           component={GettingStartedInfo1}
-          option={{ title: "Getting Started" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="GettingStartedInfo2"
           component={GettingStartedInfo2}
-          option={{ title: "Getting Started" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="GettingStartedInfo3"
           component={GettingStartedInfo3}
-          option={{ title: "Getting Started" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Accessibility"
           component={Accessibility}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="CreateAccount"
           component={CreateAccount}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Authentication"
           component={Authentication}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Profile"
           component={Profile}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="DietryRequirements"
           component={DietryRequirements}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Allergies"
           component={Allergies}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Dislikes"
           component={Dislikes}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="HealthConditions"
           component={HealthConditions}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Preferences"
           component={Preferences}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="DailyNutritionPlan"
           component={DailyNutritionPlan}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="MealPlanning"
           component={MealPlanning}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Permissions"
           component={Permissions}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Access"
           component={Access}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Notifications"
           component={Notifications}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="TodaysPlan"
           component={TodaysPlan}
-          option={{ title: "Please provide" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="NutritionalReport"
           component={NutritionalReport}
-          option={{ title: "Your summary" }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="LogIn"
           component={LogIn}
-          option={{ title: "Please login" }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

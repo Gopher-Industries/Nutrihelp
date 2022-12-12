@@ -8,7 +8,7 @@ export default function Authentication({ navigation }) {
         <Text style={{ fontWeight: "bold", fontSize: 30 }}>Authentication</Text>
       </View>
       <Button title="Continue" onPress={() => navigation.navigate("Profile")} />
-      <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
+      <Button title="Back" onPress={() => navigation.goBack()} />
       <StatusBar style="auto" />
     </View>
   );

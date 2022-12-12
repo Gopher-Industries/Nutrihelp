@@ -24,7 +24,7 @@ export default function DailyNutritionPlan({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.navigate("LandingPage")}
+        //onPress={() => navigation.goBack()}
       />
       <View>
         <Text style={styles.title}>Daily Nutrition Plan</Text>

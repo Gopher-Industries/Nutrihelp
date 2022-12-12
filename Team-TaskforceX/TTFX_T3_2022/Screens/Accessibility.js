@@ -11,7 +11,7 @@ export default function Accessibility({ navigation }) {
         title="Continue"
         onPress={() => navigation.navigate("CreateAccount")}
       />
-      <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
+      <Button title="Back" onPress={() => navigation.goBack()} />
       <StatusBar style="auto" />
     </View>
   );

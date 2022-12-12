@@ -21,7 +21,7 @@ export default function GettingStartedInfo1({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.navigate("LandingPage")}
+        onPress={() => navigation.popToTop()}
       />
       <View>
         <View style={styles.textContainer}>
@@ -46,10 +46,10 @@ export default function GettingStartedInfo1({ navigation }) {
             title="Continue"
             onPress={() => navigation.navigate("GettingStartedInfo2")}
           />
-          <Button
+          {/* <Button
             title="Exit"
             onPress={() => navigation.navigate("LandingPage")}
-          />
+          /> */}
         </View>
       </View>
     </View>
