@@ -74,6 +74,30 @@ export default function Dislikes({ navigation }) {
     setSearchQuery("");
     // BUG: Need to hide flatlist everytime after an item is added.
   };
+  const AddedByYou = () => {
+    if (selected_items_dislikes.length >= 1) {
+      return (
+        <View>
+          <Text style={styles.text}>Added by you</Text>
+          <View>
+            <FlatList
+              data={selected_items_dislikes}
+              numColumns={2}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => (
+                <View style={styles.item}>
+                  <TouchableOpacity
+                    style={styles.preference}>
+                    <Text style={styles.itemText}>{item.title}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+      )
+    }
+  }
 
   //For troubleshooting
   //console.log(dislikes);
@@ -104,20 +128,8 @@ export default function Dislikes({ navigation }) {
           renderItem={ItemView}
         />
       </View>
-      <Text style={styles.text}>Added by you</Text>
       <View>
-        <FlatList
-          data={selected_items_dislikes}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <TouchableOpacity style={styles.preference}>
-                <Text style={styles.itemText}>{item.title}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+        {AddedByYou()}
       </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
