@@ -37,14 +37,6 @@ export default function DietryRequirements({ navigation }) {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const searchData = DIET_DATA.filter(
-        (DIET_DATA) => DIET_DATA.title == text
-      ).map((data) => {
-        {
-          data.title;
-        }
-      });
-
       const newData = DIET_DATA.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
@@ -53,12 +45,12 @@ export default function DietryRequirements({ navigation }) {
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
-      setFilteredDataSource(searchData);
+      setFilteredDataSource(newData);
       setSearchQuery(text);
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(DIET_DATA);
+      setFilteredDataSource(null);
       setSearchQuery(text);
     }
   };
@@ -66,13 +58,13 @@ export default function DietryRequirements({ navigation }) {
   const ItemView = ({ item }) => {
     if (searchQuery.length > 0) {
       return (
-        // Flat List Item
+        // Flat List Item        
         <Text style={styles.listStyle} onPress={() => getItem(item)}>
           {item.title}
         </Text>
       );
     } else {
-      return <View></View>;
+      return <View></View> ;
     }
   };
 
@@ -109,7 +101,35 @@ export default function DietryRequirements({ navigation }) {
         <FlatList
           data={filteredDataSource}
           keyExtractor={(item) => item.id}
-          renderItem={ItemView}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <TouchableOpacity
+                style={styles.preference}
+                onPress={() => {
+                  //setIsSelected(!isSelected)
+                  if (item.title == "None") {
+                    navigation.navigate("Allergies");
+                    return;
+                  }
+                 else {
+                    selected_items_diet.push(item);
+                    var index0 = filteredDataSource.indexOf(item);
+                    var index = DIET_DATA.indexOf(item);
+                    console.log(selected_items_diet);
+                    DIET_DATA.splice(index,1);
+                    filteredDataSource.splice(index0, 1);
+                  }
+  
+                  // BUG: need to remove item.id if its already selected before
+                  setDiet((prevDiet) => [...prevDiet, item.id]);
+                  // BUG: need to change colour when selected
+                }}
+              >
+                <Text style={styles.itemText}>{item.title}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          
         />
       </View>
       <Text style={styles.text}>Added by you</Text>
@@ -119,9 +139,12 @@ export default function DietryRequirements({ navigation }) {
           numColumns={2}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View style={styles.item}>
+            <View style={styles.addeditem}>
               <TouchableOpacity style={styles.preference}>
-                <Text style={styles.itemText}>{item.title}</Text>
+              <Text style={styles.itemText}>
+                  <Icon name="check" size={20} color="black"/>
+                  {item.title}
+                </Text>
               </TouchableOpacity>
             </View>
           )}
@@ -142,13 +165,11 @@ export default function DietryRequirements({ navigation }) {
                   navigation.navigate("Allergies");
                   return;
                 }
-                if (selected_items_diet.includes(item)) {
-                  var index = selected_items_diet.indexOf(item);
-                  selected_items_diet.splice(index, 1);
-                  console.log(selected_items_diet);
-                } else {
+                 else {
                   selected_items_diet.push(item);
+                  var index = DIET_DATA.indexOf(item);
                   console.log(selected_items_diet);
+                  DIET_DATA.splice(index,1);
                 }
 
                 // BUG: need to remove item.id if its already selected before
@@ -190,6 +211,20 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontWeight: "bold",
     color: "black",
+  },
+  addeditem: {
+    marginTop: 10,
+    backgroundColor: 'lavender',
+    borderColor: "black",
+    borderWidth: 1,
+    maxWidth: SCREENWIDTH / 2 - 40,
+    padding: 10,
+    alignItems: "center",
+    borderRadius: 10,
+    justifyContent: "space-around",
+    margin: 5,
+    flex: 0.5,
+    //backgroundColor: 'pink',
   },
 
   button: {
