@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  TouchableHighlight,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
@@ -83,6 +84,30 @@ export default function DietryRequirements({ navigation }) {
     // BUG: Need to hide flatlist everytime after an item is added.
   };
 
+  const AddedByYou = () => {
+    if (selected_items_diet.length >= 1) {
+      return (
+        <View>
+          <Text style={styles.text}>Added by you</Text>
+          <View>
+            <FlatList
+              data={selected_items_diet}
+              numColumns={2}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => (
+                <View style={styles.item}>
+                  <TouchableOpacity
+                    style={styles.preference}>
+                    <Text style={styles.itemText}>{item.title}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+      )
+    }
+  }
   //For troubleshooting
   //console.log(diet);
   console.log(searchQuery);
@@ -112,21 +137,12 @@ export default function DietryRequirements({ navigation }) {
           renderItem={ItemView}
         />
       </View>
-      <Text style={styles.text}>Added by you</Text>
+
+      {/* Conditional Rendering of Added By you */}
       <View>
-        <FlatList
-          data={selected_items_diet}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <TouchableOpacity style={styles.preference}>
-                <Text style={styles.itemText}>{item.title}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+        {AddedByYou()}
       </View>
+
       <Text style={styles.text}>Most Common</Text>
       <FlatList
         data={DIET_DATA}
@@ -139,14 +155,16 @@ export default function DietryRequirements({ navigation }) {
               onPress={() => {
                 //setIsSelected(!isSelected)
                 if (item.title == "None") {
-                  navigation.navigate("Allergies");
+                  navigation.navigate('Allergies');
+                  selected_items_diet.splice(0, selected_items_diet.length);
                   return;
                 }
                 if (selected_items_diet.includes(item)) {
                   var index = selected_items_diet.indexOf(item);
                   selected_items_diet.splice(index, 1);
                   console.log(selected_items_diet);
-                } else {
+                }
+                else {
                   selected_items_diet.push(item);
                   console.log(selected_items_diet);
                 }

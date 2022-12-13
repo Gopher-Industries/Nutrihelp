@@ -27,13 +27,19 @@ export default function CreateAccount({ navigation }) {
     }
   };
 
-  const handleEmailConfirm = (val) => {
-    console.log(email);
-    console.log(val);
-    if (val !== email) {
-      setEmailConfirm("doesnt match");
+  const handleEmailConfirm = val => { // check if email are same 
+    if (val != email) {
+      setCheckValidEmail('Email does not match');
     } else {
-      setCheckValidEmail("");
+      setCheckValidEmail('');
+    }
+  };
+
+  const handlePassConfirm = val => { // check if pass are same 
+    if (val != password) {
+      setCheckValidEmail('Pass does not match');
+    } else {
+      setCheckValidEmail('');
     }
   };
 
@@ -49,51 +55,64 @@ export default function CreateAccount({ navigation }) {
       <View>
         <Text style={styles.title}>Create Account</Text>
       </View>
-      <View style={styles.inputView}>
+      <View style={styles.inputView}> 
+      {/* Enter Email */}
         <TextInput
           style={styles.TextInput}
           placeholder="Email address*"
           placeholderTextColor="gray"
           keyboardType="email-address"
-          onChangeText={(value) => {
+          onChangeText={value => {
             setEmail(value);
             handleCheckEmail(value);
           }}
         />
       </View>
 
+      {/* Validation text */}
       {checkValidEmail ? (
         <Text style={styles.emailValidationText}>{checkValidEmail}</Text>
-      ) : null}
-
+      ) : null} 
+      {/* Confirm Email  */}
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
           placeholder="Confirm Email Address*"
           placeholderTextColor="gray"
           keyboardType="email-address"
-          onChangeText={(emailConfirm) => setEmailConfirm(emailConfirm)}
-        />
+          onChangeText={emailConfirm => {
+          setEmailConfirm(emailConfirm);
+          handleEmailConfirm(emailConfirm);
+          }}
+          />
       </View>
       <View style={styles.inputView}>
+        {/* Enter Password */}
         <TextInput
           style={styles.TextInput}
           placeholder="Password*"
           placeholderTextColor="gray"
           secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
+          onChangeText={password => 
+            setPassword(password)
+          }
         />
       </View>
       <View>
         <Text style={styles.text}>Password must have...</Text>
       </View>
+      
       <View style={styles.inputView}>
+        {/* Password Confirm */}
         <TextInput
           style={styles.TextInput}
           placeholder="Confirm Password*"
           placeholderTextColor="gray"
           secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
+          onChangeText={password => {
+            setPasswordConfirm(password);
+            handlePassConfirm(password);
+          }}
         />
       </View>
       <View>

@@ -36,13 +36,11 @@ import {
   OpenSans_600SemiBold_Italic,
   OpenSans_700Bold_Italic,
   OpenSans_800ExtraBold_Italic,
-  } from "@expo-google-fonts/open-sans";
+} from "@expo-google-fonts/open-sans";
 
-  
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-
   let [fontsLoaded] = useFonts({
     OpenSans_300Light,
     OpenSans_400Regular,
