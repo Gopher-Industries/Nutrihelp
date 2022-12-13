@@ -126,7 +126,30 @@ export default function HealthConditions({ navigation }) {
     setSearchQuery("");
     // BUG: Need to hide flatlist everytime after an item is added.
   };
-
+  const AddedByYou = () => {
+    if (selected_items_health.length >= 1) {
+      return (
+        <View>
+          <Text style={styles.text}>Added by you</Text>
+          <View>
+            <FlatList
+              data={selected_items_health}
+              numColumns={2}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => (
+                <View style={styles.item}>
+                  <TouchableOpacity
+                    style={styles.preference}>
+                    <Text style={styles.itemText}>{item.title}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+      )
+    }
+  }
   //For troubleshooting
   //console.log(diet);
   console.log(searchQuery);
@@ -156,20 +179,8 @@ export default function HealthConditions({ navigation }) {
           renderItem={ItemView}
         />
       </View>
-      <Text style={styles.text}>Added by you</Text>
       <View>
-        <FlatList
-          data={selected_items_health}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <TouchableOpacity style={styles.preference}>
-                <Text style={styles.itemText}>{item.title}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+        {AddedByYou()}
       </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
@@ -183,7 +194,8 @@ export default function HealthConditions({ navigation }) {
               onPress={() => {
                 //setIsSelected(!isSelected)
                 if (item.title == "None") {
-                  navigation.navigate("Preferences");
+                  navigation.navigate('Preferences');
+                  selected_items_health.splice(0,selected_items_health);
                   return;
                 }
                 if (selected_items_health.includes(item)) {
