@@ -40,9 +40,9 @@ export default function LandingPage({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.termButton}
-            onPress={() => navigation.navigate("")} //no terms of service page yet.
+            onPress={() => alert("No terms of service page yet exists")} //Future task
           >
-            <Text style={{ textDecorationLine: "underline" }}>
+            <Text style= {styles.termsText}>
               Terms of Service
             </Text>
           </TouchableOpacity>
@@ -134,11 +134,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  //terms of service
+  //terms of service button
   termButton: {
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
-    top: 210,
+    top: 205,
+  },
+
+  //terms of service text
+  termsText: {
+    textDecorationLine: "underline",
+    fontFamily: 'OpenSans_400Regular',
+    fontSize: 12,
+    color: "black",
   },
 });
