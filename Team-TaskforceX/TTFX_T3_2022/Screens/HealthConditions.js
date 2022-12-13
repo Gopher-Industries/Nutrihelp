@@ -228,12 +228,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFBFE",
-    padding: 30,
+    padding: 16,
   },
   
   //Back Arrow
   backArrow: {
-    marginTop: 30,
+    marginTop: 52,
   },
   
   //Main Title
@@ -243,6 +243,8 @@ const styles = StyleSheet.create({
     color: "black",
     marginTop: 30,
     marginBottom: 20,
+    lineHeight: 32,
+    
   },
 
   //Search Bar
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: "black",
     borderStyle: "solid",
-    width: 328,
+    width: 361,
     height: 56,
     backgroundColor: "#FFFBFE",
   },
@@ -258,10 +260,11 @@ const styles = StyleSheet.create({
   //Secondary headings
   text: { 
     fontSize: 19,
-    marginBottom: 10,
-    marginTop: 20,
+    marginTop: 16,
     color: "black",
-    fontFamily: "OpenSans_600SemiBold",
+    fontFamily: "OpenSans_400Regular",
+    lineHeight: 48,
+    fontWeight: '600',
   },
 
  //Continue button
@@ -272,23 +275,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 100,
     top: 10,
-    marginBottom: 16,
+    marginBottom: 32,
   },
 
   //Continue button text
   buttonText: {
     fontSize: 16,
-    color: "white",
-    fontFamily: "OpenSans_700Bold",
+    letterSpacing: 0.1,
+    lineHeight: 20,
+    fontWeight: '700',
+    fontFamily: 'OpenSans_400Regular',
+    color: '#fff',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   //Chips
   item: {
-    marginTop: 10,
+    marginTop: 16,
     backgroundColor: "#FFFBFE",
     borderColor: "#79747E",
     borderWidth: 1,
-    maxWidth: SCREENWIDTH / 2 - 40,
+    maxWidth: SCREENWIDTH / 2 - 16,
     alignItems: "center",
     borderRadius: 8,
     justifyContent: "space-around",
@@ -302,7 +311,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#49454F",
     alignItems: "center",
-    fontFamily: "OpenSans_600SemiBold",
+    fontFamily: "OpenSans_400Regular",
+    fontWeight: '600',
   },
 
   listStyle: {
