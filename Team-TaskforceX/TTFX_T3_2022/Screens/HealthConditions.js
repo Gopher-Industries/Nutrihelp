@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
@@ -134,30 +135,30 @@ export default function HealthConditions({ navigation }) {
   // console.log(isSelected)
   return (
     <SafeAreaView style={styles.container}>
-      <Icon
+        <Icon
         name="arrow-left"
         size={20}
         color="black"
         type="entypo"
         onPress={() => navigation.goBack()}
-      />
-      <View>
-        <Text style={styles.title}>Health Conditions</Text>
-      </View>
-      <Searchbar
+        />
+        <View>
+          <Text style={styles.title}>Health Conditions</Text>
+        </View>
+        <Searchbar
         placeholder="Search Health Conditions"
         onChangeText={(text) => searchFilterFunction(text)}
         value={searchQuery}
-      />
-      <View>
-        <FlatList
+        />
+        <View>
+          <FlatList
           data={filteredDataSource}
           keyExtractor={(item) => item.id}
           renderItem={ItemView}
-        />
-      </View>
-      <Text style={styles.text}>Added by you</Text>
-      <View>
+          />
+        </View>
+        <Text style={styles.text}>Added by you</Text>
+        <View>
         <FlatList
           data={selected_items_health}
           numColumns={2}
@@ -170,9 +171,9 @@ export default function HealthConditions({ navigation }) {
             </View>
           )}
         />
-      </View>
-      <Text style={styles.text}>Most Common</Text>
-      <FlatList
+        </View>
+        <Text style={styles.text}>Most Common</Text>
+        <FlatList
         data={HEALTH_DATA}
         numColumns={2}
         keyExtractor={(item) => item.id}
@@ -207,14 +208,14 @@ export default function HealthConditions({ navigation }) {
             </TouchableOpacity>
           </View>
         )}
-      />
-
-      <TouchableOpacity
+        />
+        <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("Preferences")}
-      >
+        >
         <Text style={styles.buttonText}>Continue</Text>
-      </TouchableOpacity>
+        </TouchableOpacity>
+
     </SafeAreaView>
   );
 }
