@@ -171,12 +171,12 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 32,
+    marginBottom: 16,
     marginTop: 32,
     borderRadius: 100,
   },
 
-//Continue button text
+  //Continue button text
   buttonText: {
     fontSize: 16,
     letterSpacing: 0.1,
