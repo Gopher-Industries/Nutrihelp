@@ -30,13 +30,13 @@ export default function LandingPage({ navigation }) {
             // //testing for now, go to Confirm Screen
             onPress={() => navigation.navigate("GettingStartedInfo1")}
           >
-            <Text style={styles.buttonText}>Get started</Text>
+            <Text style={styles.buttonText}>Get Started</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.altButton}
             onPress={() => navigation.navigate("LogIn")}
           >
-            <Text style={styles.altButtonText}>I already have an account</Text>
+            <Text style={styles.altButtonText}>I Already Have An Account</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.termButton}
@@ -54,7 +54,6 @@ export default function LandingPage({ navigation }) {
 
 const styles = StyleSheet.create({
   image: {
-    // height: SCREENHEIGHT,
     backgroundColor: "transparent",
     justifyContent: "center",
   },
@@ -69,8 +68,10 @@ const styles = StyleSheet.create({
   //Description text  
   text: { 
     fontSize: 16,
-    fontFamily: "OpenSans_400Regular",
-    color: "black",
+    letterSpacing: -0.2,
+    lineHeight: 24,
+    fontFamily: 'OpenSans_400Regular',
+    color: '#000',
     justifyContent: "center",
     padding: 20,
     paddingLeft: 30, //visually better with 30 padding
@@ -110,16 +111,27 @@ const styles = StyleSheet.create({
   //Get Started text
   buttonText: {
     fontSize: 16,
-    color: "white",
-    fontFamily: "OpenSans_700Bold",
+    letterSpacing: 0.1,
+    lineHeight: 20,
+    fontWeight: '700',
+    fontFamily: 'OpenSans_400Regular',
+    color: '#fff',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   //Already have account text
   altButtonText: {
-    fontSize: 16,
     color: "#8273A9",
-    fontFamily: "OpenSans_700Bold",
-    alignSelf: "center",
+    fontSize: 16,
+    letterSpacing: 0.1,
+    lineHeight: 20,
+    fontWeight: '700',
+    fontFamily: 'OpenSans_400Regular',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   //terms of service
