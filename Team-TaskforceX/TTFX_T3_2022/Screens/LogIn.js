@@ -24,8 +24,8 @@ export default function CreateAccount({ navigation }) {
         onPress={() => navigation.goBack()}
       />
       <View>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.text}>Get started by creating an account</Text>
+        <Text style={styles.title}>Login</Text>
+        <Text style={styles.text}>Welcome back!</Text>
       </View>
       <RNPTextInput //Username field
         style={styles.usernameTextInputRNPTextInput}
@@ -62,7 +62,7 @@ export default function CreateAccount({ navigation }) {
         style={styles.button}
         onPress={() => navigation.navigate("TodaysPlan")}
       >
-      <Text style={styles.buttonText}>Continue with Email</Text>
+      <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, height: 1, backgroundColor: "gray" }} />
