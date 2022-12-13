@@ -9,7 +9,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import React from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/FontAwesome"; //this is not the correct arrow, need to change
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 
   //Back arrow
   backArrow: {
-    top: 60,
+    top: 52,
     left: 16,
   },
 
@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
     color: "black",
     justifyContent: "center",
     padding: 20,
-    paddingLeft: 25,
-    paddingRight: 25,
+    paddingLeft: 25, //increased for clarity
+    paddingRight: 25, //increased for clarity
     textAlign: "center",
     top: 315,
     letterSpacing: -0.2,
