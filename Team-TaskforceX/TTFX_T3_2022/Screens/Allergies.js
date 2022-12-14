@@ -124,6 +124,31 @@ export default function Allergies({ navigation }) {
     // BUG: Need to hide flatlist everytime after an item is added.
   };
 
+  const AddedByYou = () => {
+    if (selected_items_allergy.length >= 1) {
+      return (
+        <View>
+          <Text style={styles.text}>Added by you</Text>
+          <View>
+            <FlatList
+              data={selected_items_allergy}
+              numColumns={2}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => (
+                <View style={styles.item}>
+                  <TouchableOpacity
+                    style={styles.preference}>
+                    <Text style={styles.itemText}>{item.title}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+      )
+    }
+  }
+
   //For troubleshooting
   //console.log(diet);
   console.log(searchQuery);
@@ -153,20 +178,8 @@ export default function Allergies({ navigation }) {
           renderItem={ItemView}
         />
       </View>
-      <Text style={styles.text}>Added by you</Text>
       <View>
-        <FlatList
-          data={selected_items_allergy}
-          numColumns={2}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <TouchableOpacity style={styles.preference}>
-                <Text style={styles.itemText}>{item.title}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
+        {AddedByYou()}
       </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
@@ -179,8 +192,10 @@ export default function Allergies({ navigation }) {
               style={styles.preference}
               onPress={() => {
                 //setIsSelected(!isSelected)
-                if (item.title == "None") {
-                  navigation.navigate("Dislikes");
+                if(item.title=="None")
+                {
+                  navigation.navigate('Dislikes');
+                  selected_items_allergy.splice(0,selected_items_allergy.length);
                   return;
                 }
                 if (selected_items_allergy.includes(item)) {
