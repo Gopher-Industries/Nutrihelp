@@ -9,23 +9,22 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/FontAwesome"; //Back Arrow
 import { Searchbar } from "react-native-paper";
+import { TextInput as RNPTextInput } from "react-native-paper"; //Search Bar
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
 const HEALTH_DATA = [
   { id: "1", title: "None" },
-  { id: "2", title: "Vitamin B6 deficiency" },
-  { id: "3", title: "Vitamin D deficiency" },
-  { id: "4", title: "Limit Sodium 2400mg" },
-  { id: "5", title: "Limit Cholesterol 2800mg" },
-  { id: "6", title: "Hypertension" },
-  { id: "7", title: "Heart Disease" },
-  { id: "8", title: "Diabetes type 2" },
-  { id: "9", title: "Cardiovascular" },
-  { id: "10", title: "Iron deficiency" },
+  { id: "2", title: "Vit B6 deficiency" },
+  { id: "3", title: "Vit D deficiency" },
+  { id: "4", title: "Limit Sodium" },
+  { id: "5", title: "Limit Cholesterol" },
+  { id: "6", title: "Diabetes type 2" },
+  { id: "7", title: "Cardiovascular" },
+  { id: "8", title: "Iron deficiency" },
 ];
 export const selected_items_health = [];
 const searchFilterFunction = (text) => {
@@ -157,7 +156,8 @@ export default function HealthConditions({ navigation }) {
   // console.log(isSelected)
   return (
     <SafeAreaView style={styles.container}>
-      <Icon
+      <Icon //Back arrow
+        style={styles.backArrow}
         name="arrow-left"
         size={20}
         color="black"
@@ -167,10 +167,14 @@ export default function HealthConditions({ navigation }) {
       <View>
         <Text style={styles.title}>Health Conditions</Text>
       </View>
-      <Searchbar
+      <RNPTextInput //Active search bar.
+        style={styles.searchHealthTextInputRNPTextInput}
         placeholder="Search Health Conditions"
         onChangeText={(text) => searchFilterFunction(text)}
         value={searchQuery}
+        label="Search Health Conditions"
+        mode="outlined"
+        activeOutlineColor="#8273a9"
       />
       <View>
         <FlatList
@@ -232,91 +236,98 @@ export default function HealthConditions({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  //Background
   container: {
     flex: 1,
-    backgroundColor: "white",
-    padding: 30,
+    backgroundColor: "#FFFBFE",
+    padding: 16,
   },
-  title: {
-    fontSize: 25,
+  
+  //Back Arrow
+  backArrow: {
+    marginTop: 52,
+  },
+  
+  //Main Title
+  title: { 
+    fontSize: 24,
+    fontFamily: "OpenSans_400Regular",
     color: "black",
-    marginTop: 20,
+    marginTop: 30,
     marginBottom: 20,
-  },
-  text: {
-    fontSize: 20,
-    marginBottom: 10,
-    marginTop: 20,
-    fontWeight: "bold",
-    color: "black",
+    lineHeight: 32,
+    
   },
 
+  //Search Bar
+  searchHealthTextInputRNPTextInput: {
+    borderRadius: 4,
+    borderColor: "black",
+    borderStyle: "solid",
+    width: 361,
+    height: 56,
+    backgroundColor: "#FFFBFE",
+  },
+
+  //Secondary headings
+  text: { 
+    fontSize: 19,
+    marginTop: 16,
+    color: "black",
+    fontFamily: "OpenSans_400Regular",
+    lineHeight: 48,
+    fontWeight: '600',
+  },
+
+ //Continue button
   button: {
-    backgroundColor: "#8d71ad",
-    height: 55,
+    backgroundColor: "#8273A9",
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 25,
+    borderRadius: 100,
     top: 10,
-    marginBottom: 50,
+    marginBottom: 32,
   },
 
+  //Continue button text
   buttonText: {
-    fontSize: 18,
-    color: "white",
-    fontWeight: "bold",
+    fontSize: 16,
+    letterSpacing: 0.1,
+    lineHeight: 20,
+    fontWeight: '700',
+    fontFamily: 'OpenSans_400Regular',
+    color: '#fff',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
+  //Chips
   item: {
-    marginTop: 10,
-    // backgroundColor: 'green',
-    borderColor: "black",
+    marginTop: 16,
+    backgroundColor: "#FFFBFE",
+    borderColor: "#79747E",
     borderWidth: 1,
-    maxWidth: SCREENWIDTH / 2 - 40,
-    padding: 10,
+    maxWidth: SCREENWIDTH / 2 - 16,
     alignItems: "center",
-    borderRadius: 10,
+    borderRadius: 8,
     justifyContent: "space-around",
     margin: 5,
     flex: 0.5,
-    //backgroundColor: 'pink',
+    height: 32,
   },
-  itemText: {
-    color: "black",
-    // fontFamily: 'Times',
+
+  //Chips text
+  itemText: { 
+    fontSize: 14,
+    color: "#49454F",
+    alignItems: "center",
+    fontFamily: "OpenSans_400Regular",
+    fontWeight: '600',
   },
 
   listStyle: {
     paddingTop: 10,
   },
 });
-
-// import { StatusBar } from "expo-status-bar";
-// import { Button, StyleSheet, Text, View } from "react-native";
-
-// export default function HealthConditions({ navigation }) {
-//   return (
-//     <View style={styles.container}>
-//       <View style={{ marginLeft: 10, marginTop: 30 }}>
-//         <Text style={{ fontWeight: "bold", fontSize: 30 }}>
-//           Health Conditions
-//         </Text>
-//       </View>
-//       <Button
-//         title="Continue"
-//         onPress={() => navigation.navigate("Preferences")}
-//       />
-//       <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
