@@ -1,20 +1,65 @@
 import {
   StyleSheet,
-  Image,
   Text,
   View,
   ImageBackground,
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import {
+  useFonts,
+  OpenSans_300Light,
+  OpenSans_400Regular,
+  OpenSans_500Medium,
+  OpenSans_600SemiBold,
+  OpenSans_700Bold,
+  OpenSans_800ExtraBold,
+  OpenSans_300Light_Italic,
+  OpenSans_400Regular_Italic,
+  OpenSans_500Medium_Italic,
+  OpenSans_600SemiBold_Italic,
+  OpenSans_700Bold_Italic,
+  OpenSans_800ExtraBold_Italic,
+} from "@expo-google-fonts/open-sans";
+import { React, useCallback } from "react";
+import * as SplashScreen from "expo-splash-screen";
+//import { View, Text, StyleSheet } from "react-native";
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
+SplashScreen.preventAutoHideAsync();
+
 export default function LandingPage({ navigation }) {
+  let [fontsLoaded] = useFonts({
+    OpenSans_300Light,
+    OpenSans_400Regular,
+    OpenSans_500Medium,
+    OpenSans_600SemiBold,
+    OpenSans_700Bold,
+    OpenSans_800ExtraBold,
+    OpenSans_300Light_Italic,
+    OpenSans_400Regular_Italic,
+    OpenSans_500Medium_Italic,
+    OpenSans_600SemiBold_Italic,
+    OpenSans_700Bold_Italic,
+    OpenSans_800ExtraBold_Italic,
+  });
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <View>
+    <View
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+      onLayout={onLayoutRootView}
+    >
       <ImageBackground
         source={require("../assets/images/SplashScreen.png")}
         style={styles.image}
@@ -42,9 +87,7 @@ export default function LandingPage({ navigation }) {
             style={styles.termButton}
             onPress={() => alert("No terms of service page yet exists")} //Future task
           >
-            <Text style= {styles.termsText}>
-              Terms of Service
-            </Text>
+            <Text style={styles.termsText}>Terms of Service</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -65,13 +108,13 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
 
-  //Description text  
-  text: { 
+  //Description text
+  text: {
     fontSize: 16,
     letterSpacing: -0.2,
     lineHeight: 24,
-    fontFamily: 'OpenSans_400Regular',
-    color: '#000',
+    fontFamily: "OpenSans_400Regular",
+    color: "#000",
     justifyContent: "center",
     padding: 20,
     paddingLeft: 30, //visually better with 30 padding
@@ -113,12 +156,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 0.1,
     lineHeight: 20,
-    fontWeight: '700',
-    fontFamily: 'OpenSans_400Regular',
-    color: '#fff',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
+    fontWeight: "700",
+    fontFamily: "OpenSans_400Regular",
+    color: "#fff",
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   //Already have account text
@@ -127,11 +170,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 0.1,
     lineHeight: 20,
-    fontWeight: '700',
-    fontFamily: 'OpenSans_400Regular',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
+    fontWeight: "700",
+    fontFamily: "OpenSans_400Regular",
+    textAlign: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   //terms of service button
@@ -145,7 +188,7 @@ const styles = StyleSheet.create({
   //terms of service text
   termsText: {
     textDecorationLine: "underline",
-    fontFamily: 'OpenSans_400Regular',
+    fontFamily: "OpenSans_400Regular",
     fontSize: 12,
     color: "black",
   },
