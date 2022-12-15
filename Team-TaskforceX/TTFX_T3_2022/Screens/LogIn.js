@@ -1,5 +1,4 @@
 import { StatusBar } from "expo-status-bar";
-//import { Button, StyleSheet, Text, View } from "react-native";
 import {
   StyleSheet,
   Text,
@@ -8,6 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { TextInput as RNPTextInput } from "react-native-paper";
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
@@ -15,7 +15,8 @@ const SCREENWIDTH = Dimensions.get("window").width;
 export default function CreateAccount({ navigation }) {
   return (
     <View style={styles.container}>
-      <Icon
+      <Icon //Back arrow
+        style={styles.backArrow}
         name="arrow-left"
         size={20}
         color="black"
@@ -23,14 +24,45 @@ export default function CreateAccount({ navigation }) {
         onPress={() => navigation.goBack()}
       />
       <View>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.text}>Get started by creating an account</Text>
+        <Text style={styles.title}>Login</Text>
+        <Text style={styles.text}>Welcome back!</Text>
       </View>
+      <RNPTextInput //Username field
+        style={styles.usernameTextInputRNPTextInput}
+        placeholder="Email Address"
+        label="Email Address"
+        mode="outlined"
+        activeOutlineColor="#8273a9"
+        theme={{
+          fonts: {fontFamily: "OpenSans_400Regular", fontWeight: '600' },
+          colors: {text: "black"},
+        }}
+      />
+      <RNPTextInput //Password field
+        style={styles.passwordTextInputRNPTextInput}
+        placeholder="Password"
+        label="Password"
+        mode="outlined"
+        activeOutlineColor="#8273a9"
+        secureTextEntry = {true}
+        theme={{
+          fonts: {fontFamily: "OpenSans_400Regular", fontWeight: '600' },
+          colors: {text: "black"},
+        }}
+      />
+      <TouchableOpacity
+        style={styles.termButton}
+        onPress={() => alert("This is a future feature")}
+      >
+      <Text style={styles.forgotPassword}>
+        Forgot Password?
+      </Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("TodaysPlan")}
       >
-        <Text style={styles.buttonText}>Continue with Email</Text>
+      <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, height: 1, backgroundColor: "gray" }} />
@@ -42,7 +74,7 @@ export default function CreateAccount({ navigation }) {
       <View>
         <TouchableOpacity
           style={styles.altButton}
-          onPress={() => alert("Setup TBC")}
+          onPress={() => alert("This is a future feature")}
         >
           <Text style={styles.altButtonText}>Continue with Google</Text>
         </TouchableOpacity>
@@ -54,81 +86,118 @@ export default function CreateAccount({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
-    padding: 30,
+    backgroundColor: "#FFFBFE",
+    padding: 16,
   },
 
-  title: {
-    fontSize: 25,
+  //Back Arrow
+  backArrow: {
+    marginTop: 52,
+  },
+
+  //Main Title
+  title: { 
+    fontSize: 24,
+    fontFamily: "OpenSans_400Regular",
     color: "black",
-    marginBottom: 20,
-    marginTop: 20,
+    marginTop: 30,
+    lineHeight: 32,
   },
 
+  //Username field
+  usernameTextInputRNPTextInput: {
+    borderRadius: 4,
+    borderColor: "black",
+    borderStyle: "solid",
+    width: 361,
+    height: 56,
+    backgroundColor: "#FFFBFE",
+    marginTop: -150,
+  },
+
+  //Password field
+  passwordTextInputRNPTextInput: {
+    borderRadius: 4,
+    borderColor: "black",
+    borderStyle: "solid",
+    width: 361,
+    height: 56,
+    backgroundColor: "#FFFBFE",
+    marginTop: 16,
+  },
+  
+  //Forgot password
+  forgotPassword: {
+    textDecorationLine: "underline",
+    fontSize: 14,
+    letterSpacing: 0.1,
+    lineHeight: 20,
+    fontWeight: '600',
+    fontFamily: 'OpenSans_400Regular',
+    textAlign: 'right',
+    marginTop: 16,
+  },
+
+  //Paragraph
   text: {
     marginTop: 40,
     marginBottom: SCREENHEIGHT / 4,
-    fontSize: 18,
     color: "black",
+    fontSize: 16,
+    letterSpacing: 0.1,
+    lineHeight: 20,
+    fontWeight: '600',
+    fontFamily: 'OpenSans_400Regular',
   },
 
+  //Continue with email button
   button: {
-    borderRadius: 25,
-    height: 50,
+    borderRadius: 100,
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#8d71ad",
-    margin: 10,
+    marginTop: 130,
+    marginBottom: 32,
   },
 
+  //Continue with google button
   altButton: {
-    borderRadius: 25,
-    height: 50,
+    borderRadius: 100,
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white",
+    backgroundColor: "FFFBFE",
     borderWidth: 1,
-    borderColor: "gray",
-    margin: 10,
+    borderColor: "#79747e",
+    marginTop: 32,
+    marginBottom: 32,
   },
 
+  //Continue with email button text
   buttonText: {
-    fontWeight: "bold",
-    color: "white",
-    fontSize: 18,
+    fontSize: 16,
+    letterSpacing: 0.1,
+    lineHeight: 20,
+    fontWeight: '700',
+    fontFamily: 'OpenSans_400Regular',
+    color: '#fff',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
+  //Continue with Google text
   altButtonText: {
-    fontWeight: "bold",
-    color: "#8d71ad",
-    fontSize: 18,
+    fontSize: 16,
+    letterSpacing: 0.1,
+    lineHeight: 20,
+    fontWeight: '700',
+    fontFamily: 'OpenSans_400Regular',
+    color: '#8d71ad',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
-// import { StatusBar } from "expo-status-bar";
-// import { Button, StyleSheet, Text, View } from "react-native";
-
-// export default function LogIn({ navigation }) {
-//   return (
-//     <View style={styles.container}>
-//       <View style={{ marginLeft: 10, marginTop: 30 }}>
-//         <Text style={{ fontWeight: "bold", fontSize: 30 }}>Log In</Text>
-//       </View>
-//       <Button
-//         title="On success"
-//         onPress={() => navigation.navigate("TodaysPlan")}
-//       />
-//       <Button title="Exit" onPress={() => navigation.navigate("LandingPage")} />
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
