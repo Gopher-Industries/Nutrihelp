@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
-  TouchableHighlight,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
@@ -19,7 +18,6 @@ const SCREENWIDTH = Dimensions.get("window").width;
 const DIET_DATA = [
   { id: "1", title: "None" },
   { id: "2", title: "Vegetarian" },
-  { id: "3", title: "Vegan" },
   { id: "4", title: "Keto" },
   { id: "5", title: "Pescetarian" },
   { id: "6", title: "Low Carb" },
@@ -51,7 +49,7 @@ export default function DietryRequirements({ navigation }) {
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(null);
+      setFilteredDataSource(DIET_DATA);
       setSearchQuery(text);
     }
   };
@@ -59,13 +57,46 @@ export default function DietryRequirements({ navigation }) {
   const ItemView = ({ item }) => {
     if (searchQuery.length > 0) {
       return (
-        // Flat List Item        
-        <Text style={styles.listStyle} onPress={() => getItem(item)}>
-          {item.title}
-        </Text>
+        // Flat List Item
+        <View style={styles.item}>
+        <TouchableOpacity
+        style={styles.preference}
+        onPress={() => {
+          //setIsSelected(!isSelected)
+          if (item.title == "None") {
+            navigation.navigate("Allergies");
+            return;
+          }
+          if (selected_items_diet.includes(item)) {
+            var index = selected_items_diet.indexOf(item);
+            selected_items_diet.splice(index, 1);
+            console.log(selected_items_diet);
+            DIET_DATA.push(item);
+          } else {
+            selected_items_diet.push(item);
+            console.log(selected_items_diet);
+            // 4 lines added
+            var index = selected_items_diet.indexOf(item);
+            var index0 = DIET_DATA.indexOf(item);
+            var index1 =filteredDataSource.indexOf(item);
+            DIET_DATA.splice(index0, 1);
+            filteredDataSource.splice(index1, 1);
+          }
+
+          // BUG: need to remove item.id if its already selected before
+          setDiet((prevDiet) => [...prevDiet, item.id]);
+          // BUG: need to change colour when selected
+        }}
+      > 
+        <Text style={styles.itemText}>{item.title}</Text>
+        
+      </TouchableOpacity>
+              
+     </View>
+          
       );
     } else {
-      return <View></View> ;
+      return <View></View>;
     }
   };
 
@@ -76,30 +107,6 @@ export default function DietryRequirements({ navigation }) {
     // BUG: Need to hide flatlist everytime after an item is added.
   };
 
-  const AddedByYou = () => {
-    if (selected_items_diet.length >= 1) {
-      return (
-        <View>
-          <Text style={styles.text}>Added by you</Text>
-          <View>
-            <FlatList
-              data={selected_items_diet}
-              numColumns={2}
-              keyExtractor={item => item.id}
-              renderItem={({ item }) => (
-                <View style={styles.item}>
-                  <TouchableOpacity
-                    style={styles.preference}>
-                    <Text style={styles.itemText}>{item.title}</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            />
-          </View>
-        </View>
-      )
-    }
-  }
   //For troubleshooting
   //console.log(diet);
   console.log(searchQuery);
@@ -126,57 +133,24 @@ export default function DietryRequirements({ navigation }) {
         <FlatList
           data={filteredDataSource}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <TouchableOpacity
-                style={styles.preference}
-                onPress={() => {
-                  //setIsSelected(!isSelected)
-                  if (item.title == "None") {
-                    navigation.navigate("Allergies");
-                    return;
-                  }
-                 else {
-                    selected_items_diet.push(item);
-                    var index0 = filteredDataSource.indexOf(item);
-                    var index = DIET_DATA.indexOf(item);
-                    console.log(selected_items_diet);
-                    DIET_DATA.splice(index,1);
-                    filteredDataSource.splice(index0, 1);
-                  }
-  
-                  // BUG: need to remove item.id if its already selected before
-                  setDiet((prevDiet) => [...prevDiet, item.id]);
-                  // BUG: need to change colour when selected
-                }}
-              >
-                <Text style={styles.itemText}>{item.title}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          
+          renderItem={ItemView}
         />
       </View>
-
-      {/* Conditional Rendering of Added By you */}
+      <Text style={styles.text}>Added by you</Text>
       <View>
         <FlatList
           data={selected_items_diet}
           numColumns={2}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View style={styles.addeditem}>
+            <View style={styles.item}>
               <TouchableOpacity style={styles.preference}>
-              <Text style={styles.itemText}>
-                  <Icon name="check" size={20} color="black"/>
-                  {item.title}
-                </Text>
+                <Text style={styles.itemText}>{item.title}</Text>
               </TouchableOpacity>
             </View>
           )}
         />
       </View>
-
       <Text style={styles.text}>Most Common</Text>
       <FlatList
         data={DIET_DATA}
@@ -189,34 +163,79 @@ export default function DietryRequirements({ navigation }) {
               onPress={() => {
                 //setIsSelected(!isSelected)
                 if (item.title == "None") {
-                  navigation.navigate('Allergies');
-                  selected_items_diet.splice(0, selected_items_diet.length);
+                  navigation.navigate("Allergies");
                   return;
                 }
-                 else {
-                  selected_items_diet.push(item);
-                  var index = DIET_DATA.indexOf(item);
+                if (selected_items_diet.includes(item)) {
+                  var index = selected_items_diet.indexOf(item);
+                  selected_items_diet.splice(index, 1);
                   console.log(selected_items_diet);
-                  DIET_DATA.splice(index,1);
+                } else {
+                  selected_items_diet.push(item);
+                  console.log(selected_items_diet);
+                  // 4 lines added
+                  var index = selected_items_diet.indexOf(item);
+                  var index0 = DIET_DATA.indexOf(item);
+                  DIET_DATA.splice(index0, 1);
                 }
-
                 // BUG: need to remove item.id if its already selected before
                 setDiet((prevDiet) => [...prevDiet, item.id]);
                 // BUG: need to change colour when selected
               }}
-            >
-              <Text style={styles.itemText}>{item.title}</Text>
+            > 
+              <Text style={styles.itemText}>{item.title}</Text>              
             </TouchableOpacity>
           </View>
         )}
       />
-
-      <TouchableOpacity
+      <View>
+          <FlatList
+            data={selected_items_diet}
+            numColumns={2}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={styles.addeditem}>
+               <TouchableOpacity
+                 style={styles.preference}
+                 onPress={() => {
+                  //setIsSelected(!isSelected)
+                  if (item.title == "None") {
+                    navigation.navigate("Allergies");
+                    return;
+                  }
+                  if (selected_items_diet.includes(item)) {
+                    var index = selected_items_diet.indexOf(item);
+                    selected_items_diet.splice(index, 1);
+                    console.log(selected_items_diet);
+                    DIET_DATA.push(item);
+                  } else {
+                    selected_items_diet.push(item);
+                    console.log(selected_items_diet);
+                    // 4 lines added
+                    var index = selected_items_diet.indexOf(item);
+                    var index0 = DIET_DATA.indexOf(item);
+                    DIET_DATA.splice(index0, 1);
+                  }
+  
+                  // BUG: need to remove item.id if its already selected before
+                  setDiet((prevDiet) => [...prevDiet, item.id]);
+                  // BUG: need to change colour when selected
+                 }}
+                > 
+                 <Text style={styles.itemText}><Icon name="check" size={20} color="black"/>{item.title}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+          <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("Allergies")}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
+          </View>
+
+      
     </SafeAreaView>
   );
 }
@@ -240,20 +259,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
   },
-  addeditem: {
-    marginTop: 10,
-    backgroundColor: 'lavender',
-    borderColor: "black",
-    borderWidth: 1,
-    maxWidth: SCREENWIDTH / 2 - 40,
-    padding: 10,
-    alignItems: "center",
-    borderRadius: 10,
-    justifyContent: "space-around",
-    margin: 5,
-    flex: 0.5,
-    //backgroundColor: 'pink',
-  },
 
   button: {
     backgroundColor: "#8d71ad",
@@ -274,6 +279,20 @@ const styles = StyleSheet.create({
   item: {
     marginTop: 10,
     // backgroundColor: 'green',
+    borderColor: "black",
+    borderWidth: 1,
+    maxWidth: SCREENWIDTH / 2 - 40,
+    padding: 10,
+    alignItems: "center",
+    borderRadius: 10,
+    justifyContent: "space-around",
+    margin: 5,
+    flex: 0.5,
+    //backgroundColor: 'pink',
+  },
+  addeditem: {
+    marginTop: 10,
+    backgroundColor: 'lavender',
     borderColor: "black",
     borderWidth: 1,
     maxWidth: SCREENWIDTH / 2 - 40,
