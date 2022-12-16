@@ -132,6 +132,7 @@ export default function Allergies({ navigation }) {
     ALLERGY_DATA.forEach(element => {
       element.choice = false;
     });
+    console.log("All data selected cleared");
     selected_items_allergy.splice(0, selected_items_allergy.length);
   }
 
@@ -198,19 +199,19 @@ export default function Allergies({ navigation }) {
               onPress={() => {
                 if (item.title == "None") {
                   defaults()
-                  // navigation.navigate("Dislikes")
+                  navigation.navigate("Dislikes")
                   //return ; 
                   // return statement removed since it wasn't actually working 
                   // if Return is added it will not clear the array or put default values. 
                   // to deselect none press the none button in the AddedByYou section 
                 }
-                if (selected_items_allergy.includes(item)) {
+                else if (selected_items_allergy.includes(item) && item.title!="None") {
                   var index = selected_items_allergy.indexOf(item);
                   selected_items_allergy.splice(index, 1);
                   item.choice = !item.choice
                   console.log(item, item.choice);
                   console.log(selected_items_allergy);
-                } else {
+                } else if(!selected_items_allergy.includes(item) && item.title!="None"){
                   selected_items_allergy.push(item);
                   item.choice = !item.choice
                   console.log(item.choice);
