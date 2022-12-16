@@ -1,68 +1,109 @@
 import {
   StyleSheet,
+  Image,
   Text,
   View,
-  Button,
+  ImageBackground,
   Dimensions,
-  SafeAreaView,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import React from "react";
+import Icon from "react-native-vector-icons/FontAwesome"; //this is not the correct arrow, need to change
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
-//Lorem Ipsum Generator
 export default function GettingStartedInfo1({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Icon
-        name="arrow-left"
-        size={20}
-        color="black"
-        type="entypo"
-        onPress={() => navigation.popToTop()}
-      />
-      <View>
+    <SafeAreaView style={styles.gettingStartedOne}>
+      <ImageBackground
+        source={require("../assets/images/Splash1.png")}
+        style={styles.image}
+      >
+        <Icon //Back arrow
+          style={styles.backArrow}
+          name="arrow-left"
+          size={20}
+          color="black"
+          type="entypo"
+          onPress={() => navigation.goBack()}
+        />
         <View style={styles.textContainer}>
-          <Text>
-            Unnamed. Lorem Ipsum is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard
-            dummy text ever since the 1500s, when an unknown printer took a
-            galley of type and scrambled it to make a type specimen book. It has
-            survived not only five centuries, but also the leap into electronic
-            typesetting, remaining essentially unchanged. It was popularised in
-            the 1960s with the release of Letraset sheets containing Lorem Ipsum
-            passages, and more recently with desktop publishing software like
-            Aldus PageMaker including versions of Lorem Ipsum.
+          <Text style={styles.text}>
+            Tell us your nutrient-related diseases, deficiencies and dietary requirements
           </Text>
-          {/* <TouchableOpacity
-            style={styles.altButton}
-            onPress={() => navigation.navigate("GettingStartedInfo2")}
-          >
-            <Text>Show homescreen with the bottom navigation tabs</Text>
-          </TouchableOpacity> */}
-          <Button
-            title="Continue"
-            onPress={() => navigation.navigate("GettingStartedInfo2")}
-          />
-          {/* <Button
-            title="Exit"
-            onPress={() => navigation.navigate("LandingPage")}
-          /> */}
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "#8273A9" }]}
+            // //testing for now, go to Confirm Screen
+              onPress={() => navigation.navigate("GettingStartedInfo2")}
+            >
+            <Text style={styles.buttonText}>Continue</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-    </View>
+      </ImageBackground>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 30,
-    width: SCREENWIDTH,
+  gettingStartedOne: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
+
+  //Back arrow
+  backArrow: {
+    top: 52,
+    left: 16,
+  },
+
   textContainer: {
+    width: SCREENWIDTH,
+    height: SCREENHEIGHT - SCREENHEIGHT / 3,
+    backgroundColor: "transparent",
+    marginTop: SCREENHEIGHT / 3,
+  },
+
+  // Description
+  text: {
+    fontSize: 16,
+    fontFamily: "OpenSans_400Regular",
+    color: "black",
     justifyContent: "center",
     padding: 20,
+    paddingLeft: 25, //increased for clarity
+    paddingRight: 25, //increased for clarity
+    textAlign: "center",
+    top: 315,
+    letterSpacing: -0.2,
+    lineHeight: 24,
+  },
+
+  //Continue button
+  button: { 
+    backgroundColor: "#8273A9",
+    width: "90%",
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    borderRadius: 100,
+    top: 325,
+  },
+
+ //Continue button text
+  buttonText: {
+    fontSize: 16,
+    letterSpacing: 0.1,
+    lineHeight: 20,
+    fontWeight: '700',
+    fontFamily: 'OpenSans_400Regular',
+    color: '#fff',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
+
