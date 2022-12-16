@@ -57,7 +57,6 @@ export default function App() {
     OpenSans_700Bold_Italic,
     OpenSans_800ExtraBold_Italic,
     });
-
   return (
     <NavigationContainer>
       <Stack.Navigator>

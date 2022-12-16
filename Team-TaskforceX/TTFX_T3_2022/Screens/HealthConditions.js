@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome"; //Back Arrow
 import { Searchbar } from "react-native-paper";
@@ -181,13 +182,25 @@ export default function HealthConditions({ navigation }) {
           data={filteredDataSource}
           keyExtractor={(item) => item.id}
           renderItem={ItemView}
+          />
+        </View>
+        <Text style={styles.text}>Added by you</Text>
+        <View>
+        <FlatList
+          data={selected_items_health}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <TouchableOpacity style={styles.preference}>
+                <Text style={styles.itemText}>{item.title}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         />
-      </View>
-      <View>
-        {AddedByYou()}
-      </View>
-      <Text style={styles.text}>Most Common</Text>
-      <FlatList
+        </View>
+        <Text style={styles.text}>Most Common</Text>
+        <FlatList
         data={HEALTH_DATA}
         numColumns={2}
         keyExtractor={(item) => item.id}
@@ -223,14 +236,14 @@ export default function HealthConditions({ navigation }) {
             </TouchableOpacity>
           </View>
         )}
-      />
-
-      <TouchableOpacity
+        />
+        <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate("Preferences")}
-      >
+        >
         <Text style={styles.buttonText}>Continue</Text>
-      </TouchableOpacity>
+        </TouchableOpacity>
+
     </SafeAreaView>
   );
 }
