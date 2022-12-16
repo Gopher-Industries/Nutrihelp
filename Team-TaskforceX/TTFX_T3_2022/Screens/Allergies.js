@@ -11,56 +11,24 @@ import {
   FlatList,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { FilterChip } from "./Components/FilterChip";
 import { Searchbar } from "react-native-paper";
+import { firebase } from "../config";
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
 const ALLERGY_DATA = [
-  { id: "1", title: "None" },
-  { id: "2", title: "Soy" },
-  { id: "3", title: "Dairy" },
-  { id: "4", title: "Fish" },
-  { id: "5", title: "Eggs" },
-  { id: "6", title: "Gluten" },
-  { id: "7", title: "Test" },
+  { id: "1", title: "None", choice: false },
+  { id: "2", title: "Soy", choice: false },
+  { id: "3", title: "Dairy", choice: false },
+  { id: "4", title: "Fish", choice: false },
+  { id: "5", title: "Eggs", choice: false },
+  { id: "6", title: "Gluten", choice: false },
+  { id: "7", title: "Test", choice: false },
 ];
 
 export const selected_items_allergy = [];
-
-const searchFilterFunction = (text) => {
-  // Check if searched text is not blank
-  if (text) {
-    // Inserted text is not blank
-    // Filter the masterDataSource and update FilteredDataSource
-    const newData = ALLERGY_DATA.filter(function (item) {
-      // Applying filter for the inserted text in search bar
-      const itemData = item.title ? item.title.toUpperCase() : "".toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    setFilteredDataSource(newData);
-    setSearchQuery(text);
-  } else {
-    // Inserted text is blank
-    // Update FilteredDataSource with masterDataSource
-    setFilteredDataSource(ALLERGY_DATA);
-    setSearchQuery(text);
-  }
-};
-
-const ItemView = ({ item }) => {
-  if (searchQuery.length > 0) {
-    return (
-      // Flat List Item
-      <Text style={styles.listStyle} onPress={() => getItem(item)}>
-        {item.title}
-      </Text>
-    );
-  } else {
-    return <View></View>;
-  }
-};
 
 const getItem = (item) => {
   // Function for click on an item
@@ -86,7 +54,8 @@ export default function Allergies({ navigation }) {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = ALLERGY_DATA.filter(function (item) {
+      var difference = ALLERGY_DATA.filter(x => selected_items_allergy.indexOf(x) === -1);
+      const newData = difference.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
           ? item.title.toUpperCase()
@@ -99,7 +68,7 @@ export default function Allergies({ navigation }) {
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(ALLERGY_DATA);
+      setFilteredDataSource(null);
       setSearchQuery(text);
     }
   };
@@ -137,7 +106,17 @@ export default function Allergies({ navigation }) {
               renderItem={({ item }) => (
                 <View style={styles.item}>
                   <TouchableOpacity
-                    style={styles.preference}>
+                    style={styles.preference}
+                    onPress={() => {
+                      var index = selected_items_allergy.indexOf(item);
+                      selected_items_allergy.splice(index, 1);
+                      item.choice = !item.choice
+                      console.log(item, item.choice);
+                      console.log(selected_items_allergy);
+                      // BUG: need to remove item.id if its already selected before
+                      setAllergy((prevAllergy) => [...prevAllergy, item.id]);
+                    }}
+                  >
                     <Text style={styles.itemText}>{item.title}</Text>
                   </TouchableOpacity>
                 </View>
@@ -147,6 +126,14 @@ export default function Allergies({ navigation }) {
         </View>
       )
     }
+  }
+
+  const defaults = () => {
+    ALLERGY_DATA.forEach(element => {
+      element.choice = false;
+    });
+    console.log("All data selected cleared");
+    selected_items_allergy.splice(0, selected_items_allergy.length);
   }
 
   //For troubleshooting
@@ -175,7 +162,26 @@ export default function Allergies({ navigation }) {
         <FlatList
           data={filteredDataSource}
           keyExtractor={(item) => item.id}
-          renderItem={ItemView}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <TouchableOpacity
+                style={styles.preference}
+                onPress={() => {
+                  //setIsSelected(!isSelected)
+                  setSearchQuery("");
+                  selected_items_allergy.push(item);
+                  item.choice = !item.choice
+                  console.log(item, item.choice);
+                  var index0 = filteredDataSource.indexOf(item);
+                  filteredDataSource.splice(index0, 1);
+                  setAllergy((prevDiet) => [...prevDiet, item.id]);
+                }}
+              >
+                <Text style={styles.itemText}>{item.title}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
         />
       </View>
       <View>
@@ -187,29 +193,31 @@ export default function Allergies({ navigation }) {
         numColumns={2}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.item}>
+          <View {...{ style: item.choice ? styles.addeditem : styles.item }}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                //setIsSelected(!isSelected)
-                if(item.title=="None")
-                {
-                  navigation.navigate('Dislikes');
-                  selected_items_allergy.splice(0,selected_items_allergy.length);
-                  return;
+                if (item.title == "None") {
+                  defaults()
+                  navigation.navigate("Dislikes")
+                  //return ; 
+                  // return statement removed since it wasn't actually working 
+                  // if Return is added it will not clear the array or put default values. 
+                  // to deselect none press the none button in the AddedByYou section 
                 }
-                if (selected_items_allergy.includes(item)) {
+                else if (selected_items_allergy.includes(item) && item.title!="None") {
                   var index = selected_items_allergy.indexOf(item);
                   selected_items_allergy.splice(index, 1);
+                  item.choice = !item.choice
+                  console.log(item, item.choice);
                   console.log(selected_items_allergy);
-                } else {
+                } else if(!selected_items_allergy.includes(item) && item.title!="None"){
                   selected_items_allergy.push(item);
+                  item.choice = !item.choice
+                  console.log(item.choice);
                   console.log(selected_items_allergy);
                 }
-
-                // BUG: need to remove item.id if its already selected before
                 setAllergy((prevAllergy) => [...prevAllergy, item.id]);
-                // BUG: need to change colour when selected
               }}
             >
               <Text style={styles.itemText}>{item.title}</Text>
@@ -220,7 +228,12 @@ export default function Allergies({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Dislikes")}
+        onPress={() => {
+          if (selected_items_allergy.length == 0) {
+            selected_items_allergy.push(ALLERGY_DATA[0]);
+          }
+          navigation.navigate("Dislikes")
+        }}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -247,7 +260,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
   },
-
+  addeditem: {
+    marginTop: 10,
+    backgroundColor: 'lavender',
+    borderColor: "black",
+    borderWidth: 1,
+    maxWidth: SCREENWIDTH / 2 - 40,
+    padding: 10,
+    alignItems: "center",
+    borderRadius: 10,
+    justifyContent: "space-around",
+    margin: 5,
+    flex: 0.5,
+  },
   button: {
     backgroundColor: "#8d71ad",
     height: 55,
