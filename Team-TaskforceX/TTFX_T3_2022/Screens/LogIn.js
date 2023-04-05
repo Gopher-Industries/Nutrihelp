@@ -5,12 +5,15 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from "react-native";
 import { TextInput as RNPTextInput } from "react-native-paper";
 //google auth
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 import * as React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // refresh token
+import * as AuthSession from 'expo-auth-session'; // revoke token 
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -20,8 +23,11 @@ const SCREENWIDTH = Dimensions.get("window").width;
 
 export default function CreateAccount({ navigation }) {
 
-  const [accessToken, setAccessToken] = React.useState();
+  // const [accessToken, setAccessToken] = React.useState(); // don't need this as we are using Auth to persist the login with google 
   const [user, setUser] = React.useState(null);
+  const [auth,setAuth] = React.useState();
+  const [requireRefresh, setRequireRefresh] = React.useState(false);
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: "27081580903-20un610dr5cchg6cqkni4uo0t428h31k.apps.googleusercontent.com", //webclient id
     iosClientId: "27081580903-vi9btr7cke1n3k8ka21m5tfamcbldlfk.apps.googleusercontent.com ", //iOs Client ID
@@ -29,23 +35,62 @@ export default function CreateAccount({ navigation }) {
   });
 
   React.useEffect(() => {
-    console.log(response)
+    // console.log(response)
     if (response?.type === "success") {
-      setAccessToken(response.authentication.accessToken);
+      // setAccessToken(response.authentication.accessToken); // no need for this since we are using setAuth 
+      setAuth(response.authentication);
       // if we have access token we are trying to get user info 
+
+      const persistAuth = async () => {
+        await AsyncStorage.setItem("auth", JSON.stringify(response.authentication)) // auth is key
+      };
+      persistAuth();
     }
   }, [response])
 
-  async function fetchUserInfo() {
+
+  React.useEffect(()=>{ //setting up persistence if already logged in 
+    const getPersistedAuth = async () =>{
+      const jsonVal = await AsyncStorage.getItem("auth"); // key used here
+      if(jsonVal !=null)
+      {
+        const authJson = JSON.parse(jsonVal);
+        setAuth(authJson);
+        // console.log(authJson);// showing only auth path 
+
+        console.log("Token life:")
+        console.log(AuthSession.TokenResponse.isTokenFresh());
+
+        setRequireRefresh(!AuthSession.TokenResponse.isTokenFresh({
+          expiresIn:authJson.expiresIn,
+          issuedAt: authJson.issuedAt
+        }));
+      }
+    };
+    getPersistedAuth()
+  },[])
+
+  async function fetchUserInfo() { //getting user details 
     let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: { Authorization: `Bearer ${accessToken}` }
+      headers: { Authorization: `Bearer ${auth.authentication.accessToken}` } // change from access token to auth since we don't need anymore
     });
     
-
     response.json().then(data=>{
+      console.log(data); // login data of user
       setUser(data);
     })
   }
+
+  const Logout = async () =>{ // we logout by revoking token 
+     await AuthSession.revokeAsync({
+      token: auth.accessToken // we can also revoke refresh token 
+     },{
+      revocationEndpoint: "https://oauth2.googleapis.com/revoke" 
+     });
+     setAuth(undefined); // removing Auth 
+     setUser(undefined);
+     await AsyncStorage.removeItem("auth"); // removing from persistence 
+  };
 
   const showUserInfo = () => {
     if (user) {
@@ -57,9 +102,59 @@ export default function CreateAccount({ navigation }) {
     }
   }
 
+
+
+  // platform check for refresh 
+  const getclientID = () =>{
+    if(Platform.OS=== "android")
+    {
+      return "27081580903-hvgc8op2ois587c22i6jsm56gju02irq.apps.googleusercontent.com" ;
+    }
+    else if(Platform.OS === 'web')
+    {
+      return "27081580903-20un610dr5cchg6cqkni4uo0t428h31k.apps.googleusercontent.com";
+    }
+    else if(Platform.OS === "ios")
+    {
+      return "27081580903-vi9btr7cke1n3k8ka21m5tfamcbldlfk.apps.googleusercontent.com";
+    }
+    else {
+      console.log("Invalid input")
+    }
+  }
+
+  const refreshToken = async () => {
+    const clientId = getclientID();
+    // console.log(auth);
+    const tokenResult = await AuthSession.refreshAsync({
+      clientId: clientId,
+      refreshToken: auth.refreshToken
+    },{
+      tokenEndpoint:"https://www.googleapis.com/oauth2/v4/token"
+    });
+    
+    tokenResult.refreshToken = auth.refreshToken;
+
+    setAuth(tokenResult);
+    await AsyncStorage.setItem("auth",JSON.stringify(tokenResult));
+    setRequireRefresh(false);
+  }
+
+  if(requireRefresh){
+    return (
+      <View>
+        <TouchableOpacity
+        style={styles.button}
+        onPress={refreshToken}>
+        <Text style={styles.buttonText}>Token Requires Refresh</Text>
+      </TouchableOpacity>
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container}>
-      {showUserInfo()}
+      {/* {showUserInfo()} */}
       <View>
         <Text style={styles.title}>Login</Text>
         <Text style={styles.text}>Welcome back!</Text>
@@ -113,10 +208,14 @@ export default function CreateAccount({ navigation }) {
       <View>
         <TouchableOpacity
           style={styles.altButton}
-          onPress={accessToken ? fetchUserInfo : () => promptAsync({useProxy:true,showInRecents:true })}>
+          onPress={auth ? fetchUserInfo : () => promptAsync({useProxy:true,showInRecents:true })}>
             {/* // if we have access token we are trying to get user info  */}
           <Text style={styles.altButtonText}>Continue with Google</Text>
         </TouchableOpacity>
+        {auth ? <TouchableOpacity 
+        onPress={Logout}>
+        <Text style={styles.altButtonText}>Logout from Google</Text>
+        </TouchableOpacity> :undefined } 
       </View>
     </View>
   );
