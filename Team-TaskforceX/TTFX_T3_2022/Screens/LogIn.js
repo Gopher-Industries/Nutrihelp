@@ -20,34 +20,38 @@ const SCREENWIDTH = Dimensions.get("window").width;
 
 export default function CreateAccount({ navigation }) {
 
-  const [accessToken, setAccessToken] = React.useState(null);
+  const [accessToken, setAccessToken] = React.useState();
   const [user, setUser] = React.useState(null);
-  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    clientId: "53215678571-cfnf974taddd6r8tjgai11sc60v82rqm.apps.googleusercontent.com", //webclient id
-    iosClientId: " ",//add Android/iOs Client ID here
-    androidClientId: ""
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: "27081580903-20un610dr5cchg6cqkni4uo0t428h31k.apps.googleusercontent.com", //webclient id
+    iosClientId: "27081580903-vi9btr7cke1n3k8ka21m5tfamcbldlfk.apps.googleusercontent.com ", //iOs Client ID
+    androidClientId: "27081580903-hvgc8op2ois587c22i6jsm56gju02irq.apps.googleusercontent.com" //android client id
   });
 
   React.useEffect(() => {
+    console.log(response)
     if (response?.type === "success") {
       setAccessToken(response.authentication.accessToken);
-      accessToken && fetchUserInfo(); // if we have access token we are trying to get user info 
+      // if we have access token we are trying to get user info 
     }
-  }, [response, accessToken])
+  }, [response])
 
   async function fetchUserInfo() {
     let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
-    const userInfo = await repsonse.json();
-    setUser(userInfo);
+    
+
+    response.json().then(data=>{
+      setUser(data);
+    })
   }
 
   const showUserInfo = () => {
     if (user) {
-      return (
-        <View>
-          <Text>Welcome: {user.name}</Text>
+      return(
+        <View style={styles.text}>
+          <Text>Welcome {user.name}</Text>
         </View>
       )
     }
@@ -55,6 +59,7 @@ export default function CreateAccount({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {showUserInfo()}
       <View>
         <Text style={styles.title}>Login</Text>
         <Text style={styles.text}>Welcome back!</Text>
@@ -108,7 +113,8 @@ export default function CreateAccount({ navigation }) {
       <View>
         <TouchableOpacity
           style={styles.altButton}
-          onPress={() => promptAsync()}>
+          onPress={accessToken ? fetchUserInfo : () => promptAsync({useProxy:true,showInRecents:true })}>
+            {/* // if we have access token we are trying to get user info  */}
           <Text style={styles.altButtonText}>Continue with Google</Text>
         </TouchableOpacity>
       </View>

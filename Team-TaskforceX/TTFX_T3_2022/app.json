@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "ttfxrebuildattempt",
+    "slug": "ttfxrebuildattempt",
+    "version": "1.0.0",
+    "scheme": "com.gopher.nutrihelp",
+    "sdkVersion": "47.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gopher.nutrihelp"
+    },
+    "android": {
+      "package": "com.gopher.nutrihelp"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a97f77ae-5bd2-4a73-9289-ac449133cd0c"
+      }
+    }
+  }
+}
