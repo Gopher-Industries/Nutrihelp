@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
@@ -45,6 +44,8 @@ export default function CreateAccount({ navigation }) {
         await AsyncStorage.setItem("auth", JSON.stringify(response.authentication)) // auth is key
       };
       persistAuth();
+      fetchUserInfo();
+      navigation.navigate("TodaysPlan")
     }
   }, [response])
 
@@ -58,8 +59,8 @@ export default function CreateAccount({ navigation }) {
         setAuth(authJson);
         // console.log(authJson);// showing only auth path 
 
-        console.log("Token life:")
-        console.log(AuthSession.TokenResponse.isTokenFresh());
+        // console.log("Token life:")
+        // console.log(AuthSession.TokenResponse.isTokenFresh());
 
         setRequireRefresh(!AuthSession.TokenResponse.isTokenFresh({
           expiresIn:authJson.expiresIn,
@@ -70,9 +71,9 @@ export default function CreateAccount({ navigation }) {
     getPersistedAuth()
   },[])
 
-  async function fetchUserInfo() { //getting user details 
+  const fetchUserInfo = async () => { //getting user details 
     let response = await fetch("https://www.googleapis.com/userinfo/v2/me", {
-      headers: { Authorization: `Bearer ${auth.authentication.accessToken}` } // change from access token to auth since we don't need anymore
+      headers: { Authorization: `Bearer ${auth.accessToken}` } // change from access token to auth since we don't need anymore
     });
     
     response.json().then(data=>{
@@ -80,17 +81,6 @@ export default function CreateAccount({ navigation }) {
       setUser(data);
     })
   }
-
-  const Logout = async () =>{ // we logout by revoking token 
-     await AuthSession.revokeAsync({
-      token: auth.accessToken // we can also revoke refresh token 
-     },{
-      revocationEndpoint: "https://oauth2.googleapis.com/revoke" 
-     });
-     setAuth(undefined); // removing Auth 
-     setUser(undefined);
-     await AsyncStorage.removeItem("auth"); // removing from persistence 
-  };
 
   const showUserInfo = () => {
     if (user) {
@@ -101,7 +91,6 @@ export default function CreateAccount({ navigation }) {
       )
     }
   }
-
 
 
   // platform check for refresh 
@@ -138,19 +127,31 @@ export default function CreateAccount({ navigation }) {
     setAuth(tokenResult);
     await AsyncStorage.setItem("auth",JSON.stringify(tokenResult));
     setRequireRefresh(false);
-  }
+  };
 
-  if(requireRefresh){
-    return (
-      <View>
-        <TouchableOpacity
-        style={styles.button}
-        onPress={refreshToken}>
-        <Text style={styles.buttonText}>Token Requires Refresh</Text>
-      </TouchableOpacity>
-      </View>
-    )
-  }
+  // if(requireRefresh){
+  //   return (
+  //     <View>
+  //       <TouchableOpacity
+  //       style={styles.button}
+  //       onPress={refreshToken}>
+  //       <Text style={styles.buttonText}>Token Requires Refresh</Text>
+  //     </TouchableOpacity>
+  //     </View>
+  //   )
+  // }
+
+  
+  const Logout = async () =>{ // we logout by revoking token 
+    await AuthSession.revokeAsync({
+     token: auth.accessToken // we can also revoke refresh token 
+    },{
+     revocationEndpoint: "https://oauth2.googleapis.com/revoke" 
+    });
+    setAuth(undefined); // removing Auth 
+    setUser(undefined);
+    await AsyncStorage.removeItem("auth"); // removing from persistence 
+ };
 
   return (
     <View style={styles.container}>
