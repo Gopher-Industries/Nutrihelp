@@ -22,6 +22,7 @@ import Notifications from "./Screens/Notifications";
 import TodaysPlan from "./Screens/TodaysPlan";
 import NutritionalReport from "./Screens/NutritionalReport";
 import LogIn from "./Screens/LogIn";
+import GoogleAuthScreen from "./Screens/GoogleAuthScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -134,6 +135,11 @@ export default function App() {
         <Stack.Screen
           name="LogIn"
           component={LogIn}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="GoogleAuthScreen"
+          component={GoogleAuthScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
