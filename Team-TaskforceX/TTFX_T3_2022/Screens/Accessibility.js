@@ -2,21 +2,20 @@ import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View, Pressable, Image, Switch,TouchableOpacity } from "react-native";
 import * as React from "react";
 import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useRoute } from "@react-navigation/native"
 //import './Accessibility.css';
 
-//const colourBlind = useState(false);
 
-export default function Accessibility({navigation}) {
+
+const Accessibility = () => {
   const [switchColour, setColourValue] = useState(false);
   //toggle colourblind mode
- // const handleColourBlind = () => {
-    //setColourValue(!switchColour);
-    //colourBlind = !colourBlind;
- // };
-
+  
+  const navigation = useNavigation();
   const [switchVoice, setVoiceValue] = useState(false);
-  //const [colourblind, setColourBlind] = useState(false);
 
   // text size
   const [isLarge, setIsLarge] = useState(false);
@@ -37,6 +36,11 @@ const handleNormalPress = () => {
   }
 };
 
+
+const updateSwitchColour = (newColour) => {
+  setColourValue(newColour);
+  navigation.setParams(newColour)
+}
 
 
 //stylesheet
@@ -113,7 +117,7 @@ const handleNormalPress = () => {
       width: "100%",
       height: "100%",
     },
-    leadingIcon: { //go back icon
+    backButton: { //go back icon
       position: "absolute",
       left: 16,
       top: 5,
@@ -279,7 +283,7 @@ const handleNormalPress = () => {
     isNormalPressed && styles.purpleBackground,
   ];
 //export text size and colourblind settings
-  module.exports = {switchColour, isLarge};
+  //module.exports = {switchColour, isLarge};
 
 //main body
 
@@ -296,22 +300,19 @@ const handleNormalPress = () => {
       <Text style={styles.voiceOver}>Voice Over</Text>
       <StatusBar barStyle="default" translucent={true} />
       <View style={styles.topAppBar}>
-        <Pressable 
-          style={styles.leadingIcon}
-          onPress={() => navigation.goBack()}
-        >
-          <Image
-            style={styles.icon}
-            resizeMode="cover"
-            source={require("../assets/leadingicon12.png")}
-          />
-        </Pressable>
+      <Icon style={styles.backButton}
+        name="arrow-left"
+        size={20}
+        color="black"
+        type="entypo"
+        onPress={() => navigation.goBack()}
+      />
         <Text style={styles.headline}>{`Accessibility  `}</Text>
       </View>
       <Switch //colourblind switch
         style={styles.colourSwitch}
         value={switchColour}
-        onValueChange={setColourValue}
+        onValueChange = {setColourValue}
         thumbColor="#fff"
         trackColor={{ false: "#79747e", true: "#8273a9" }}
       />
@@ -324,7 +325,7 @@ const handleNormalPress = () => {
       />
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={() => navigation.navigate("CreateAccount")}
+        onPress={() => navigation.navigate("CreateAccount", { switchColour, isLarge})}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -350,3 +351,4 @@ const handleNormalPress = () => {
   );
 };
 
+export default Accessibility;
