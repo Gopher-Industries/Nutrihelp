@@ -1,6 +1,11 @@
 import { View, Text } from "react-native";
+import GoogleAuthScreen from "../../GoogleAuthScreen";
 
 export default function ViewNutritionReport({ navigation }) {
+  function signout() {
+    // GoogleAuth.Logout();
+    navigation.navigate("LandingPage")
+  }
   return (
     <View
       style={{
@@ -36,8 +41,7 @@ export default function ViewNutritionReport({ navigation }) {
           backgroundColor: "#c4cdd4",
           borderRadius: 25,
         }}
-        onPress={() => navigation.navigate("LandingPage")}
-      >
+        onPress={signout}>
         Sign out
       </Text>
     </View>
