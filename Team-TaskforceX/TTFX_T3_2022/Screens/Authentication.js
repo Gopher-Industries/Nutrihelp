@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,54 +9,26 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { TextInput as RNPTextInput } from "react-native-paper";
+import { useRoute } from '@react-navigation/native';
+import { useEffect } from "react";
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
-export default function Authentication({ navigation }) {
-  return (
-    <View style={styles.container}>
-      <Icon //Back arrow
-        style={styles.backArrow}
-        name="arrow-left"
-        size={20}
-        color="black"
-        type="entypo"
-        onPress={() => navigation.goBack()}
-      />
-      <View>
-        <Text style={styles.title}>Two Factor Authentication</Text>
-        <Text style={styles.textOne}>Protecting your information is very important to NutriHelp</Text>
-        <Text style={styles.textTwo}>Please verify your account by entering the 6-digit code sent to your email address</Text>
-      </View>
-      <RNPTextInput //2FA field
-        style={styles.twoFactorTextInputRNPTextInput}
-        placeholder="6-Digit Code"
-        label="6-Digit Code"
-        mode="outlined"
-        activeOutlineColor="#8273a9"
-        theme={{
-          fonts: { fontFamily: "OpenSans_400Regular", fontWeight: '600',  },
-          colors: {text: "black"},
-        }}
-      />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Profile")}
-      >
-      <Text style={styles.buttonText}>Verify Code</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
+export default function Authentication({ navigation }) {
+  const route = useRoute();
+  const isLarge = route.params?.isLarge;
+  const switchColour = route.params?.switchColour;
+
+
+  const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFBFE",
     padding: 16,
   },
-
+  
   //Back Arrow
   backArrow: {
     marginTop: 52,
@@ -63,9 +36,9 @@ const styles = StyleSheet.create({
 
   //Main Title
   title: { 
-    fontSize: 24,
+    fontSize: isLarge ? 30 : 24,
     fontFamily: "OpenSans_400Regular",
-    color: "black",
+    color: switchColour ? "red" : "black",
     marginTop: 32,
     lineHeight: 32,
   },
@@ -128,4 +101,42 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+
+  return (
+    <View style={styles.container}>
+      <Icon //Back arrow
+        style={styles.backArrow}
+        name="arrow-left"
+        size={20}
+        color="black"
+        type="entypo"
+        onPress={() => navigation.goBack()}
+      />
+      <View>
+        <Text style={styles.title}>Two Factor Authentication</Text>
+        <Text style={styles.textOne}>Protecting your information is very important to NutriHelp</Text>
+        <Text style={styles.textTwo}>Please verify your account by entering the 6-digit code sent to your email address</Text>
+      </View>
+      <RNPTextInput //2FA field
+        style={styles.twoFactorTextInputRNPTextInput}
+        placeholder="6-Digit Code"
+        label="6-Digit Code"
+        mode="outlined"
+        activeOutlineColor="#8273a9"
+        theme={{
+          fonts: { fontFamily: "OpenSans_400Regular", fontWeight: '600',  },
+          colors: {text: "black"},
+        }}
+      />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Profile")}
+      >
+      <Text style={styles.buttonText}>Verify Code</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
