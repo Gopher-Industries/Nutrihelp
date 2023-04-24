@@ -38,7 +38,7 @@ export default function Authentication({ navigation }) {
   title: { 
     fontSize: isLarge ? 30 : 24,
     fontFamily: "OpenSans_400Regular",
-    color: switchColour ? "red" : "black",
+    color: "black",
     marginTop: 32,
     lineHeight: 32,
   },
@@ -59,7 +59,7 @@ export default function Authentication({ navigation }) {
     marginTop: 40,
     marginBottom: SCREENHEIGHT / 4,
     color: "black",
-    fontSize: 16,
+    fontSize: isLarge ? 20 : 16,
     letterSpacing: 0.1,
     lineHeight: 20,
     fontWeight: '600',
@@ -71,7 +71,7 @@ export default function Authentication({ navigation }) {
     marginTop: -150,
     marginBottom: SCREENHEIGHT / 4,
     color: "black",
-    fontSize: 16,
+    fontSize: isLarge ? 20 : 16,
     letterSpacing: 0.1,
     lineHeight: 20,
     fontWeight: '600',
@@ -80,17 +80,23 @@ export default function Authentication({ navigation }) {
 
   //Verify code button
   button: {
+    position: "absolute",
+    top: 685,
+    left: 26,
     borderRadius: 100,
-    height: 40,
+    backgroundColor: switchColour ? "#f54242": "#8273a9",
+    width: 328,
+    overflow: "hidden",
+    flexDirection: "column",
+    paddingHorizontal: 24,
+    paddingVertical: 10,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#8d71ad",
-    marginTop: 273,
   },
 
   //Verify code button text
   buttonText: {
-    fontSize: 16,
+    fontSize: isLarge ? 20 : 16,
     letterSpacing: 0.1,
     lineHeight: 20,
     fontWeight: '700',
@@ -132,7 +138,7 @@ export default function Authentication({ navigation }) {
       />
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Profile")}
+        onPress={() => navigation.navigate("Profile",{ switchColour, isLarge})}
       >
       <Text style={styles.buttonText}>Verify Code</Text>
       </TouchableOpacity>

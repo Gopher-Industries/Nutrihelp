@@ -54,7 +54,7 @@ export default function CreateAccount({ navigation }) {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: switchColour ? "red": '#FFFBFE',
+      backgroundColor: '#FFFBFE',
       padding: 16,
     },
   
@@ -111,7 +111,7 @@ export default function CreateAccount({ navigation }) {
       height: 40,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "#8d71ad",
+      backgroundColor:  switchColour ? "red":"#8273a9",
       marginTop: 160,
       marginBottom: 32,
     },
