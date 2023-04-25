@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome"; //Wrong arrow, need to change
 import { TextInput as RNPTextInput } from "react-native-paper";
+import {switchColour , isLarge } from "./Accessibility";
+import { useRoute } from '@react-navigation/native';
 
 export default function CreateAccount({ navigation }) {
   const [email, setEmail] = useState("");
@@ -15,6 +17,11 @@ export default function CreateAccount({ navigation }) {
   const [password, setPassword] = useState("");
   const [passwordConfrim, setPasswordConfirm] = useState("");
   const [checkValidEmail, setCheckValidEmail] = useState("");
+
+  const route = useRoute();
+  const isLarge = route.params?.isLarge;
+  const switchColour = route.params?.switchColour;
+  
 
   const handleCheckEmail = (val) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -43,6 +50,86 @@ export default function CreateAccount({ navigation }) {
       setCheckValidEmail('');
     }
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#FFFBFE',
+      padding: 16,
+    },
+  
+    //Back Arrow
+    backArrow: {
+      marginTop: 32,
+    },
+  
+    //Title
+    title: {
+      fontSize: isLarge ? 30 : 24,
+      fontFamily: "OpenSans_400Regular",
+      color: "black",
+      marginTop: 32,
+      marginBottom: 16,
+      lineHeight: 32,
+    },
+  
+    //User input fields
+    TextInputRNPTextInput: {
+      borderRadius: 4,
+      borderColor: "black",
+      borderStyle: "solid",
+      width: 361,
+      height: 56,
+      backgroundColor: "#FFFBFE",
+      marginTop: 16,
+    },
+  
+    //Small text
+    text: {
+      color: "black",
+      fontSize: isLarge ? 16: 12,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '600',
+      fontFamily: 'OpenSans_400Regular',
+      marginTop: 8,
+    },
+  
+    //Validation text
+    emailValidationText: {
+      color: "red",
+      fontSize: isLarge ? 16: 12,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '600',
+      fontFamily: 'OpenSans_400Regular',
+    },
+  
+    //Continue button
+    button: {
+      borderRadius: 100,
+      height: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor:  switchColour ? "red":"#8273a9",
+      marginTop: 160,
+      marginBottom: 32,
+    },
+  
+    //Continue button text
+    buttonText: {
+      fontSize: isLarge ? 20: 16,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '700',
+      fontFamily: 'OpenSans_400Regular',
+      color: '#fff',
+      textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
+  
 
   return (
     <View style={styles.container}>
@@ -138,7 +225,7 @@ export default function CreateAccount({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Authentication")}
+        onPress={() => navigation.navigate("Authentication",{ switchColour, isLarge})}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -146,81 +233,3 @@ export default function CreateAccount({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFBFE",
-    padding: 16,
-  },
-
-  //Back Arrow
-  backArrow: {
-    marginTop: 32,
-  },
-
-  //Title
-  title: {
-    fontSize: 24,
-    fontFamily: "OpenSans_400Regular",
-    color: "black",
-    marginTop: 32,
-    marginBottom: 16,
-    lineHeight: 32,
-  },
-
-  //User input fields
-  TextInputRNPTextInput: {
-    borderRadius: 4,
-    borderColor: "black",
-    borderStyle: "solid",
-    width: 361,
-    height: 56,
-    backgroundColor: "#FFFBFE",
-    marginTop: 16,
-  },
-
-  //Small text
-  text: {
-    color: "black",
-    fontSize: 12,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '600',
-    fontFamily: 'OpenSans_400Regular',
-    marginTop: 8,
-  },
-
-  //Validation text
-  emailValidationText: {
-    color: "red",
-    fontSize: 12,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '600',
-    fontFamily: 'OpenSans_400Regular',
-  },
-
-  //Continue button
-  button: {
-    borderRadius: 100,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#8d71ad",
-    marginTop: 160,
-    marginBottom: 32,
-  },
-
-  //Continue button text
-  buttonText: {
-    fontSize: 16,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '700',
-    fontFamily: 'OpenSans_400Regular',
-    color: '#fff',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
