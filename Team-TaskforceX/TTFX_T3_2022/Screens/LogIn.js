@@ -10,7 +10,6 @@ import { TextInput as RNPTextInput } from "react-native-paper";
 import * as React from 'react';
 
 
-
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
