@@ -12,14 +12,129 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import { PermissionsAndroid, Platform } from 'react-native';
+
+//import { BleManager } from 'react-native-ble-plx'
+//import Contacts from 'react-native-contacts';
+//import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions'; //perissions for IOS
+//import { launchCamera } from 'react-native-image-picker';
 
 const Permissions = () => {
   const [cameraSwitchValue, setCameraSwitchValue] = useState(false);
+  const [locationSwitchValue, setLocationSwitchValue] = useState(false);
   const [contactsSwitchValue, setContactsSwitchValue] = useState(false);
   const [bluetoothSwitchValue, setBluetoothSwitchValue] = useState(false);
-  const navigation = useNavigation();
-  const [locationSwitchValue, setLocationSwitchValue] = useState(false);
   const [healthSwitchValue, setHealthSwitchValue] = useState(false);
+  const navigation = useNavigation();
+
+  
+
+  //handle camera permissions
+  const handleCameraSwitch = async (value) => {
+    setCameraSwitchValue(value);
+    
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera Permission',
+          message: 'App needs access to camera',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        },
+      );
+
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        setCameraSwitchValue(false);
+        return;
+      }
+    } 
+  };
+  //handle location permissions
+  const handleLocationSwitch = async (value) => {
+    setLocationSwitchValue(value);
+
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'App needs access to location',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        },
+      );
+
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        setLocationSwitchValue(false);
+        return;
+      }
+    } 
+  };
+  //handle contacts permissions
+  const handleContactsSwitch = async (value) => {
+    setContactsSwitchValue(value);
+  
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        {
+          title: 'Contacts Permission',
+          message: 'App needs access to contacts',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        },
+      );
+  
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        setContactsSwitchValue(false);
+        return;
+      }
+    } 
+  };
+  //handle bluetooth switch
+  const handleBluetoothSwitch = async (value) => {
+    setBluetoothSwitchValue(value);
+  
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        {
+          title: 'Bluetooth Permission',
+          message: 'App needs access to Bluetooth',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        },
+      );
+  
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        setBluetoothSwitchValue(false);
+        return;
+      }
+    }
+    console.log(value);
+  };
+  //handle health switch
+  const handleHealthSwitch = async (value) => {
+    setHealthSwitchValue(value);
+  
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.BODY_SENSORS,
+      {
+        title: 'Heart Rate Permission',
+        message: 'App needs access to heart rate data',
+        buttonPositive: 'OK',
+        buttonNegative: 'Cancel',
+      },
+    );
+    if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+      setHealthSwitchValue(false);
+      return;
+    } 
+  
+  console.log(value)
+};
+
 
   return (
     <View style={styles.permissions}>
@@ -42,38 +157,38 @@ const Permissions = () => {
       />
         <Text style={styles.headline}>Permissions</Text>
       </View>
-      <Switch
+      <Switch //camera
         style={styles.cameraSwitch}
         value={cameraSwitchValue}
-        onValueChange={setCameraSwitchValue}
+        onValueChange={handleCameraSwitch}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
-      <Switch
-        style={styles.contactsSwitch}
-        value={contactsSwitchValue}
-        onValueChange={setContactsSwitchValue}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
-        style={styles.bluetoothSwitch}
-        value={bluetoothSwitchValue}
-        onValueChange={setBluetoothSwitchValue}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
+      <Switch //location
         style={styles.locationSwitch}
         value={locationSwitchValue}
-        onValueChange={setLocationSwitchValue}
+        onValueChange={handleLocationSwitch}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
-      <Switch
+      <Switch //contacts
+        style={styles.contactsSwitch}
+        value={contactsSwitchValue}
+        onValueChange={handleContactsSwitch}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch //bluetooth
+        style={styles.bluetoothSwitch}
+        value={bluetoothSwitchValue}
+        onValueChange={handleBluetoothSwitch}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch //health
         style={styles.healthSwitch}
         value={healthSwitchValue}
-        onValueChange={setHealthSwitchValue}
+        onValueChange={handleHealthSwitch}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
