@@ -22,6 +22,8 @@ const SCREENWIDTH = Dimensions.get("window").width;
 
 export default function GoogleAuthScreen({ navigation }) {
 
+
+  
   const [user, setUser] = React.useState();
   const [auth, setAuth] = React.useState();
   const [requireRefresh, setRequireRefresh] = React.useState(false);
