@@ -22,6 +22,7 @@ export default function CreateAccount({ navigation }) {
   const [passwordConfrim, setPasswordConfirm] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [checkValidPassword, setCheckValidPassword] = useState("");
 
   const route = useRoute();
   const isLarge = route.params?.isLarge;
@@ -172,13 +173,14 @@ export default function CreateAccount({ navigation }) {
     }
   };
   
-  const handlePasswordConfirm = (val) => {
-    if (val != password) {
+  const handlePasswordConfirm = (passwordConfirm) => {
+    if (passwordConfirm !== password) {
       setCheckValidPassword("Passwords do not match");
     } else {
       setCheckValidPassword("");
     }
   };
+  
   <><RNPTextInput //Enter password
 
         style={styles.TextInputRNPTextInput}
@@ -194,22 +196,22 @@ export default function CreateAccount({ navigation }) {
         onChangeText={(value) => {
             setPassword(value);
             handleCheckPassword(value);
-        } } /><RNPTextInput //Confirm password
-
-            style={styles.TextInputRNPTextInput}
-            placeholder="Confirm Password*"
-            label="Confirm Password*"
-            mode="outlined"
-            activeOutlineColor="#8273a9"
-            theme={{
-                fonts: { fontFamily: "OpenSans_400Regular", fontWeight: "600" },
-                colors: { text: "black" },
-            }}
-            secureTextEntry={true}
-            onChangeText={(value) => {
-                setPasswordConfirm(value);
-                handlePasswordConfirm(value);
-            } } /></>
+        } } /><RNPTextInput
+        style={styles.TextInputRNPTextInput}
+        placeholder="Confirm Password*"
+        label="Confirm Password*"
+        mode="outlined"
+        activeOutlineColor="#8273a9"
+        theme={{
+          fonts: { fontFamily: "OpenSans_400Regular", fontWeight: "600" },
+          colors: { text: "black" },
+        }}
+        secureTextEntry={true}
+        onChangeText={(value) => {
+          setPasswordConfirm(value);
+          handlePasswordConfirm(value);
+        }}
+      /></>
   
   {checkValidPassword ? (
     <Text style={styles.passwordValidationText}>{checkValidPassword}</Text>
