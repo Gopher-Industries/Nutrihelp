@@ -13,6 +13,7 @@ import * as Google from 'expo-auth-session/providers/google';
 import * as React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // refresh token
 import * as AuthSession from 'expo-auth-session'; // revoke token 
+import { googleConfig } from "../config";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -22,21 +23,20 @@ const SCREENWIDTH = Dimensions.get("window").width;
 
 export default function GoogleAuthScreen({ navigation }) {
 
-
-  
   const [user, setUser] = React.useState();
   const [auth, setAuth] = React.useState();
   const [requireRefresh, setRequireRefresh] = React.useState(false);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: "27081580903-20un610dr5cchg6cqkni4uo0t428h31k.apps.googleusercontent.com", //webclient id
-    iosClientId: "27081580903-vi9btr7cke1n3k8ka21m5tfamcbldlfk.apps.googleusercontent.com ", //iOs Client ID
-    androidClientId: "27081580903-hvgc8op2ois587c22i6jsm56gju02irq.apps.googleusercontent.com" //android client id
+    clientId: googleConfig.webKey, //webclient id
+    iosClientId: googleConfig.iOsKey, //iOs Client ID
+    androidClientId: googleConfig.androidKey //android client id
+    // keys are moved to the google config file which has firebase setup 
   });
   //you need an expo account login and the tokens 
 
   React.useEffect(() => {
-    console.log(response) // remember to comment 
+    // console.log(response) // remember to comment 
     if (response?.type === "success") {
       setAuth(response.authentication);
       // if we have access token we are trying to get user info 
@@ -45,7 +45,11 @@ export default function GoogleAuthScreen({ navigation }) {
         await AsyncStorage.setItem("auth", JSON.stringify(response.authentication)) // auth is key
       };
       persistAuth();
+      fetchUserInfo(); // to get the user data after login
       navigation.navigate("TodaysPlan") // if success go to todays plan
+    }
+    else if(response?.type === "dismiss" || response?.type === "error" || response?.type === "cancel"){
+      navigation.navigate("LogIn")
     }
   }, [response])
 
@@ -97,13 +101,13 @@ export default function GoogleAuthScreen({ navigation }) {
   // Refresh token is broken for android, check this link https://github.com/expo/expo/issues/12808
   const getclientID = () => {
     if (Platform.OS === "android") {
-      return "27081580903-hvgc8op2ois587c22i6jsm56gju02irq.apps.googleusercontent.com";
+      return googleConfig.androidKey;
     }
     else if (Platform.OS === 'web') {
-      return "27081580903-20un610dr5cchg6cqkni4uo0t428h31k.apps.googleusercontent.com";
+      return googleConfig.webKey;
     }
     else if (Platform.OS === "ios") {
-      return "27081580903-vi9btr7cke1n3k8ka21m5tfamcbldlfk.apps.googleusercontent.com";
+      return googleConfig.iOsKey;
     }
     else {
       console.log("Invalid input")
@@ -141,6 +145,7 @@ export default function GoogleAuthScreen({ navigation }) {
 
 
   async function Logout() { //export this logout somehow to make it work with the sign out in nutrition 
+    // we can't export this function so we use the data from inside. 
     await AuthSession.revokeAsync({
       token: auth.accessToken // we can also revoke refresh token 
     }, {
@@ -151,21 +156,15 @@ export default function GoogleAuthScreen({ navigation }) {
     await AsyncStorage.removeItem("auth"); // removing from persistence 
   }
 
+  function login(){
+    if(!auth)
+    {
+      promptAsync({ useProxy: true, showInRecents: true })
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <View>
-        <TouchableOpacity
-          style={styles.altButton}
-          onPress={auth ? fetchUserInfo : () => promptAsync({ useProxy: true, showInRecents: true })}>
-          {/* // if we have access token we are trying to get user info  */}
-          <Text style={styles.altButtonText}>Continue with Google</Text>
-        </TouchableOpacity>
-        {auth ? <TouchableOpacity
-          onPress={Logout}>
-          <Text style={styles.altButtonText}>Logout from Google</Text>
-        </TouchableOpacity> : undefined}
-      </View>
-    </View>
+    login()
   );
 }
 

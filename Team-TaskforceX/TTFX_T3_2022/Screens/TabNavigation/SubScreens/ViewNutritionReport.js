@@ -1,10 +1,26 @@
 import { View, Text } from "react-native";
-import GoogleAuthScreen from "../../GoogleAuthScreen";
+import * as AuthSession from 'expo-auth-session'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ViewNutritionReport({ navigation }) {
-  function signout() {
-    // GoogleAuth.Logout();
-    navigation.navigate("LandingPage")
+  const signout = async () => {
+    try {
+      if (!__DEV__) { // checking if we are in production
+        // can only be done in production for now we are only using the else to remove the persistence login 
+        await AuthSession.revokeAsync({
+          token: auth.accessToken // we can also revoke refresh token 
+        }, {
+          revocationEndpoint: "https://oauth2.googleapis.com/revoke"
+        });
+        await AsyncStorage.removeItem("auth")
+      }
+      else {
+        await AsyncStorage.removeItem("auth")
+        navigation.navigate("LandingPage")
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     <View
