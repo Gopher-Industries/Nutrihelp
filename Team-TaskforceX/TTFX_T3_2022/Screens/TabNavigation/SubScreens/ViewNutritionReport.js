@@ -16,11 +16,11 @@ export default function ViewNutritionReport({ navigation }) {
       }
       else {
         await AsyncStorage.removeItem("auth")
-        navigation.navigate("LandingPage")
       }
     } catch (error) {
       console.log(error);
     }
+    navigation.navigate("LandingPage")
   }
   return (
     <View
