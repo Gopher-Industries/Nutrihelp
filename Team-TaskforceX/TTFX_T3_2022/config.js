@@ -19,9 +19,9 @@ const firebaseConfig = {
 };
 
 export const googleConfig = {
-  androidKey: "865542999903-a8il0krmfckkf9qenl6v6tvsn25sftqf.apps.googleusercontent.com", // android client id
-  webKey: "865542999903-e20vtt4857cequ4f8dneefnrn8fu2gc6.apps.googleusercontent.com", //webclient id
-  iOsKey: "865542999903-s29730rel8o0oe37oi1bglfu9ii36o4o.apps.googleusercontent.com" //iOs Client ID
+  androidKey: "1048978811841-u04p0rgma4kkjiomtlr8jdqn95qhhhbe.apps.googleusercontent.com", // android client id
+  webKey: "1048978811841-l8d5ns815jd80i93u8vq06r578rpau3j.apps.googleusercontent.com", //webclient id
+  iOsKey: "1048978811841-ef2bc40l3k5pg25kdoiqogsdnvnipg7b.apps.googleusercontent.com" //iOs Client ID
 }
 
 if (!firebase.apps.length) {
