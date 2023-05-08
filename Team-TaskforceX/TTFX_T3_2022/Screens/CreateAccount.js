@@ -14,35 +14,35 @@ import { useRoute } from "@react-navigation/native";
 import { validate } from "email-validator";
 import { zxcvbn } from "zxcvbn";
 import axios from "axios";
+import nodemailer from "nodemailer";
 
 export default function CreateAccount({ navigation }) {
   const [email, setEmail] = useState("");
   const [emailConfirm, setEmailConfirm] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordConfrim, setPasswordConfirm] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [checkValidPassword, setCheckValidPassword] = useState("");
 
   const route = useRoute();
-  const isLarge = route.params?.isLarge;
-  const switchColour = route.params?.switchColour;
+  const { isLarge, switchColour } = route.params || {}
 
   useEffect(() => {
-    if (emailConfirm && email !== emailConfirm) {
-      setEmailErrorMessage("Email addresses must match");
-    } else {
-      setEmailErrorMessage("");
-    }
-  }, [emailConfirm]);
+  if (emailConfirm && email !== emailConfirm) {
+    setEmailErrorMessage("Email addresses must match");
+  } else {
+    setEmailErrorMessage("");
+  }
+}, [emailConfirm, email]);
 
   useEffect(() => {
-    if (passwordConfrim && password !== passwordConfrim) {
-      setPasswordErrorMessage("Passwords must match");
-    } else {
-      setPasswordErrorMessage("");
-    }
-  }, [passwordConfrim]);
+  if (passwordConfirm && password !== passwordConfirm) {
+    setPasswordErrorMessage("Passwords must match");
+  } else {
+    setPasswordErrorMessage("");
+  }
+}, [passwordConfirm, password]);
 
   const validateEmail = (val) => {
     if (!val) {
@@ -74,6 +74,35 @@ export default function CreateAccount({ navigation }) {
         password,
       });
       console.log(response.data);
+
+      // Send Email
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          type: "OAuth2",
+          user: "email@gmail.com",
+          clientId: "client_id",
+          clientSecret: "client_secret",
+          refreshToken: "refresh_token",
+          accessToken: "access_token",
+        },
+      });
+      const mailOptions = {
+        from: "GopherTTFX@gmail.com",
+        to: email,
+        subject: "Email Verification",
+        text: "Please verify your email address to complete registration",
+      };
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
+
       Alert.alert("Account created successfully!");
       navigation.navigate("Home");
     } catch (error) {
@@ -87,12 +116,12 @@ export default function CreateAccount({ navigation }) {
       backgroundColor: "#FFFBFE",
       padding: 16,
     },
-  
+
     //Back Arrow
     backArrow: {
       marginTop: 32,
     },
-  
+
     //Title
     title: {
       fontSize: isLarge ? 30 : 24,
@@ -102,7 +131,7 @@ export default function CreateAccount({ navigation }) {
       marginBottom: 16,
       lineHeight: isLarge ? 32 : 28,
     },
-  
+
     //User input fields
     TextInputRNPTextInput: {
       borderRadius: 4,
@@ -113,7 +142,7 @@ export default function CreateAccount({ navigation }) {
       backgroundColor: "#FFFBFE",
       marginTop: 16,
     },
-  
+
     //Small text
     text: {
       color: "black",
@@ -124,7 +153,7 @@ export default function CreateAccount({ navigation }) {
       fontFamily: "OpenSans_400Regular",
       marginTop: 8,
     },
-  
+
     //Validation text
     emailValidationText: {
       color: "red",
@@ -134,7 +163,7 @@ export default function CreateAccount({ navigation }) {
       fontWeight: "600",
       fontFamily: "OpenSans_400Regular",
     },
-  
+
     //Continue button
     button: {
       borderRadius: 100,
@@ -145,7 +174,7 @@ export default function CreateAccount({ navigation }) {
       marginTop: 160,
       marginBottom: 32,
     },
-  
+
     //Continue button text
     buttonText: {
       fontSize: isLarge ? 20 : 16,
@@ -161,7 +190,7 @@ export default function CreateAccount({ navigation }) {
   });
   const handleCheckPassword = (val) => {
     let passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
-  
+
     if (val.length === 0) {
       setCheckValidPassword("Password must be entered");
     } else if (passRegex.test(val) === false) {
@@ -172,15 +201,16 @@ export default function CreateAccount({ navigation }) {
       setCheckValidPassword("");
     }
   };
-  
-  const handlePasswordConfirm = (passwordConfirm) => {
+
+  const handlePassConfirm = (passwordConfirm) => {
     if (passwordConfirm !== password) {
-      setCheckValidPassword("Passwords do not match");
+      setPasswordErrorMessage("Passwords do not match");
     } else {
-      setCheckValidPassword("");
+      setPasswordErrorMessage("");
     }
   };
-  
+
+
   <><RNPTextInput //Enter password
 
         style={styles.TextInputRNPTextInput}
@@ -209,142 +239,106 @@ export default function CreateAccount({ navigation }) {
         secureTextEntry={true}
         onChangeText={(value) => {
           setPasswordConfirm(value);
-          handlePasswordConfirm(value);
+          handlePassConfirm(value);
         }}
       /></>
-  
+
   {checkValidPassword ? (
     <Text style={styles.passwordValidationText}>{checkValidPassword}</Text>
   ) : null}
-    <><><RNPTextInput //Confirm password
+    <><RNPTextInput //Confirm password
 
 
-        style={styles.TextInputRNPTextInput}
-        placeholder="Confirm Password*"
-        label="Confirm Password*"
-        mode="outlined"
-        activeOutlineColor="#8273a9"
-        theme={{
-            fonts: { fontFamily: "OpenSans_400Regular", fontWeight: '600' },
-            colors: { text: "black" },
-        }}
-        secureTextEntry={true}
-        onChangeText={password => {
-            setPasswordConfirm(password);
-            handlePassConfirm(password);
-        } } /><View>
-            <Text style={styles.text}>* Mandatory information</Text>
-        </View><TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate("Authentication", { switchColour, isLarge })}
-        >
-            <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity></><TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-                if (checkValidEmail ||
-                    email === "" ||
-                    emailConfirm === "" ||
-                    password === "" ||
-                    passwordConfirm === "") {
-                    setCheckValidEmail("Please enter valid information in all fields");
-                } else {
-                    if (password.length < 6) {
-                        setCheckValidEmail(
-                            "Password must be a minimum of 6 characters, containing at least one uppercase letter, one lowercase letter, and one number"
-                        );
-                    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-                        setCheckValidEmail(
-                            "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-                        );
-                    } else if (email !== emailConfirm) {
-                        setCheckValidEmail("Email addresses do not match");
-                    } else if (password !== passwordConfirm) {
-                        setCheckValidEmail("Passwords do not match");
-                    } else {
-                        // send email verification
-                        const transporter = nodemailer.createTransport({
-                            service: "gmail",
-                            auth: {
-                                user: "your-email@gmail.com",
-                                pass: "your-password",
-                            },
-                        });
-                        const mailOptions = {
-                            from: "your-email@gmail.com",
-                            to: userEmail,
-                            subject: "Email Verification",
-                            text: "Please verify your email address to complete registration",
-                        };
-                        transporter.sendMail(mailOptions, function (error, info) {
-                            if (error) {
-                                console.log(error);
-                            } else {
-                                console.log("Email sent: " + info.response);
-                            }
-                        });
-                        navigation.navigate("Verification", {
-                            email: email,
-                            password: password,
-                            switchColour: switchColour,
-                            isLarge: isLarge,
-                        });
-                    }
-                }
-            } }
-        >
-            <Text style={styles.buttonText}>Continue</Text>
+    style={styles.TextInputRNPTextInput}
+    placeholder="Password*"
+    label="Password*"
+    mode="outlined"
+    activeOutlineColor="#8273a9"
+    theme={{
+      fonts: { fontFamily: "OpenSans_400Regular", fontWeight: "600" },
+      colors: { text: "black" },
+    }}
+    secureTextEntry={true}
+    onChangeText={(value) => {
+      setPassword(value);
+      handleCheckPassword(value);
+    }}
+  />
+  <RNPTextInput
+    style={styles.TextInputRNPTextInput}
+    placeholder="Confirm Password*"
+    label="Confirm Password*"
+    mode="outlined"
+    activeOutlineColor="#8273a9"
+    theme={{
+      fonts: { fontFamily: "OpenSans_400Regular", fontWeight: "600" },
+      colors: { text: "black" },
+    }}
+    secureTextEntry={true}
+    onChangeText={(value) => {
+      setPasswordConfirm(value);
+      handlePassConfirm(value);
+    }}
+  />
+  {checkValidPassword ? (
+    <Text style={styles.passwordValidationText}>{checkValidPassword}</Text>
+  ) : null}
+
+  <TouchableOpacity
+    style={styles.button}
+    onPress={() => {
+      if (
+        checkValidEmail ||
+        email === "" ||
+        emailConfirm === "" ||
+        password === "" ||
+        passwordConfirm === ""
+      ) {
+        setCheckValidEmail(
+          "Please enter valid information in all fields"
+        );
+      } else {
+        if (password.length < 6) {
+          setCheckValidEmail(
+            "Password must be a minimum of 6 characters, containing at least one uppercase letter, one lowercase letter, and one number"
+          );
+        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+          setCheckValidEmail(
+            "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+          );
+        } else if (email !== emailConfirm) {
+          setCheckValidEmail("Email addresses do not match");
+        } else if (password !== passwordConfirm) {
+          setCheckValidEmail("Passwords do not match");
+        } else {
+          // send email verification
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: "your-email@gmail.com",
+              pass: "your-password",
+            },
+          });
+          const mailOptions = {
+            from: "your-email@gmail.com",
+            to: email,
+            subject: "Email Verification",
+            text: "Please verify your email address to complete registration",
+          };
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+              Alert.alert("An error occurred while sending the email.");
+            } else {
+              console.log("Email sent: " + info.response);
+              Alert.alert("Account created successfully!");
+              navigation.navigate("Home");
+            }
+          });
+        }
+      }
+    }}
+  >
+    <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity></>
 }
-//Verification code to user's email
-/*const [verificationCode, setVerificationCode] = useState("");
-const [validVerificationCode, setValidVerificationCode] = useState(false);
-
-const handleVerificationCode = (val) => {
-  if (val.length === 6) {
-    setValidVerificationCode(true);
-  } else {
-    setValidVerificationCode(false);
-  }
-};
-
-const handleVerifyCode = async () => {
-  try {
-    await auth.applyActionCode(verificationCode);
-    navigation.navigate("Authentication");
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-<><TouchableOpacity
-  style={[
-    styles.button,
-    validEmail && validPassword && checkPasswordsMatch
-      ? styles.enabled
-      : styles.disabled,
-  ]}
-  onPress={() => {
-    handleVerifyCode();
-  } }
-  disabled={!validVerificationCode}
->
-  <Text style={styles.buttonText}>Verify Code</Text>
-</TouchableOpacity><View style={styles.inputView}>
-    <TextInput
-      style={styles.TextInput}
-      placeholder="Verification Code*"
-      placeholderTextColor="gray"
-      keyboardType="numeric"
-      maxLength={6}
-      onChangeText={(value) => {
-        setVerificationCode(value);
-        handleVerificationCode(value);
-      } } />
-  </View></>
-
-{validVerificationCode ? null : (
-  <Text style={styles.emailValidationText}>
-    Verification code must be a 6-digit number
-  </Text>
-)}*/
