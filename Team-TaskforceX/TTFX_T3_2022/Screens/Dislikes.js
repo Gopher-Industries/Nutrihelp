@@ -24,7 +24,7 @@ const DISLIKES_DATA = [
   { id: "6", title: "Anchovies" },
   { id: "7", title: "Test" },
 ];
-export const selected_items_dislikes =[];
+export const selected_items_dislikes = [];
 
 export default function Dislikes({ navigation }) {
   const [dislikes, setDislikes] = useState([]);
@@ -74,6 +74,30 @@ export default function Dislikes({ navigation }) {
     setSearchQuery("");
     // BUG: Need to hide flatlist everytime after an item is added.
   };
+  const AddedByYou = () => {
+    if (selected_items_dislikes.length >= 1) {
+      return (
+        <View>
+          <Text style={styles.text}>Added by you</Text>
+          <View>
+            <FlatList
+              data={selected_items_dislikes}
+              numColumns={2}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => (
+                <View style={styles.item}>
+                  <TouchableOpacity
+                    style={styles.preference}>
+                    <Text style={styles.itemText}>{item.title}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+      )
+    }
+  }
 
   //For troubleshooting
   //console.log(dislikes);
@@ -87,7 +111,7 @@ export default function Dislikes({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.navigate("LandingPage")}
+        onPress={() => navigation.goBack()}
       />
       <View>
         <Text style={styles.title}>Dislikes</Text>
@@ -104,28 +128,15 @@ export default function Dislikes({ navigation }) {
           renderItem={ItemView}
         />
       </View>
-      <Text style={styles.text}>Added by you</Text>
       <View>
-      <FlatList
-        data={selected_items_dislikes}
-        numColumns={2}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <TouchableOpacity
-              style={styles.preference}>
-              <Text style={styles.itemText}>{item.title}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+        {AddedByYou()}
       </View>
       <Text style={styles.text}>Most Common</Text>
       <FlatList
         data={DISLIKES_DATA}
         numColumns={2}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
           <View style={styles.item}>
             <TouchableOpacity
               style={styles.preference}
@@ -134,23 +145,22 @@ export default function Dislikes({ navigation }) {
                 if(item.title=="None")
                 {
                   navigation.navigate('HealthConditions');
+                  selected_items_dislikes.splice(0,selected_items_dislikes.length);
                   return;
                 }
                 if (selected_items_dislikes.includes(item)) {
                   var index = selected_items_dislikes.indexOf(item);
                   selected_items_dislikes.splice(index, 1);
                   console.log(selected_items_dislikes);
-                }
-                else {
-                  
+                } else {
                   selected_items_dislikes.push(item);
                   console.log(selected_items_dislikes);
                 }
                 // BUG: need to remove item.id if its already selected before
-                setDislikes(prevDislikes=> [...prevDislikes, item.id]);
+                setDislikes((prevDislikes) => [...prevDislikes, item.id]);
                 // BUG: need to change colour when selected
-
-              }}>
+              }}
+            >
               <Text style={styles.itemText}>{item.title}</Text>
             </TouchableOpacity>
           </View>

@@ -1,0 +1,236 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+container {
+    flex: 1;
+    background-color: "#FFFBFE";
+    padding: 16;
+}
+
+ml24 {
+    margin-Left: 24;
+}
+
+  ml8 {
+    margin-Left: 8;
+}
+
+  theFollowingOptions {
+    margin-Block-Start: 0;
+    margin-Block-End: 0;
+  }
+
+  theFollowingOptionsMayMake { /*'the following options...' text*/
+    position: "absolute";
+    top: 190;
+    left: 16;
+    font-Size: 16;
+    letter-Spacing: -0.2;
+    line-Height: 24;
+    /*font-Family: "Open Sans";*/
+    color: "#000";
+    text-Align: "left";
+    width: 329;
+    height: 70;
+  }
+
+  textSize { /*text size header text*/
+    position: "absolute";
+    top: 260;
+    left: 16;
+    font-Size: 19;
+    line-Height: 48;
+    font-Weight: "600";
+    /*fontFamily: "Open Sans";*/
+    color: "#000";
+    text-Align: "left";
+    display: "flex";
+    align-Items: "center";
+    width: 85;
+    height: 44;
+    font-Weight: "600";
+  }
+  colourBlind { /*'colour blind' text*/
+    position: "absolute";
+    top: 404;
+    left: 16;
+    font-Size: 16;
+    line-Height: 48;
+   /* fontFamily: "Open Sans"; */
+    color: "#000";
+    text-Align: "left";
+    display: "flex";
+    align-Items: "center";
+    width: 99;
+    height: 44;
+  }
+  voiceOver { /*'voice over' text */
+    position: "absolute";
+    top: 456;
+    left: 16;
+    font-Size: 16;
+    line-Height: 48;
+    /*fontFamily: "Open Sans";*/
+    color: "#000";
+    text-Align: "left";
+    display: "flex";
+    align-Items: "center";
+    width: 85;
+    height: 32;
+  }
+  icon { 
+    width: "100%";
+    height: "100%";
+  }
+  leadingIcon { /*go back icon*/
+    position: "absolute";
+    left: 16;
+    top: 5;
+    width: 24;
+    height: 24;
+  };
+  headline {  /* 'accessibility' headline*/
+    position: "absolute";
+    top: 55;
+    left: 16;
+    font-Size: 24;
+    line-Height: 30;
+   /* font-Family: "Open Sans";*/
+    color: "#1c1b1f";
+    text-Align: "left";
+    display: "flex";
+    align-Items: "center";
+    width: 328;
+  }
+  topAppBar { /*background*/
+    position: "absolute";
+    top: 56;
+    bottom: 0;
+    left: 0;
+    background-Color: "#fffbfe";
+    width: "1%";
+  };
+  colourSwitch { /*colour blind switch*/
+    position: "absolute";
+    height: "5%";
+    width: "14.44%";
+    top: "52.4%";
+    right: "4.17%";
+    bottom: "32.5%";
+    left: "81.39%";
+  }
+  switch1 { /* voice over switch*/
+    position: "absolute";
+    height: "5%";
+    width: "14.44%";
+    top: "58.5%";
+    right: "4.44%";
+    bottom: "23.75%";
+    left: "81.11%";
+  }
+  buttonText { /*continue text*/
+    position: "relative";
+    font-Size: 16;
+    letter-Spacing: 0;
+    line-Height: 20;
+    font-Weight: "700";
+   /* fontFamily: "Open Sans";*/
+    color: "#f5f2f7";
+    text-Align: "center";
+  }
+  continueButton { /*continue button*/
+    position: "absolute";
+    top: 685;
+    left: 26;
+    border-Radius: 100;
+    background-Color: "#8273a9";
+    width: 328;
+    overflow: "hidden";
+    flex-Direction: "column";
+   
+    align-Items: "center";
+    justify-Content: "center";
+  }
+  buttonLarge{ /*box of 'large'*/
+  position: "absolute";
+  top: 304;
+  left: 188;
+  border-Radius: 8;
+  border-Style: "solid";
+  border-Color: "#79747e";
+  /*backgroundColor: (props => props.colour); /*"#79747e";*/
+  border-Width: 1;
+  width: 156;
+  flex-Direction: "row";
+ 
+  align-Items: "center";
+  justify-Content: "center";
+  }
+  labelText1 { /*'large' text*/
+    position: "relative";
+    font-Size: 16;
+    letter-Spacing: 0;
+    line-Height: 20;
+    font-Weight: "600";
+   /* fontFamily: "Open Sans";*/
+    color: "#1d192b";
+    text-Align: "center";
+  }
+ 
+  icon1 { /*'normal' text position*/
+    position: "relative";
+    width: 0;
+    height: 18;
+    flex-Shrink: 0;
+  }
+  labelText2 { /*'normal' text*/
+    position: "relative";
+    font-Size: 16;
+    letter-Spacing: 0;
+    line-Height: 20;
+    font-Weight: "600";
+    /*fontFamily: "Open Sans";*/
+    color: "#1d192b";
+    text-Align: "center";
+    
+    
+  }
+  buttonNormal { /*'normal' text box*/
+    position: "absolute";
+    top: 304;
+    left: 16;
+    border-Radius: 8;
+    border-Style: "solid";
+    border-Color: "#79747e";
+    background-Color: "#e8def8";
+    border-Width: 1;
+    width: 156;
+    flex-Direction: "row";
+   
+    align-Items: "center";
+    justify-Content: "center";
+    
+  }
+  lineView { /*Line below textr size buttons*/
+    position: "absolute";
+    top: 368;
+    left: 16;
+    border-Style: "solid";
+    border-Color: "#79747e";
+    border-Top-Width: 1;
+    width: 329;
+    height: 1;
+  }
+  accessibility { /*acessibility*/
+    position: "relative";
+    border-Radius: 20;
+    background-Color: "#fffbfe";
+    flex: 1;
+    width: "100%";
+    height: 40;
+    overflow: "hidden";
+  }

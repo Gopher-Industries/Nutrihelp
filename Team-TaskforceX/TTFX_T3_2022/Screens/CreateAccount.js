@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,7 +6,10 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/FontAwesome"; //Wrong arrow, need to change
+import { TextInput as RNPTextInput } from "react-native-paper";
+import {switchColour , isLarge } from "./Accessibility";
+import { useRoute } from '@react-navigation/native';
 
 export default function CreateAccount({ navigation }) {
   const [email, setEmail] = useState("");
@@ -14,6 +17,11 @@ export default function CreateAccount({ navigation }) {
   const [password, setPassword] = useState("");
   const [passwordConfrim, setPasswordConfirm] = useState("");
   const [checkValidEmail, setCheckValidEmail] = useState("");
+
+  const route = useRoute();
+  const isLarge = route.params?.isLarge;
+  const switchColour = route.params?.switchColour;
+  
 
   const handleCheckEmail = (val) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -27,82 +35,197 @@ export default function CreateAccount({ navigation }) {
     }
   };
 
-  const handleEmailConfirm = (val) => {
-    console.log(email);
-    console.log(val);
-    if (val !== email) {
-      setEmailConfirm("doesnt match");
+  const handleEmailConfirm = val => { // check if email are same 
+    if (val != email) {
+      setCheckValidEmail('Email does not match');
     } else {
-      setCheckValidEmail("");
+      setCheckValidEmail('');
     }
   };
+
+  const handlePassConfirm = val => { // check if pass are same 
+    if (val != password) {
+      setCheckValidEmail('Password does not match');
+    } else {
+      setCheckValidEmail('');
+    }
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#FFFBFE',
+      padding: 16,
+    },
+  
+    //Back Arrow
+    backArrow: {
+      marginTop: 32,
+    },
+  
+    //Title
+    title: {
+      fontSize: isLarge ? 30 : 24,
+      fontFamily: "OpenSans_400Regular",
+      color: "black",
+      marginTop: 32,
+      marginBottom: 16,
+      lineHeight: 32,
+    },
+  
+    //User input fields
+    TextInputRNPTextInput: {
+      borderRadius: 4,
+      borderColor: "black",
+      borderStyle: "solid",
+      width: 361,
+      height: 56,
+      backgroundColor: "#FFFBFE",
+      marginTop: 16,
+    },
+  
+    //Small text
+    text: {
+      color: "black",
+      fontSize: isLarge ? 16: 12,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '600',
+      fontFamily: 'OpenSans_400Regular',
+      marginTop: 8,
+    },
+  
+    //Validation text
+    emailValidationText: {
+      color: "red",
+      fontSize: isLarge ? 16: 12,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '600',
+      fontFamily: 'OpenSans_400Regular',
+    },
+  
+    //Continue button
+    button: {
+      borderRadius: 100,
+      height: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor:  switchColour ? "red":"#8273a9",
+      marginTop: 160,
+      marginBottom: 32,
+    },
+  
+    //Continue button text
+    buttonText: {
+      fontSize: isLarge ? 20: 16,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '700',
+      fontFamily: 'OpenSans_400Regular',
+      color: '#fff',
+      textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
+  
 
   return (
     <View style={styles.container}>
       <Icon
+        style = {styles.backArrow}
         name="arrow-left"
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.navigate("LandingPage")}
+        onPress={() => navigation.goBack()}
       />
       <View>
         <Text style={styles.title}>Create Account</Text>
       </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email address*"
-          placeholderTextColor="gray"
-          keyboardType="email-address"
-          onChangeText={(value) => {
-            setEmail(value);
-            handleCheckEmail(value);
-          }}
-        />
-      </View>
-
+      
+      {/* Validation text */}
       {checkValidEmail ? (
         <Text style={styles.emailValidationText}>{checkValidEmail}</Text>
-      ) : null}
-
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Confirm Email Address*"
-          placeholderTextColor="gray"
-          keyboardType="email-address"
-          onChangeText={(emailConfirm) => setEmailConfirm(emailConfirm)}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Password*"
-          placeholderTextColor="gray"
+      ) : null} 
+    
+      <RNPTextInput //Enter email
+        style={styles.TextInputRNPTextInput}
+        placeholder="Email Address*"
+        label="Email Address*"
+        mode="outlined"
+        activeOutlineColor="#8273a9"
+        theme={{
+          fonts: {fontFamily: "OpenSans_400Regular", fontWeight: '600' },
+          colors: {text: "black"},
+        }}
+        onChangeText={value => {
+          setEmail(value);
+          handleCheckEmail(value);
+        }}
+      />
+      
+      <RNPTextInput //Confirm email
+        style={styles.TextInputRNPTextInput}
+        placeholder="Confirm Email Address*"
+        label="Confirm Email Address*"
+        mode="outlined"
+        activeOutlineColor="#8273a9"
+        theme={{
+          fonts: {fontFamily: "OpenSans_400Regular", fontWeight: '600' },
+          colors: {text: "black"},
+        }}
+        onChangeText={emailConfirm => {
+          setEmailConfirm(emailConfirm);
+          handleEmailConfirm(emailConfirm);
+        }}
+      />
+    
+      <RNPTextInput //Enter password
+        style={styles.TextInputRNPTextInput}
+        placeholder="Password*"
+        label="Password*"
+        mode="outlined"
+        activeOutlineColor="#8273a9"
+        theme={{
+          fonts: {fontFamily: "OpenSans_400Regular", fontWeight: '600' },
+          colors: {text: "black"},
+        }}
           secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-      </View>
+          onChangeText={password => 
+            setPassword(password)
+        }
+      />
+    
       <View>
-        <Text style={styles.text}>Password must have...</Text>
+        <Text style={styles.text}>Password must be a minimum of 8 characters</Text>
       </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
+      
+      <RNPTextInput //Confirm password
+          style={styles.TextInputRNPTextInput}
           placeholder="Confirm Password*"
-          placeholderTextColor="gray"
+          label="Confirm Password*"
+          mode="outlined"
+          activeOutlineColor="#8273a9"
+          theme={{
+            fonts: {fontFamily: "OpenSans_400Regular", fontWeight: '600' },
+            colors: {text: "black"},
+          }}
           secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-      </View>
+          onChangeText={password => {
+            setPasswordConfirm(password);
+            handlePassConfirm(password);
+          }}
+      />
+ 
       <View>
         <Text style={styles.text}>* Mandatory information</Text>
       </View>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Authentication")}
+        onPress={() => navigation.navigate("Authentication",{ switchColour, isLarge})}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -110,58 +233,3 @@ export default function CreateAccount({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 30,
-  },
-
-  title: {
-    fontSize: 25,
-    color: "black",
-    marginBottom: 20,
-    marginTop: 20,
-  },
-
-  inputView: {
-    borderRadius: 5,
-    borderColor: "black",
-    height: 60,
-    marginBottom: 20,
-    borderWidth: 1,
-  },
-
-  TextInput: {
-    height: 50,
-    flex: 1,
-    marginLeft: 10,
-    fontSize: 15,
-  },
-
-  text: {
-    fontWeight: "bold",
-    paddingBottom: 10,
-    color: "green",
-  },
-
-  emailValidationText: {
-    color: "red",
-    marginBottom: 10,
-  },
-
-  button: {
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#8d71ad",
-    margin: 10,
-  },
-
-  buttonText: {
-    fontWeight: "bold",
-    color: "white",
-    fontSize: 18,
-  },
-});
