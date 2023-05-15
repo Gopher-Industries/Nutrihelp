@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function ViewNutritionReport({ navigation }) {
   const signout = async () => {
     try {
-      if (__DEV__) { // checking if we are in production
+      if (!__DEV__) { // checking if we are in production
         // can only be done in production for now we are only using the else to remove the persistence login 
         await AuthSession.revokeAsync({
           token: auth.accessToken // we can also revoke refresh token 
@@ -13,15 +13,14 @@ export default function ViewNutritionReport({ navigation }) {
           revocationEndpoint: "https://oauth2.googleapis.com/revoke"
         });
         await AsyncStorage.removeItem("auth")
-        console.log("Logged out 1 ");
       }
       else {
         await AsyncStorage.removeItem("auth")
-        console.log("Logged out 2");
       }
     } catch (error) {
       console.log(error);
     }
+    navigation.navigate("LandingPage")
   }
   return (
     <View
