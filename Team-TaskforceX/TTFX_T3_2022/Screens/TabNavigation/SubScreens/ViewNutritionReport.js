@@ -16,6 +16,7 @@ export default function ViewNutritionReport({ navigation }) {
       }
       else {
         await AsyncStorage.removeItem("auth")
+        console.log("Logged out dev user")
       }
     } catch (error) {
       console.log(error);
