@@ -27,7 +27,7 @@ const BottomMenuView = () => {
             resizeMode="cover"
             source={require("../assets/inactiveicon.png")}
           />
-          <Text style={[styles.labelText2, styles.mt8]}>Unnamed</Text>
+          <Text style={[styles.labelText2, styles.mt8]}>Meals</Text>
         </View>
         <View style={styles.segment3}>
           <Image
@@ -35,7 +35,7 @@ const BottomMenuView = () => {
             resizeMode="cover"
             source={require("../assets/inactiveicon.png")}
           />
-          <Text style={[styles.labelText3, styles.mt8]}>Preferences</Text>
+          <Text style={[styles.labelText3, styles.mt8]}>Scanner</Text>
         </View>
       </View>
       <View style={styles.button}>
@@ -49,7 +49,7 @@ const BottomMenuView = () => {
       <Image
         style={styles.accountCircleIcon}
         resizeMode="cover"
-        source={require("../assets/account-circle.png")}
+        source={require("../assets/scanner-icon.png")}
       />
       <Image
         style={styles.calendarMonthIcon}
