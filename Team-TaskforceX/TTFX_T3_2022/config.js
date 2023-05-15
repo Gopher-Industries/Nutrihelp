@@ -18,6 +18,12 @@ const firebaseConfig = {
   //   measurementId: "G-DK49L9R7Q0",
 };
 
+export const googleConfig = {
+  androidKey: "436079732543-gb38190nmbq9o0ushru0oi5kvhkag36g.apps.googleusercontent.com", // android client id
+  webKey: "436079732543-5f52oca1gkig2cr8b0f90ss61a0n2s07.apps.googleusercontent.com", //webclient id
+  iOsKey: "436079732543-cnf4f12bonf11rtuhvb134vs2sbht9io.apps.googleusercontent.com" //iOs Client ID
+}
+
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }

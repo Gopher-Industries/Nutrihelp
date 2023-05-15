@@ -1,28 +1,23 @@
-import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { TextInput as RNPTextInput } from "react-native-paper";
+import * as React from 'react';
+
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
 export default function CreateAccount({ navigation }) {
+
   return (
     <View style={styles.container}>
-      <Icon //Back arrow
-        style={styles.backArrow}
-        name="arrow-left"
-        size={20}
-        color="black"
-        type="entypo"
-        onPress={() => navigation.goBack()}
-      />
+      {/* {showUserInfo()} */}
       <View>
         <Text style={styles.title}>Login</Text>
         <Text style={styles.text}>Welcome back!</Text>
@@ -34,36 +29,36 @@ export default function CreateAccount({ navigation }) {
         mode="outlined"
         activeOutlineColor="#8273a9"
         theme={{
-          fonts: {fontFamily: "OpenSans_400Regular", fontWeight: '600' },
-          colors: {text: "black"},
+          fonts: { fontFamily: "OpenSans_400Regular", fontWeight: '600' },
+          colors: { text: "black" },
         }}
       />
+
       <RNPTextInput //Password field
         style={styles.passwordTextInputRNPTextInput}
         placeholder="Password"
         label="Password"
         mode="outlined"
         activeOutlineColor="#8273a9"
-        secureTextEntry = {true}
+        secureTextEntry={true}
         theme={{
-          fonts: {fontFamily: "OpenSans_400Regular", fontWeight: '600' },
-          colors: {text: "black"},
+          fonts: { fontFamily: "OpenSans_400Regular", fontWeight: '600' },
+          colors: { text: "black" },
         }}
       />
       <TouchableOpacity
         style={styles.termButton}
-        onPress={() => alert("This is a future feature")}
-      >
-      <Text style={styles.forgotPassword}>
-        Forgot Password?
-      </Text>
+        onPress={() => alert("This is a future feature")}>
+        <Text style={styles.forgotPassword}>
+          Forgot Password?
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("TodaysPlan")}
-      >
-      <Text style={styles.buttonText}>Login</Text>
+        onPress={() => navigation.navigate("TodaysPlan")}>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <View style={{ flex: 1, height: 1, backgroundColor: "gray" }} />
         <View>
@@ -71,11 +66,13 @@ export default function CreateAccount({ navigation }) {
         </View>
         <View style={{ flex: 1, height: 1, backgroundColor: "gray" }} />
       </View>
+
+
       <View>
         <TouchableOpacity
           style={styles.altButton}
-          onPress={() => alert("This is a future feature")}
-        >
+          onPress={() => navigation.navigate("GoogleAuthScreen")}>
+          {/* // if we have access token we are trying to get user info  */}
           <Text style={styles.altButtonText}>Continue with Google</Text>
         </TouchableOpacity>
       </View>
@@ -96,7 +93,7 @@ const styles = StyleSheet.create({
   },
 
   //Main Title
-  title: { 
+  title: {
     fontSize: 24,
     fontFamily: "OpenSans_400Regular",
     color: "black",
@@ -125,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFBFE",
     marginTop: 16,
   },
-  
+
   //Forgot password
   forgotPassword: {
     textDecorationLine: "underline",

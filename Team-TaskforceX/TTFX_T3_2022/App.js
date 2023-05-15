@@ -22,6 +22,11 @@ import Notifications from "./Screens/Notifications";
 import TodaysPlan from "./Screens/TodaysPlan";
 import NutritionalReport from "./Screens/NutritionalReport";
 import LogIn from "./Screens/LogIn";
+import GoogleAuthScreen from "./Screens/GoogleAuthScreen";
+import { LogBox } from 'react-native'; 
+// This is there to stop the warnings show up in the actual device/emulator 
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 
 const Stack = createNativeStackNavigator();
@@ -134,6 +139,11 @@ export default function App() {
         <Stack.Screen
           name="LogIn"
           component={LogIn}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="GoogleAuthScreen"
+          component={GoogleAuthScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
