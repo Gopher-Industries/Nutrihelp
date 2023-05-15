@@ -284,7 +284,7 @@ export default function Preferences({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FFFBFE",
     padding: 30,
     fontSize: 150,
     textAlign: "left",

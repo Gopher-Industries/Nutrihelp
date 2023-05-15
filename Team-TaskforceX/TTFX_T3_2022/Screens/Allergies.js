@@ -104,7 +104,7 @@ export default function Allergies({ navigation }) {
               numColumns={2}
               keyExtractor={item => item.id}
               renderItem={({ item }) => (
-                <View style={styles.item}>
+                <View {...{ style: item.choice ? styles.addeditem : styles.item }}>
                   <TouchableOpacity
                     style={styles.preference}
                     onPress={() => {
@@ -117,7 +117,12 @@ export default function Allergies({ navigation }) {
                       setAllergy((prevAllergy) => [...prevAllergy, item.id]);
                     }}
                   >
-                    <Text style={styles.itemText}>{item.title}</Text>
+                    <View style={styles.itemContent}>
+               {item.choice && (
+               <Icon name="check" size={20} color="black" style={styles.checkIcon}/>
+               )}
+              <Text style={styles.itemText}>{item.title}</Text>
+                </View>
                   </TouchableOpacity>
                 </View>
               )}
@@ -220,7 +225,13 @@ export default function Allergies({ navigation }) {
                 setAllergy((prevAllergy) => [...prevAllergy, item.id]);
               }}
             >
-              <Text style={styles.itemText}>{item.title}</Text>
+              <View style={styles.itemContent}>
+      {item.choice && (
+        <Icon name="check" size={20} color="black" style={styles.checkIcon} />
+      )}
+      <Text style={styles.itemText}>{item.title}</Text>
+      </View>
+    
             </TouchableOpacity>
           </View>
         )}
@@ -244,7 +255,7 @@ export default function Allergies({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FFFBFE",
     padding: 30,
   },
   title: {
@@ -307,7 +318,13 @@ const styles = StyleSheet.create({
     color: "black",
     // fontFamily: 'Times',
   },
-
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkIcon: {
+    marginRight: 5,
+  },
   listStyle: {
     paddingTop: 10,
   },
