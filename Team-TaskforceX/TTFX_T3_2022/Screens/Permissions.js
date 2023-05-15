@@ -12,14 +12,313 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import { PermissionsAndroid, Platform } from 'react-native';
+//import { RESULTS } from "react-native-permissions";
+
+//import { BleManager } from 'react-native-ble-plx'
+//import Contacts from 'react-native-contacts';
+//import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions'; //perissions for IOS
+//import { launchCamera } from 'react-native-image-picker';
 
 const Permissions = () => {
   const [cameraSwitchValue, setCameraSwitchValue] = useState(false);
+  const [locationSwitchValue, setLocationSwitchValue] = useState(false);
   const [contactsSwitchValue, setContactsSwitchValue] = useState(false);
   const [bluetoothSwitchValue, setBluetoothSwitchValue] = useState(false);
-  const navigation = useNavigation();
-  const [locationSwitchValue, setLocationSwitchValue] = useState(false);
   const [healthSwitchValue, setHealthSwitchValue] = useState(false);
+  const navigation = useNavigation();
+
+  // check permission statuses when the component mounts
+  React.useEffect(() => {
+    const checkPermissions = async () => {
+      const cameraStatus = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+      );
+      setCameraSwitchValue(cameraStatus);
+
+      const locationStatus = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      setLocationSwitchValue(locationStatus);
+
+      const contactsStatus = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+      );
+      setContactsSwitchValue(contactsStatus);
+
+      const bluetoothStatus = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      );
+      setBluetoothSwitchValue(bluetoothStatus);
+
+      const healthStatus = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.BODY_SENSORS,
+      );
+      setHealthSwitchValue(healthStatus);
+    };
+
+    checkPermissions();
+  }, []);  
+
+  //handle camera permissions
+  const handleCameraSwitch = async (value) => {
+    setCameraSwitchValue(value);
+    
+    if (value) {
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+  
+        if (!granted) {
+          const permissionResult = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              title: 'Camera Permission',
+              message: 'App needs access to camera',
+              buttonPositive: 'OK',
+              buttonNegative: 'Cancel',
+            },
+          );
+  
+          if (permissionResult !== PermissionsAndroid.RESULTS.GRANTED) {
+            setCameraSwitchValue(false);
+            return;
+          }
+        }
+      } else {
+        // code to handle permission check for other platforms
+      }
+    } else {
+      if (Platform.OS === 'android') {
+        const revoked = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+  
+        if (revoked) {
+          await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              title: 'Camera Permission Revoked',
+              message: 'App needs access to camera',
+              buttonPositive: 'OK',
+              buttonNegative: 'Cancel',
+            },
+          );
+        }
+      } else {
+        // code to handle permission revocation for other platforms
+      }
+    }
+  };
+  //handle location permissions
+  const handleLocationSwitch = async (value) => {
+    setLocationSwitchValue(value);
+  
+    if (value) {
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+  
+        if (!granted) {
+          const permissionResult = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Location Permission',
+              message: 'App needs access to location',
+              buttonPositive: 'OK',
+              buttonNegative: 'Cancel',
+            },
+          );
+  
+          if (permissionResult !== PermissionsAndroid.RESULTS.GRANTED) {
+            setLocationSwitchValue(false);
+            return;
+          }
+        }
+      } else {
+        // code to handle permission check for other platforms
+      }
+    } else {
+      if (Platform.OS === 'android') {
+        const revoked = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+  
+        if (revoked) {
+          await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Location Permission Revoked',
+              message: 'App needs access to location',
+              buttonPositive: 'OK',
+              buttonNegative: 'Cancel',
+            },
+          );
+        }
+      } else {
+        // code to handle permission revocation for other platforms
+      }
+    }
+  };
+  
+//handle location permissions
+const handleBluetoothSwitch = async (value) => {
+  setBluetoothSwitchValue(value);
+
+  if (value) {
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+
+      if (!granted) {
+        const permissionResult = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Bluetooth Permission',
+            message: 'App needs access to bluetooth',
+            buttonPositive: 'OK',
+            buttonNegative: 'Cancel',
+          },
+        );
+
+        if (permissionResult !== PermissionsAndroid.RESULTS.GRANTED) {
+          setBluetoothSwitchValue(false);
+          return;
+        }
+      }
+    } else {
+      // code to handle permission check for other platforms
+    }
+  } else {
+    if (Platform.OS === 'android') {
+      const revoked = await PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+
+      if (revoked) {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Bluetooth Permission Revoked',
+            message: 'App needs access to bluetooth',
+            buttonPositive: 'OK',
+            buttonNegative: 'Cancel',
+          },
+        );
+      }
+    } else {
+      // code to handle permission revocation for other platforms
+    }
+  }
+};
+  
+  
+  //handle contacts permissions
+  const handleContactsSwitch = async (value) => {
+    setContactsSwitchValue(value);
+  
+    if (value) {
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        );
+  
+        if (!granted) {
+          const permissionResult = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+            {
+              title: 'Contacts Permission',
+              message: 'App needs access to contacts',
+              buttonPositive: 'OK',
+              buttonNegative: 'Cancel',
+            },
+          );
+  
+          if (permissionResult !== PermissionsAndroid.RESULTS.GRANTED) {
+            setContactsSwitchValue(false);
+            return;
+          }
+        }
+      } else {
+        // code to handle permission check for other platforms
+      }
+    } else {
+      if (Platform.OS === 'android') {
+        const revoked = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        );
+  
+        if (revoked) {
+          await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+            {
+              title: 'Contacts Permission Revoked',
+              message: 'App needs access to contacts',
+              buttonPositive: 'OK',
+              buttonNegative: 'Cancel',
+            },
+          );
+        }
+      } else {
+        // code to handle permission revocation for other platforms
+      }
+    }
+  };
+  //handle health switch
+  const handleHealthSwitch = async (value) => {
+    setHealthSwitchValue(value);
+
+    if (value) {
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.BODY_SENSORS,
+        );
+  
+        if (!granted) {
+          const permissionResult = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.BODY_SENSORS,
+            {
+              title: 'Health Permission',
+              message: 'App needs access to health data',
+              buttonPositive: 'OK',
+              buttonNegative: 'Cancel',
+            },
+          );
+  
+          if (permissionResult !== PermissionsAndroid.RESULTS.GRANTED) {
+            setHealthSwitchValue(false);
+            return;
+          }
+        }
+      } else {
+        // code to handle permission check for other platforms
+      }
+    } else {
+      if (Platform.OS === 'android') {
+        const revoked = await PermissionsAndroid.check(
+          PermissionsAndroid.PERMISSIONS.BODY_SENSORS,
+        );
+  
+        if (revoked) {
+          await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.BODY_SENSORS,
+            {
+              title: 'Health Permission Revoked',
+              message: 'App needs access to health data',
+              buttonPositive: 'OK',
+              buttonNegative: 'Cancel',
+            },
+          );
+        }
+      } else {
+        // code to handle permission revocation for other platforms
+      }
+    }
+  };
+
 
   return (
     <View style={styles.permissions}>
@@ -42,38 +341,39 @@ const Permissions = () => {
       />
         <Text style={styles.headline}>Permissions</Text>
       </View>
-      <Switch
+      <View style={styles.lineView} />
+      <Switch //camera
         style={styles.cameraSwitch}
         value={cameraSwitchValue}
-        onValueChange={setCameraSwitchValue}
+        onValueChange={handleCameraSwitch}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
-      <Switch
-        style={styles.contactsSwitch}
-        value={contactsSwitchValue}
-        onValueChange={setContactsSwitchValue}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
-        style={styles.bluetoothSwitch}
-        value={bluetoothSwitchValue}
-        onValueChange={setBluetoothSwitchValue}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
+      <Switch //location
         style={styles.locationSwitch}
         value={locationSwitchValue}
-        onValueChange={setLocationSwitchValue}
+        onValueChange={handleLocationSwitch}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
-      <Switch
+      <Switch //contacts
+        style={styles.contactsSwitch}
+        value={contactsSwitchValue}
+        onValueChange={handleContactsSwitch}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch //bluetooth
+        style={styles.bluetoothSwitch}
+        value={bluetoothSwitchValue}
+        onValueChange={handleBluetoothSwitch}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch //health
         style={styles.healthSwitch}
         value={healthSwitchValue}
-        onValueChange={setHealthSwitchValue}
+        onValueChange={handleHealthSwitch}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
@@ -97,8 +397,18 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: "#000",
     textAlign: "left",
-    width: 329,
-    height: 49,
+    width: "85%",
+    height: 50,
+  },
+  lineView: { //line seperator
+    position: "absolute",
+    top: 250,
+    left: 16,
+    borderStyle: "solid",
+    borderColor: "#dbdbdb",
+    borderTopWidth: 1,
+    width: "90%",
+    height: 1,
   },
   camera: { //camera text
     position: "absolute",
@@ -116,7 +426,7 @@ const styles = StyleSheet.create({
   cameraSwitch: { //camera switch
     position: "absolute",
     top: 260,
-    left: 300,
+    left: "80%",
   },
   location: { //location text
     position: "absolute",
@@ -134,7 +444,7 @@ const styles = StyleSheet.create({
   locationSwitch: { //location switch
     position: "absolute",
     top: 310,
-    left: 300,
+    left: "80%",
   },
   contacts: { //contacts text
     position: "absolute",
@@ -152,7 +462,7 @@ const styles = StyleSheet.create({
   contactsSwitch: { //contacts switch
     position: "absolute",
     top: 360,
-    left: 300,
+    left: "80%",
   },
   bluetooth: { //bluetooth text
     position: "absolute",
@@ -170,7 +480,7 @@ const styles = StyleSheet.create({
   bluetoothSwitch: { //bluetooth switch
     position: "absolute",
     top: 410,
-    left: 300,
+    left: "80%",
   },
   health: { //health text
     position: "absolute",
@@ -188,7 +498,8 @@ const styles = StyleSheet.create({
   healthSwitch: { //health switch
     position: "absolute",
     top: 460,
-    left: 300,
+    left: "80%",
+
   },
   backButton: { //back button
     position: "absolute",
@@ -220,18 +531,20 @@ const styles = StyleSheet.create({
   },
   continue: { //continue button
     position: "absolute",
-    top: 685,
-    left: 26,
+    bottom: 32,
+    left: 16,
     borderRadius: 100,
     backgroundColor: "#8273a9",
-    width: 328,
-    height: 40,
+    width: "90%",
     overflow: "hidden",
     flexDirection: "column",
     paddingHorizontal: 24,
     paddingVertical: 10,
+    boxSizing: "border-box",
     alignItems: "center",
     justifyContent: "center",
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   permissions: { 
     position: "relative",
