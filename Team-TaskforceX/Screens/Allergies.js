@@ -238,7 +238,7 @@ export default function Allergies({ navigation }) {
         else {
           const noneIndex = selected_items_allergy.findIndex((el) => el.title === "None");
           if (noneIndex !== -1) {
-            selected_items_allergy.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
+            selected_items_allergy.splice(noneIndex, 1); //Remove the "None" element from selected_items_diet
           }
         }
           navigation.navigate("Dislikes")

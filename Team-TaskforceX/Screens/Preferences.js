@@ -27,7 +27,7 @@ const DISLIKES_DATA = selected_items_dislikes;
 
 const HEALTH_DATA = selected_items_health;
 
-// next trim need to get values from the previous pages and output it here.
+//next trim need to get values from the previous pages and output it here.
 export default function Preferences({ navigation }) {
 
 const [dietData, setDietData] = React.useState(DIET_DATA);

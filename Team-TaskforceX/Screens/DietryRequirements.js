@@ -32,7 +32,7 @@ export const selected_items_diet = [];
 //console.log(allergy);
 //console.log(searchQuery);
 // console.log(item);
-// console.log(isSelected)
+//console.log(isSelected)
 
 
 export default function DietryRequirements({ navigation }) {

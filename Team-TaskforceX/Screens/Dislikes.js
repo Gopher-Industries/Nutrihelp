@@ -205,7 +205,7 @@ export default function Dislikes({ navigation }) {
                 }
                 // BUG: need to remove item.id if its already selected before
                 setDislikes((prevDislikes) => [...prevDislikes, item.id]);
-                // BUG: need to change colour when selected
+                //BUG: need to change colour when selected
               }}
             >
               <View style={styles.itemContent}>
