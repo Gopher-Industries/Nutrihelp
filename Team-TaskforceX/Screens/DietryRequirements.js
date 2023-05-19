@@ -24,16 +24,9 @@ const DIET_DATA = [
   { id: "4", title: "Keto", choice: false },
   { id: "5", title: "Pescetarian", choice: false },
   { id: "6", title: "Low Carb", choice: false },
-  { id: "7", title: "Test", choice: false },
+  
 ];
 export const selected_items_diet = [];
-
-const getItem = (item) => {
-  // Function for click on an item
-  setDiet((prevDiet) => [...prevDiet, item.id]);
-  setSearchQuery("");
-  // BUG: Need to hide flatlist everytime after an item is added.
-};
 
 //For troubleshooting
 //console.log(allergy);
@@ -139,7 +132,7 @@ export default function DietryRequirements({ navigation }) {
     });
     console.log("All data selected cleared");
     selected_items_diet.splice(0, selected_items_diet.length);
-  }
+  };
   //For troubleshooting
   //console.log(diet);
   console.log(searchQuery);
@@ -205,7 +198,7 @@ export default function DietryRequirements({ navigation }) {
               onPress={() => {
                 if (item.title == "None") {
                   defaults()
-                  navigation.navigate("Dislikes")
+                  navigation.navigate("Allergies")
                   //return ; 
                   // return statement removed since it wasn't actually working 
                   // if Return is added it will not clear the array or put default values. 
@@ -242,8 +235,14 @@ export default function DietryRequirements({ navigation }) {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          if (selected_items_diet.length == 0) {
+          if (selected_items_diet.length === 0) {
             selected_items_diet.push(DIET_DATA[0]);
+          }
+          else {
+            const noneIndex = selected_items_diet.findIndex((el) => el.title === "None");
+            if (noneIndex !== -1) {
+              selected_items_diet.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
+            }
           }
           navigation.navigate("Allergies")
         }}

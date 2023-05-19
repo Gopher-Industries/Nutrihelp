@@ -22,7 +22,6 @@ const DISLIKES_DATA = [
   { id: "4", title: "Raisins", choice: false },
   { id: "5", title: "Tofu", choice: false },
   { id: "6", title: "Anchovies", choice: false },
-  { id: "7", title: "Test", choice: false },
 ];
 export const selected_items_dislikes = [];
 
@@ -224,6 +223,12 @@ export default function Dislikes({ navigation }) {
         style={styles.button}
         onPress={() => {if (selected_items_dislikes.length == 0) {
           selected_items_dislikes.push(DISLIKES_DATA[0]);
+        }
+        else {
+          const noneIndex = selected_items_dislikes.findIndex((el) => el.title === "None");
+          if (noneIndex !== -1) {
+            selected_items_dislikes.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
+          }
         }
         navigation.navigate("HealthConditions")}}
       >

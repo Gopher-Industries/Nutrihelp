@@ -276,6 +276,12 @@ export default function HealthConditions({ navigation }) {
           if (selected_items_health.length == 0) {
             selected_items_health.push(HEALTH_DATA[0]);
           }
+          else {
+            const noneIndex = selected_items_health.findIndex((el) => el.title === "None");
+            if (noneIndex !== -1) {
+              selected_items_health.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
+            }
+          }
           navigation.navigate("Preferences")
         }}
         >

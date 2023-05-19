@@ -25,17 +25,9 @@ const ALLERGY_DATA = [
   { id: "4", title: "Fish", choice: false },
   { id: "5", title: "Eggs", choice: false },
   { id: "6", title: "Gluten", choice: false },
-  { id: "7", title: "Test", choice: false },
 ];
 
 export const selected_items_allergy = [];
-
-const getItem = (item) => {
-  // Function for click on an item
-  setAllergy((prevAllergy) => [...prevAllergy, item.id]);
-  setSearchQuery("");
-  // BUG: Need to hide flatlist everytime after an item is added.
-};
 
 //For troubleshooting
 //console.log(allergy);
@@ -242,7 +234,13 @@ export default function Allergies({ navigation }) {
         onPress={() => {
           if (selected_items_allergy.length == 0) {
             selected_items_allergy.push(ALLERGY_DATA[0]);
+        }
+        else {
+          const noneIndex = selected_items_allergy.findIndex((el) => el.title === "None");
+          if (noneIndex !== -1) {
+            selected_items_allergy.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
           }
+        }
           navigation.navigate("Dislikes")
         }}
       >
