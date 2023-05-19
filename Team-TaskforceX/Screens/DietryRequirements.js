@@ -11,23 +11,32 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
+import { firebase } from "../config";
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
 //hardcoded for now but we should be pulling from DB
 const DIET_DATA = [
-  { id: "1", title: "None" },
-  { id: "2", title: "Vegetarian" },
-  { id: "3", title: "Vegan" },
-  { id: "4", title: "Keto" },
-  { id: "5", title: "Pescetarian" },
-  { id: "6", title: "Low Carb" },
-  { id: "7", title: "Test" },
+  { id: "1", title: "None", choice: false },
+  { id: "2", title: "Vegetarian", choice: false },
+  { id: "3", title: "Vegan", choice: false },
+  { id: "4", title: "Keto", choice: false },
+  { id: "5", title: "Pescetarian", choice: false },
+  { id: "6", title: "Low Carb", choice: false },
+  
 ];
 export const selected_items_diet = [];
 
+//For troubleshooting
+//console.log(allergy);
+//console.log(searchQuery);
+// console.log(item);
+//console.log(isSelected)
+
+
 export default function DietryRequirements({ navigation }) {
+  
   const [diet, setDiet] = useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -38,15 +47,8 @@ export default function DietryRequirements({ navigation }) {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const searchData = DIET_DATA.filter(
-        (DIET_DATA) => DIET_DATA.title == text
-      ).map((data) => {
-        {
-          data.title;
-        }
-      });
-
-      const newData = DIET_DATA.filter(function (item) {
+      var difference = DIET_DATA.filter(x => selected_items_diet.indexOf(x) === -1);
+      const newData = difference.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
           ? item.title.toUpperCase()
@@ -54,12 +56,12 @@ export default function DietryRequirements({ navigation }) {
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
       });
-      setFilteredDataSource(searchData);
+      setFilteredDataSource(newData);
       setSearchQuery(text);
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(DIET_DATA);
+      setFilteredDataSource(null);
       setSearchQuery(text);
     }
   };
@@ -95,10 +97,25 @@ export default function DietryRequirements({ navigation }) {
               numColumns={2}
               keyExtractor={item => item.id}
               renderItem={({ item }) => (
-                <View style={styles.item}>
+                <View {...{ style: item.choice ? styles.addeditem : styles.item }}>
                   <TouchableOpacity
-                    style={styles.preference}>
-                    <Text style={styles.itemText}>{item.title}</Text>
+                    style={styles.preference}
+                    onPress={() => {
+                      var index = selected_items_diet.indexOf(item);
+                      selected_items_diet.splice(index, 1);
+                      item.choice = !item.choice
+                      console.log(item, item.choice);
+                      console.log(selected_items_diet);
+                      // BUG: need to remove item.id if its already selected before
+                      setDiet((prevDiet) => [...prevDiet, item.id]);
+                    }}
+                  >
+                    <View style={styles.itemContent}>
+               {item.choice && (
+               <Icon name="check" size={20} color="black" style={styles.checkIcon}/>
+               )}
+              <Text style={styles.itemText}>{item.title}</Text>
+                </View>
                   </TouchableOpacity>
                 </View>
               )}
@@ -108,6 +125,14 @@ export default function DietryRequirements({ navigation }) {
       )
     }
   }
+
+  const defaults = () => {
+    DIET_DATA.forEach(element => {
+      element.choice = false;
+    });
+    console.log("All data selected cleared");
+    selected_items_diet.splice(0, selected_items_diet.length);
+  };
   //For troubleshooting
   //console.log(diet);
   console.log(searchQuery);
@@ -131,13 +156,31 @@ export default function DietryRequirements({ navigation }) {
         value={searchQuery}
       />
       <View>
-        <FlatList
+      <FlatList
           data={filteredDataSource}
           keyExtractor={(item) => item.id}
-          renderItem={ItemView}
-        />
-      </View>
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <TouchableOpacity
+                style={styles.preference}
+                onPress={() => {
+                  //setIsSelected(!isSelected)
+                  setSearchQuery("");
+                  selected_items_diet.push(item);
+                  item.choice = !item.choice
+                  console.log(item, item.choice);
+                  var index0 = filteredDataSource.indexOf(item);
+                  filteredDataSource.splice(index0, 1);
+                  setDiet((prevDiet) => [...prevDiet, item.id]);
+                }}
+              >
+                <Text style={styles.itemText}>{item.title}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
+        />
+    </View>
       {/* Conditional Rendering of Added By you */}
       <View>
         {AddedByYou()}
@@ -149,32 +192,41 @@ export default function DietryRequirements({ navigation }) {
         numColumns={2}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.item}>
+          <View {...{ style: item.choice ? styles.addeditem : styles.item }}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                //setIsSelected(!isSelected)
                 if (item.title == "None") {
-                  navigation.navigate('Allergies');
-                  selected_items_diet.splice(0, selected_items_diet.length);
-                  return;
+                  defaults()
+                  navigation.navigate("Allergies")
+                  //return ; 
+                  // return statement removed since it wasn't actually working 
+                  // if Return is added it will not clear the array or put default values. 
+                  // to deselect none press the none button in the AddedByYou section 
                 }
-                if (selected_items_diet.includes(item)) {
+                else if (selected_items_diet.includes(item) && item.title!="None") {
                   var index = selected_items_diet.indexOf(item);
                   selected_items_diet.splice(index, 1);
+                  item.choice = !item.choice
+                  console.log(item, item.choice);
                   console.log(selected_items_diet);
-                }
-                else {
+                } else if(!selected_items_diet.includes(item) && item.title!="None"){
                   selected_items_diet.push(item);
+                  item.choice = !item.choice
+                  console.log(item.choice);
                   console.log(selected_items_diet);
                 }
-
                 // BUG: need to remove item.id if its already selected before
                 setDiet((prevDiet) => [...prevDiet, item.id]);
                 // BUG: need to change colour when selected
               }}
             >
+              <View style={styles.itemContent}>
+               {item.choice && (
+               <Icon name="check" size={20} color="black" style={styles.checkIcon}/>
+               )}
               <Text style={styles.itemText}>{item.title}</Text>
+                </View>
             </TouchableOpacity>
           </View>
         )}
@@ -182,7 +234,18 @@ export default function DietryRequirements({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Allergies")}
+        onPress={() => {
+          if (selected_items_diet.length === 0) {
+            selected_items_diet.push(DIET_DATA[0]);
+          }
+          else {
+            const noneIndex = selected_items_diet.findIndex((el) => el.title === "None");
+            if (noneIndex !== -1) {
+              selected_items_diet.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
+            }
+          }
+          navigation.navigate("Allergies")
+        }}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -193,7 +256,7 @@ export default function DietryRequirements({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FFFBFE",
     padding: 30,
   },
   title: {
@@ -209,7 +272,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "black",
   },
-
   button: {
     backgroundColor: "#8d71ad",
     height: 55,
@@ -219,14 +281,14 @@ const styles = StyleSheet.create({
     top: 10,
     marginBottom: 50,
   },
-
   buttonText: {
     fontSize: 18,
     color: "white",
     fontWeight: "bold",
   },
-
   item: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
     marginTop: 10,
     // backgroundColor: 'green',
     borderColor: "black",
@@ -244,7 +306,26 @@ const styles = StyleSheet.create({
     color: "black",
     // fontFamily: 'Times',
   },
-
+  addeditem: {
+    marginTop: 10,
+    backgroundColor: 'lavender',
+    borderColor: "black",
+    borderWidth: 1,
+    maxWidth: SCREENWIDTH / 2 - 40,
+    padding: 10,
+    alignItems: "center",
+    borderRadius: 10,
+    justifyContent: "space-around",
+    margin: 5,
+    flex: 0.5,
+  },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkIcon: {
+    marginRight: 5, // Adjust this value to add spacing between the label and check mark
+  },
   listStyle: {
     paddingTop: 10,
   },

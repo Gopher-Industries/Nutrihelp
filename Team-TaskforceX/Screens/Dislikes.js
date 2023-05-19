@@ -16,13 +16,12 @@ const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
 const DISLIKES_DATA = [
-  { id: "1", title: "None" },
-  { id: "2", title: "Mushrooms" },
-  { id: "3", title: "Ginger" },
-  { id: "4", title: "Raisins" },
-  { id: "5", title: "Tofu" },
-  { id: "6", title: "Anchovies" },
-  { id: "7", title: "Test" },
+  { id: "1", title: "None", choice: false },
+  { id: "2", title: "Mushrooms", choice: false },
+  { id: "3", title: "Ginger",choice: false },
+  { id: "4", title: "Raisins", choice: false },
+  { id: "5", title: "Tofu", choice: false },
+  { id: "6", title: "Anchovies", choice: false },
 ];
 export const selected_items_dislikes = [];
 
@@ -37,7 +36,8 @@ export default function Dislikes({ navigation }) {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = DISLIKES_DATA.filter(function (item) {
+      var difference = DISLIKES_DATA.filter(x => selected_items_dislikes.indexOf(x) === -1);
+      const newData = difference.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
           ? item.title.toUpperCase()
@@ -50,7 +50,7 @@ export default function Dislikes({ navigation }) {
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(DISLIKES_DATA);
+      setFilteredDataSource(null);
       setSearchQuery(text);
     }
   };
@@ -85,10 +85,25 @@ export default function Dislikes({ navigation }) {
               numColumns={2}
               keyExtractor={item => item.id}
               renderItem={({ item }) => (
-                <View style={styles.item}>
+                <View {...{ style: item.choice ? styles.addeditem : styles.item }}>
                   <TouchableOpacity
-                    style={styles.preference}>
-                    <Text style={styles.itemText}>{item.title}</Text>
+                    style={styles.preference}
+                    onPress={() => {
+                      var index = selected_items_dislikes.indexOf(item);
+                      selected_items_dislikes.splice(index, 1);
+                      item.choice = !item.choice
+                      console.log(item, item.choice);
+                      console.log(selected_items_dislikes);
+                      // BUG: need to remove item.id if its already selected before
+                      setDislikes((prevDislikes) => [...prevDislikes, item.id]);
+                    }}
+                  >
+                    <View style={styles.itemContent}>
+               {item.choice && (
+               <Icon name="check" size={20} color="black" style={styles.checkIcon}/>
+               )}
+              <Text style={styles.itemText}>{item.title}</Text>
+                </View>
                   </TouchableOpacity>
                 </View>
               )}
@@ -98,7 +113,13 @@ export default function Dislikes({ navigation }) {
       )
     }
   }
-
+  const defaults = () => {
+    DISLIKES_DATA.forEach(element => {
+      element.choice = false;
+    });
+    console.log("All data selected cleared");
+    selected_items_dislikes.splice(0, selected_items_dislikes.length);
+  }
   //For troubleshooting
   //console.log(dislikes);
   console.log(searchQuery);
@@ -125,7 +146,26 @@ export default function Dislikes({ navigation }) {
         <FlatList
           data={filteredDataSource}
           keyExtractor={(item) => item.id}
-          renderItem={ItemView}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <TouchableOpacity
+                style={styles.preference}
+                onPress={() => {
+                  //setIsSelected(!isSelected)
+                  setSearchQuery("");
+                  selected_items_dislikes.push(item);
+                  item.choice = !item.choice
+                  console.log(item, item.choice);
+                  var index0 = filteredDataSource.indexOf(item);
+                  filteredDataSource.splice(index0, 1);
+                  setDislikes((prevDislikes) => [...prevDislikes, item.id]);
+                }}
+              >
+                <Text style={styles.itemText}>{item.title}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
         />
       </View>
       <View>
@@ -137,39 +177,60 @@ export default function Dislikes({ navigation }) {
         numColumns={2}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.item}>
+          <View {...{ style: item.choice ? styles.addeditem : styles.item }}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
                 // setIsSelected(!isSelected)
                 if(item.title=="None")
                 {
+                  defaults()
                   navigation.navigate('HealthConditions');
-                  selected_items_dislikes.splice(0,selected_items_dislikes.length);
-                  return;
+                  //return ; 
+                  // return statement removed since it wasn't actually working 
+                  // if Return is added it will not clear the array or put default values. 
+                  // to deselect none press the none button in the AddedByYou section 
                 }
-                if (selected_items_dislikes.includes(item)) {
+                else if (selected_items_dislikes.includes(item) && item.title!="None") {
                   var index = selected_items_dislikes.indexOf(item);
                   selected_items_dislikes.splice(index, 1);
+                  item.choice = !item.choice
+                  console.log(item, item.choice);
                   console.log(selected_items_dislikes);
-                } else {
+                } else if(!selected_items_dislikes.includes(item) && item.title!="None"){
                   selected_items_dislikes.push(item);
+                  item.choice = !item.choice
+                  console.log(item.choice);
                   console.log(selected_items_dislikes);
                 }
                 // BUG: need to remove item.id if its already selected before
                 setDislikes((prevDislikes) => [...prevDislikes, item.id]);
-                // BUG: need to change colour when selected
+                //BUG: need to change colour when selected
               }}
             >
-              <Text style={styles.itemText}>{item.title}</Text>
-            </TouchableOpacity>
+              <View style={styles.itemContent}>
+      {item.choice && (
+        <Icon name="check" size={20} color="black" style={styles.checkIcon} />
+      )}
+      <Text style={styles.itemText}>{item.title}</Text>
+    </View>
+     </TouchableOpacity>
           </View>
         )}
       />
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("HealthConditions")}
+        onPress={() => {if (selected_items_dislikes.length == 0) {
+          selected_items_dislikes.push(DISLIKES_DATA[0]);
+        }
+        else {
+          const noneIndex = selected_items_dislikes.findIndex((el) => el.title === "None");
+          if (noneIndex !== -1) {
+            selected_items_dislikes.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
+          }
+        }
+        navigation.navigate("HealthConditions")}}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -180,7 +241,7 @@ export default function Dislikes({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FFFBFE",
     padding: 30,
   },
   title: {
@@ -231,7 +292,26 @@ const styles = StyleSheet.create({
     color: "black",
     // fontFamily: 'Times',
   },
-
+  addeditem: {
+    marginTop: 10,
+    backgroundColor: 'lavender',
+    borderColor: "black",
+    borderWidth: 1,
+    maxWidth: SCREENWIDTH / 2 - 40,
+    padding: 10,
+    alignItems: "center",
+    borderRadius: 10,
+    justifyContent: "space-around",
+    margin: 5,
+    flex: 0.5,
+  },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkIcon: {
+    marginRight: 5,
+  },
   listStyle: {
     paddingTop: 10,
   },

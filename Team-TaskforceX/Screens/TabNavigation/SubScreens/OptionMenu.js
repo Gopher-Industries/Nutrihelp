@@ -14,7 +14,7 @@ import {
 const DATA = [
   {
     key: 0,
-    value: "1153 KJ",
+    value: 1153 + " KJ",
     image: require("../Local_Store/strawberrysmoothie1of12-1.png"),
     description: "Strawberry & Bannana Smoothie",
   },

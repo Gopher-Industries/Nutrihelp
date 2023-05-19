@@ -16,7 +16,6 @@ import { selected_items_allergy } from "../../Allergies";
 import { selected_items_dislikes } from "../../Dislikes";
 import { selected_items_health } from "../../HealthConditions";
 import { firebase } from "../../../config";
-
 // const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get("window").width;
 const DIET_DATA = selected_items_diet;
@@ -29,6 +28,13 @@ const HEALTH_DATA = selected_items_health;
 
 // next trim need to get values from the previous pages and output it here.
 export default function Preferences({ navigation }) {
+
+const [dietData, setDietData] = React.useState(DIET_DATA);
+const [allergyData, setAllergyData] = React.useState(ALLERGY_DATA);
+const [dislikesData, setDislikesData] = React.useState(DISLIKES_DATA);
+const [healthData, setHealthData] = React.useState(HEALTH_DATA);
+
+
   const CommitDietryData = () => {
     var a = [
       { key: "None", value: false },
@@ -178,6 +184,7 @@ export default function Preferences({ navigation }) {
     });
   };
 
+
   return (
     <SafeAreaView style={styles.container}>
       <Icon
@@ -190,71 +197,98 @@ export default function Preferences({ navigation }) {
       <View>
         <Text style={styles.title}>Your preferences</Text>
       </View>
+      <View>
+        <Text style={styles.text}>Please confirm your selections</Text>
+      </View>
       <View style={styles.columnView}>
         <Text style={styles.preference}>Special dietary requirement</Text>
         <View>
-          <FlatList
-            data={DIET_DATA}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.item}>
-                <TouchableOpacity>
+        <FlatList
+          data={dietData}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => (
+            <View style={styles.item}>
+              <TouchableOpacity
+                onPress={() => setDietData((prevData) => prevData.filter((_, i) => i !== index))}
+              >
+                <View style={styles.itemContent}>
                   <Text style={styles.itemText}>{item.title}</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
+                  <Icon name="times" size={20} color="black" style={styles.crossIcon} />
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
         </View>
         <Text style={styles.preference}>Allergies</Text>
         <View>
-          <FlatList
-            data={ALLERGY_DATA}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.item}>
-                <TouchableOpacity>
+        <FlatList
+          data={allergyData}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => (
+            <View style={styles.item}>
+              <TouchableOpacity
+                onPress={() => setAllergyData((prevData) => prevData.filter((_, i) => i !== index))}
+              >
+                <View style={styles.itemContent}>
                   <Text style={styles.itemText}>{item.title}</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
+                  <Icon name="times" size={20} color="black" style={styles.crossIcon} />
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
         </View>
         <Text style={styles.preference}>Dislikes</Text>
         <View>
-          <FlatList
-            data={DISLIKES_DATA}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.item}>
-                <TouchableOpacity>
+        <FlatList
+          data={dislikesData}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => (
+            <View style={styles.item}>
+              <TouchableOpacity
+                onPress={() => setDislikesData((prevData) => prevData.filter((_, i) => i !== index))}
+              >
+                <View style={styles.itemContent}>
                   <Text style={styles.itemText}>{item.title}</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
+                  <Icon name="times" size={20} color="black" style={styles.crossIcon} />
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
         </View>
         <Text style={styles.preference}>Health Conditions</Text>
         <View>
-          <FlatList
-            data={HEALTH_DATA}
-            numColumns={2}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.item}>
-                <TouchableOpacity>
+        <FlatList
+          data={healthData}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => (
+            <View style={styles.item}>
+              <TouchableOpacity
+                onPress={() => setHealthData((prevData) => prevData.filter((_, i) => i !== index))}
+              >
+                <View style={styles.itemContent}>
                   <Text style={styles.itemText}>{item.title}</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
+                  <Icon name="times" size={20} color="black" style={styles.crossIcon} />
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
         </View>
         <View>
         <TouchableOpacity
             style={styles.button}
             onPress={() => {
+              CommitDietryData();
+              CommitAllergyData();
+              CommitDislikesData();
+              CommitHealthConditions();
               navigation.goBack();
             }}
             accessibilityLabel="Confirm your preference selection"
@@ -269,7 +303,7 @@ export default function Preferences({ navigation }) {
             <Text style={styles.altButtonText}>Redo</Text>
           </TouchableOpacity>
         </View>
-      </View>
+        </View>
     </SafeAreaView>
   );
 }
@@ -277,7 +311,7 @@ export default function Preferences({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FFFBFE",
     padding: 30,
     fontSize: 150,
     textAlign: "left",
@@ -349,19 +383,26 @@ const styles = StyleSheet.create({
   // }
   item: {
     marginTop: 10,
-    // backgroundColor: 'green',
+    backgroundColor: 'lavender',
     borderColor: "black",
     borderWidth: 1,
     maxWidth: SCREENWIDTH / 2 - 40,
-    padding: 8,
+    padding: 10,
     alignItems: "center",
     borderRadius: 10,
     justifyContent: "space-around",
     margin: 5,
     flex: 0.5,
   },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   itemText: {
     color: "black",
     // fontFamily: 'Times',
+  },
+  crossIcon: {
+    marginLeft: 5, // Adjust this value to add spacing between the label and check mark
   },
 });

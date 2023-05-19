@@ -3,20 +3,20 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableHighlight,
   Dimensions,
   SafeAreaView,
   TouchableOpacity,
   FlatList,
-  ScrollView,
+  TouchableHighlight,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome"; //Back Arrow
+import Icon from "react-native-vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
-import { TextInput as RNPTextInput } from "react-native-paper"; //Search Bar
+import { firebase } from "../config";
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
+//hardcoded for now but we should be pulling from DB
 const HEALTH_DATA = [
   { id: "1", title: "None" },
   { id: "2", title: "Vit B6 deficiency" },
@@ -28,6 +28,7 @@ const HEALTH_DATA = [
   { id: "8", title: "Iron deficiency" },
 ];
 export const selected_items_health = [];
+
 const searchFilterFunction = (text) => {
   // Check if searched text is not blank
   if (text) {
@@ -86,7 +87,8 @@ export default function HealthConditions({ navigation }) {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = HEALTH_DATA.filter(function (item) {
+      var difference = HEALTH_DATA.filter(x => selected_items_health.indexOf(x) === -1);
+      const newData = difference.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.title
           ? item.title.toUpperCase()
@@ -99,7 +101,7 @@ export default function HealthConditions({ navigation }) {
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(HEALTH_DATA);
+      setFilteredDataSource(null);
       setSearchQuery(text);
     }
   };
@@ -119,10 +121,7 @@ export default function HealthConditions({ navigation }) {
 
   const getItem = (item) => {
     // Function for click on an item
-    setHealthCondition((prevHealthCondition) => [
-      ...prevHealthCondition,
-      item.id,
-    ]);
+    setHealthCondition((prevHealthCondition) => [...prevHealthCondition,item.id]);
     setSearchQuery("");
     // BUG: Need to hide flatlist everytime after an item is added.
   };
@@ -132,15 +131,30 @@ export default function HealthConditions({ navigation }) {
         <View>
           <Text style={styles.text}>Added by you</Text>
           <View>
-            <FlatList
+          <FlatList
               data={selected_items_health}
               numColumns={2}
               keyExtractor={item => item.id}
               renderItem={({ item }) => (
-                <View style={styles.item}>
+                <View {...{ style: item.choice ? styles.addeditem : styles.item }}>
                   <TouchableOpacity
-                    style={styles.preference}>
-                    <Text style={styles.itemText}>{item.title}</Text>
+                    style={styles.preference}
+                    onPress={() => {
+                      var index = selected_items_health.indexOf(item);
+                      selected_items_health.splice(index, 1);
+                      item.choice = !item.choice
+                      console.log(item, item.choice);
+                      console.log(selected_items_health);
+                      // BUG: need to remove item.id if its already selected before
+                      setHealthCondition((prevHealthCondition) => [...prevHealthCondition, item.id]);
+                    }}
+                  >
+                    <View style={styles.itemContent}>
+               {item.choice && (
+               <Icon name="check" size={20} color="black" style={styles.checkIcon}/>
+               )}
+              <Text style={styles.itemText}>{item.title}</Text>
+                </View>
                   </TouchableOpacity>
                 </View>
               )}
@@ -149,6 +163,14 @@ export default function HealthConditions({ navigation }) {
         </View>
       )
     }
+  }
+
+  const defaults = () => {
+    HEALTH_DATA.forEach(element => {
+      element.choice = false;
+    });
+    console.log("All data selected cleared");
+    selected_items_health.splice(0, selected_items_health.length);
   }
   //For troubleshooting
   //console.log(diet);
@@ -168,78 +190,100 @@ export default function HealthConditions({ navigation }) {
       <View>
         <Text style={styles.title}>Health Conditions</Text>
       </View>
-      <RNPTextInput //Active search bar.
-        style={styles.searchHealthTextInputRNPTextInput}
+      <Searchbar
         placeholder="Search Health Conditions"
         onChangeText={(text) => searchFilterFunction(text)}
         value={searchQuery}
-        label="Search Health Conditions"
-        mode="outlined"
-        activeOutlineColor="#8273a9"
       />
       <View>
-        <FlatList
+      <FlatList
           data={filteredDataSource}
-          keyExtractor={(item) => item.id}
-          renderItem={ItemView}
-          />
-        </View>
-        <Text style={styles.text}>Added by you</Text>
-        <View>
-        <FlatList
-          data={selected_items_health}
-          numColumns={2}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.item}>
-              <TouchableOpacity style={styles.preference}>
+              <TouchableOpacity
+                style={styles.preference}
+                onPress={() => {
+                  //setIsSelected(!isSelected)
+                  setSearchQuery("");
+                  selected_items_health.push(item);
+                  item.choice = !item.choice
+                  console.log(item, item.choice);
+                  var index0 = filteredDataSource.indexOf(item);
+                  filteredDataSource.splice(index0, 1);
+                  setHealthCondition((prevHealthCondition) => [...prevHealthCondition, item.id]);
+                }}
+              >
                 <Text style={styles.itemText}>{item.title}</Text>
               </TouchableOpacity>
             </View>
           )}
         />
-        </View>
+      </View>
+
+      <View>
+        {AddedByYou()}
+      </View>
+
         <Text style={styles.text}>Most Common</Text>
-        <FlatList
+      <FlatList
         data={HEALTH_DATA}
         numColumns={2}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.item}>
+          <View {...{ style: item.choice ? styles.addeditem : styles.item }}>
             <TouchableOpacity
               style={styles.preference}
               onPress={() => {
-                //setIsSelected(!isSelected)
                 if (item.title == "None") {
-                  navigation.navigate('Preferences');
-                  selected_items_health.splice(0,selected_items_health);
-                  return;
+                  defaults()
+                  navigation.navigate("Preferences")
+                  //return ; 
+                  // return statement removed since it wasn't actually working 
+                  // if Return is added it will not clear the array or put default values. 
+                  // to deselect none press the none button in the AddedByYou section 
                 }
-                if (selected_items_health.includes(item)) {
+                else if (selected_items_health.includes(item) && item.title!="None") {
                   var index = selected_items_health.indexOf(item);
                   selected_items_health.splice(index, 1);
+                  item.choice = !item.choice
+                  console.log(item, item.choice);
                   console.log(selected_items_health);
-                } else {
+                } else if(!selected_items_health.includes(item) && item.title!="None"){
                   selected_items_health.push(item);
+                  item.choice = !item.choice
+                  console.log(item.choice);
                   console.log(selected_items_health);
                 }
-
                 // BUG: need to remove item.id if its already selected before
-                setHealthCondition((prevHealthCondition) => [
-                  ...prevHealthCondition,
-                  item.id,
-                ]);
-                // BUG: need to change colour when selected
+                setHealthCondition((prevHealthCondition) => [...prevHealthCondition, item.id]);
+                //BUG: need to change colour when selected
               }}
             >
-              <Text style={styles.itemText}>{item.title}</Text>
-            </TouchableOpacity>
+              <View style={styles.itemContent}>
+                  {item.choice && (
+                    <Icon name="check" size={20} color="black" style={styles.checkIcon} />
+                  )}
+      <Text style={styles.itemText}>{item.title}</Text>
+          </View>
+      </TouchableOpacity>
           </View>
         )}
-        />
+      />
         <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Preferences")}
+        onPress={() => {
+          if (selected_items_health.length == 0) {
+            selected_items_health.push(HEALTH_DATA[0]);
+          }
+          else {
+            const noneIndex = selected_items_health.findIndex((el) => el.title === "None");
+            if (noneIndex !== -1) {
+              selected_items_health.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
+            }
+          }
+          navigation.navigate("Preferences")
+        }}
         >
         <Text style={styles.buttonText}>Continue</Text>
         </TouchableOpacity>
@@ -249,97 +293,78 @@ export default function HealthConditions({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  //Background
   container: {
     flex: 1,
     backgroundColor: "#FFFBFE",
-    padding: 16,
+    padding: 30,
   },
-  
-  //Back Arrow
-  backArrow: {
-    marginTop: 52,
-  },
-  
-  //Main Title
-  title: { 
-    fontSize: 24,
-    fontFamily: "OpenSans_400Regular",
+  title: {
+    fontSize: 25,
     color: "black",
-    marginTop: 30,
+    marginTop: 20,
     marginBottom: 20,
-    lineHeight: 32,
-    
   },
-
-  //Search Bar
-  searchHealthTextInputRNPTextInput: {
-    borderRadius: 4,
-    borderColor: "black",
-    borderStyle: "solid",
-    width: 361,
-    height: 56,
-    backgroundColor: "#FFFBFE",
-  },
-
-  //Secondary headings
-  text: { 
-    fontSize: 19,
-    marginTop: 16,
+  text: {
+    fontSize: 20,
+    marginBottom: 10,
+    marginTop: 20,
+    fontWeight: "bold",
     color: "black",
-    fontFamily: "OpenSans_400Regular",
-    lineHeight: 48,
-    fontWeight: '600',
   },
-
- //Continue button
   button: {
-    backgroundColor: "#8273A9",
-    height: 40,
+    backgroundColor: "#8d71ad",
+    height: 55,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 100,
+    borderRadius: 25,
     top: 10,
-    marginBottom: 32,
+    marginBottom: 50,
   },
-
-  //Continue button text
   buttonText: {
-    fontSize: 16,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '700',
-    fontFamily: 'OpenSans_400Regular',
-    color: '#fff',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
+    fontSize: 18,
+    color: "white",
+    fontWeight: "bold",
   },
-
-  //Chips
   item: {
-    marginTop: 16,
-    backgroundColor: "#FFFBFE",
-    borderColor: "#79747E",
+    flexDirection: 'row', // Add this line
+    alignItems: 'center', // Add this line
+    marginTop: 10,
+    // backgroundColor: 'green',
+    borderColor: "black",
     borderWidth: 1,
-    maxWidth: SCREENWIDTH / 2 - 16,
+    maxWidth: SCREENWIDTH / 2 - 40,
+    padding: 10,
     alignItems: "center",
-    borderRadius: 8,
+    borderRadius: 10,
     justifyContent: "space-around",
     margin: 5,
     flex: 0.5,
-    height: 32,
+    //backgroundColor: 'pink',
   },
-
-  //Chips text
-  itemText: { 
-    fontSize: 14,
-    color: "#49454F",
+  itemText: {
+    color: "black",
+    // fontFamily: 'Times',
+  },
+  addeditem: {
+    marginTop: 10,
+    backgroundColor: 'lavender',
+    borderColor: "black",
+    borderWidth: 1,
+    maxWidth: SCREENWIDTH / 2 - 40,
+    padding: 10,
     alignItems: "center",
-    fontFamily: "OpenSans_400Regular",
-    fontWeight: '600',
+    borderRadius: 10,
+    justifyContent: "space-around",
+    margin: 5,
+    flex: 0.5,
   },
-
+  checkIcon: {
+    marginRight: 5, // Adjust this value to add spacing between the label and check mark
+  },
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   listStyle: {
     paddingTop: 10,
   },

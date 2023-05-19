@@ -25,17 +25,9 @@ const ALLERGY_DATA = [
   { id: "4", title: "Fish", choice: false },
   { id: "5", title: "Eggs", choice: false },
   { id: "6", title: "Gluten", choice: false },
-  { id: "7", title: "Test", choice: false },
 ];
 
 export const selected_items_allergy = [];
-
-const getItem = (item) => {
-  // Function for click on an item
-  setAllergy((prevAllergy) => [...prevAllergy, item.id]);
-  setSearchQuery("");
-  // BUG: Need to hide flatlist everytime after an item is added.
-};
 
 //For troubleshooting
 //console.log(allergy);
@@ -104,7 +96,7 @@ export default function Allergies({ navigation }) {
               numColumns={2}
               keyExtractor={item => item.id}
               renderItem={({ item }) => (
-                <View style={styles.item}>
+                <View {...{ style: item.choice ? styles.addeditem : styles.item }}>
                   <TouchableOpacity
                     style={styles.preference}
                     onPress={() => {
@@ -117,7 +109,12 @@ export default function Allergies({ navigation }) {
                       setAllergy((prevAllergy) => [...prevAllergy, item.id]);
                     }}
                   >
-                    <Text style={styles.itemText}>{item.title}</Text>
+                    <View style={styles.itemContent}>
+               {item.choice && (
+               <Icon name="check" size={20} color="black" style={styles.checkIcon}/>
+               )}
+              <Text style={styles.itemText}>{item.title}</Text>
+                </View>
                   </TouchableOpacity>
                 </View>
               )}
@@ -220,7 +217,13 @@ export default function Allergies({ navigation }) {
                 setAllergy((prevAllergy) => [...prevAllergy, item.id]);
               }}
             >
-              <Text style={styles.itemText}>{item.title}</Text>
+              <View style={styles.itemContent}>
+      {item.choice && (
+        <Icon name="check" size={20} color="black" style={styles.checkIcon} />
+      )}
+      <Text style={styles.itemText}>{item.title}</Text>
+      </View>
+    
             </TouchableOpacity>
           </View>
         )}
@@ -231,7 +234,13 @@ export default function Allergies({ navigation }) {
         onPress={() => {
           if (selected_items_allergy.length == 0) {
             selected_items_allergy.push(ALLERGY_DATA[0]);
+        }
+        else {
+          const noneIndex = selected_items_allergy.findIndex((el) => el.title === "None");
+          if (noneIndex !== -1) {
+            selected_items_allergy.splice(noneIndex, 1); //Remove the "None" element from selected_items_diet
           }
+        }
           navigation.navigate("Dislikes")
         }}
       >
@@ -244,7 +253,7 @@ export default function Allergies({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#FFFBFE",
     padding: 30,
   },
   title: {
@@ -307,7 +316,13 @@ const styles = StyleSheet.create({
     color: "black",
     // fontFamily: 'Times',
   },
-
+  itemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkIcon: {
+    marginRight: 5,
+  },
   listStyle: {
     paddingTop: 10,
   },

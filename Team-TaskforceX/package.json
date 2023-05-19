@@ -45,10 +45,15 @@
     "react-native-select-dropdown": "^3.0.3",
     "react-native-sensors": "^7.3.6",
     "react-native-vector-icons": "^9.2.0",
-    "react-navigation-tabs": "^2.11.2"
+    "react-navigation-tabs": "^2.11.2",
+    "expo-dev-client": "~2.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
   },
-  "private": true
+  "private": true,
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
