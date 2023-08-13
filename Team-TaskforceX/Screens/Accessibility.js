@@ -3,18 +3,22 @@ import { Button, StyleSheet, Text, View, Pressable, Image, Switch,TouchableOpaci
 import * as React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+//import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useRoute } from "@react-navigation/native"
-//import './Accessibility.css';
+import * as Speech from 'expo-speech';
+
+export const Access = {
+  colourBlind: false,
+  textLarge: false,
+  isVoiceOverOn: false,
+};
 
 
-
-const Accessibility = () => {
+export default function Accessibility ({navigation}) {
   const [switchColour, setColourValue] = useState(false);
-  //toggle colourblind mode
   
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
   const [switchVoice, setVoiceValue] = useState(false);
 
   // text size
@@ -24,26 +28,55 @@ const Accessibility = () => {
   //handle text size button presses
   const handleLargePress = () => {
   if (isLargePressed == false){
-  setIsLargePressed(!isLargePressed);
+    setIsLargePressed(!isLargePressed);
     setIsNormalPressed(!isNormalPressed);
+    Access.textLarge = true;
+    console.log("large text: " + Access.textLarge);
   }
-};
-const handleNormalPress = () => {
-  if (isNormalPressed == false){
-  setIsNormalPressed(!isNormalPressed);
-  setIsLargePressed(!isLargePressed);
+  if (switchVoice == true) {
+    speak("Large text");
+  }
+  };
   
+  const handleNormalPress = () => {
+    if (isNormalPressed == false){
+    setIsNormalPressed(!isNormalPressed);
+    setIsLargePressed(!isLargePressed);
+    Access.textLarge = false;
+    console.log("large text: " +  Access.textLarge);
   }
-};
+  if (switchVoice == true) {
+    speak("Normal text");
+  }
+  };
 
 
-const updateSwitchColour = (newColour) => {
+  const updateSwitchColour = (newColour) => {
   setColourValue(newColour);
-  navigation.setParams(newColour)
-}
+  Access.colourBlind = newColour;
+  console.log("colourblind: " +  Access.colourBlind);
+  if (switchVoice == true) {
+    speak(newColour ? "Colour blind Mode on": "Colour blind Mode off");
+  }
+  }
 
+//call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
 
-//stylesheet
+  const handleVoiceOverSwitch = (newValue) => {
+    setVoiceValue(newValue);
+    Access.isVoiceOverOn = newValue;
+    console.log("voice over: " +  Access.isVoiceOverOn);
+    speak(newValue ? "Voice Over On" : "");
+  };
+
+  //stylesheet
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -293,27 +326,35 @@ const updateSwitchColour = (newColour) => {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => 
+          {if (switchVoice == true) {
+            speak("Back");
+          };
+          navigation.goBack()}}
       />
         <Text style={styles.headline}>{`Accessibility  `}</Text>
       </View>
       <Switch //colourblind switch
         style={styles.colourSwitch}
         value={switchColour}
-        onValueChange = {setColourValue}
+        onValueChange = {updateSwitchColour}
         thumbColor="#fff"
         trackColor={{ false: "#79747e", true: "#8273a9" }}
       />
       <Switch //voice over switch
         style={styles.voiceSwitch}
         value={switchVoice}
-        onValueChange={setVoiceValue}
+        onValueChange={handleVoiceOverSwitch}
         thumbColor="#fff"
         trackColor={{ false: "#79747e", true: "#8273a9" }}
       />
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={() => navigation.navigate("CreateAccount", { switchColour, isLarge})}
+        onPress={() => 
+          {if (switchVoice == true) {
+          speak("Continue");
+        };
+          navigation.navigate("CreateAccount")}}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
@@ -337,6 +378,5 @@ const updateSwitchColour = (newColour) => {
     </View>
   
   );
-};
+}
 
-export default Accessibility;

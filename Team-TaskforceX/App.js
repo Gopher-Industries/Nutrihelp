@@ -17,13 +17,13 @@ import Preferences from "./Screens/Preferences";
 import DailyNutritionPlan from "./Screens/DailyNutritionPlan";
 import MealPlanning from "./Screens/MealPlanning";
 import Permissions from "./Screens/Permissions";
-import Access from "./Screens/Access";
+import AccessScreen from "./Screens/AccessScreen";
 import Notifications from "./Screens/Notifications";
 import TodaysPlan from "./Screens/TodaysPlan";
 import NutritionalReport from "./Screens/NutritionalReport";
 import LogIn from "./Screens/LogIn";
 import GoogleAuthScreen from "./Screens/GoogleAuthScreen";
-import { LogBox } from 'react-native'; 
+import { LogBox } from 'react-native';
 // This is there to stop the warnings show up in the actual device/emulator 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
@@ -117,8 +117,8 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Access"
-          component={Access}
+          name="AccessScreen"
+          component={AccessScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

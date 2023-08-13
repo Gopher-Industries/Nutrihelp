@@ -13,11 +13,26 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome"; //Wrong arrow, need to change
 //import {useNavigation} from '@react-navigation/native';
+import { Access } from "./Accessibility";
+import * as Speech from 'expo-speech';
+
+let colourBlind =  Access.colourBlind;
+let textLarge =  Access.textLarge;
+let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
 export default function DailyNutritionPlan({ navigation }) {
+  //call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView alwaysBounceVertical = {false}>
@@ -27,7 +42,10 @@ export default function DailyNutritionPlan({ navigation }) {
           size={20}
           color="black"
           type="entypo"
-          onPress={() => navigation.goBack()}
+          onPress={() => 
+            {if (isVoiceOverOn == true) {
+              speak("Back");}
+              navigation.goBack()}}
         />
         <View>
           <Text style={styles.title}>Daily Nutrition Plan</Text>
@@ -100,7 +118,10 @@ export default function DailyNutritionPlan({ navigation }) {
           <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("MealPlanning")}
+            onPress={() => 
+              {if (isVoiceOverOn == true) {
+                speak("Continue");
+              }navigation.navigate("MealPlanning")}}
           >
           <Text style={styles.buttonText}>Continue</Text>
           </TouchableOpacity>
@@ -124,7 +145,7 @@ const styles = StyleSheet.create({
 
   //Main Title
   title: { 
-    fontSize: 24,
+    fontSize: textLarge ? 30 : 24,
     lineHeight: 32,
     fontFamily: "OpenSans_400Regular",
     color: "black",
@@ -134,7 +155,7 @@ const styles = StyleSheet.create({
 
   //Secondary headings
   subHeading: { 
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     marginTop: 16,
     color: "black",
     fontFamily: "OpenSans_400Regular",
@@ -145,7 +166,7 @@ const styles = StyleSheet.create({
   plan: {
     textAlign: 'right',
     marginTop: -25,
-    fontSize: 19,
+    fontSize: textLarge ? 23 : 19,
     color: "#6750a4",
     fontFamily: "OpenSans_600SemiBold",
     fontWeight: "600",
@@ -154,7 +175,7 @@ const styles = StyleSheet.create({
 
   //Paragraph text
   paragraphText: {
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     letterSpacing: -0.2,
     lineHeight: 24,
     fontFamily: 'OpenSans_400Regular',
@@ -167,7 +188,7 @@ const styles = StyleSheet.create({
 
   //Continue button
   button: {
-    backgroundColor: "#8273a9",
+    backgroundColor: colourBlind ? "red":"#8273a9",
     height: 40,
     alignItems: "center",
     justifyContent: "center",
@@ -178,7 +199,7 @@ const styles = StyleSheet.create({
 
   //Continue button text
   buttonText: {
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     letterSpacing: 0.1,
     lineHeight: 20,
     fontWeight: '700',

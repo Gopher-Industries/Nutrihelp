@@ -27,10 +27,15 @@ import * as Contacts from 'expo-contacts';
 //import { DropDownPicker } from "react-native-element-dropdown";
 import  DropDownPicker  from 'react-native-dropdown-picker'
 import {KeyboardAwareScrollView , KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view'
+import { Access } from "./Accessibility";
+import * as Speech from 'expo-speech';
+
+let colourBlind =  Access.colourBlind;
+let textLarge =  Access.textLarge;
+let isVoiceOverOn =  Access.isVoiceOverOn;
 
 
-
-const Access = () => {
+const AccessScreen = () => {
   const [familyCarerSwitchValue, setFamilyCarerSwitchValue] = useState(false);
   const [weeklyReportsSwitchValue, setWeeklyReportsSwitchValue] = useState(false);
   const [healthReportSwitchValue, setHealthReportSwitchValue] = useState(false);
@@ -50,6 +55,19 @@ const Access = () => {
   //const [gpInputFocused, setGpInputFocused] = useState(false);
   const [showContactPicker, setShowContactPicker] = useState(false);
 
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  const handleInputFocus = (label) => {
+    if (isVoiceOverOn) {
+      speak(label);
+    }
+  };
 
     // Function to fetch contacts data from an API or local storage
     const fetchContacts = async () => {
@@ -122,7 +140,7 @@ const Access = () => {
 const handleFamilySwitchChange = (value) => {
   setFamilyCarerSwitchValue(value);
   setOpen(value);
-
+  handleSwitchChange("Family Carer", value);
   if (familyCarerSwitchValue == true)
   {
     setSelectedFamilyContact([]);
@@ -132,7 +150,7 @@ const handleFamilySwitchChange = (value) => {
 const handleGpSwitchChange = (value) => {
   setGpSwitchValue(value);
   setGpOpen(value);
-
+  handleSwitchChange("GP", value);
   if (gpSwitchValue == true)
   {
     setSelectedGPContact([]);
@@ -142,6 +160,7 @@ const handleGpSwitchChange = (value) => {
 
   const handleContactPicker = () => {
     setShowContactPicker(true);
+    handleInputFocus("Search Contacts")
   };
 
 
@@ -151,7 +170,6 @@ const handleGpSwitchChange = (value) => {
       setSelectedFamilyContact(prevValue => [...prevValue, contact]);
     }
 
-    console.log("test")
     for (let i = 0; i < selectedContact.length; i++) {
       console.log(selectedContact[i]);
     }
@@ -163,6 +181,12 @@ const handleGpSwitchChange = (value) => {
     {
       setSelectedGPContact(prevValue => [...prevValue, contact])
     }
+  };
+
+  const handleSwitchChange = (text, value) => {
+    {if (isVoiceOverOn == true) {
+    const switchStatus = value ? "on" : "off";
+    speak(text + " " + switchStatus);}}
   };
 /*
   const handleFamilySearch = (text) => {
@@ -186,7 +210,10 @@ const handleGpSwitchChange = (value) => {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+          speak("Back");
+        };navigation.goBack()}}
       />
     <View>
         <Text style={styles.headline}>Access</Text>
@@ -231,7 +258,9 @@ const handleGpSwitchChange = (value) => {
       <Switch
         style={styles.weeklyReportsSwitch}
         value={weeklyReportsSwitchValue}
-        onValueChange={setWeeklyReportsSwitchValue}
+        onValueChange={(value) => {
+          handleSwitchChange("weekly report", value)
+          setWeeklyReportsSwitchValue(value)}}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
@@ -239,7 +268,9 @@ const handleGpSwitchChange = (value) => {
       <Switch
         style={styles.groceryListSwitch}
         value={groceryListSwitchValue}
-        onValueChange={setGroceryListSwitchValue}
+        onValueChange={(value) => {
+          handleSwitchChange("Grocery list", value)
+          setGroceryListSwitchValue(value)}}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
@@ -247,7 +278,10 @@ const handleGpSwitchChange = (value) => {
       <Switch
         style={styles.healthReportSwitch}
         value={healthReportSwitchValue}
-        onValueChange={setHealthReportSwitchValue}
+        onValueChange={(value) => {
+          handleSwitchChange("Health report", value)
+          setHealthReportSwitchValue(value);
+        }}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
@@ -285,7 +319,10 @@ const handleGpSwitchChange = (value) => {
       />
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={() => navigation.navigate("Notifications")}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Continue");}
+            navigation.navigate("Notifications")}}
       >
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
@@ -394,7 +431,7 @@ const styles = StyleSheet.create({
   headline: { //access text
     marginBottom: 10,
     marginLeft: 16,
-    fontSize: 24,
+    fontSize: textLarge ? 30 : 24,
     color: "#000",
     textAlign: "left",
     display: "flex",
@@ -404,17 +441,17 @@ const styles = StyleSheet.create({
   wouldYouLikeToGiveYourFa: {
     marginTop: 10,
     marginLeft: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 24,
     color: "#000",
     textAlign: "left",
     width: "90%",
-    height: 50,
+    height: textLarge ? 70 : 50,
   },
   familyCarer: { //family header text
     marginTop: 15,
     marginLeft: 16,
-    fontSize: 19,
+    fontSize: textLarge ? 24 : 20,
     lineHeight: 48,
     fontWeight: "600",
     color: "#000",
@@ -434,17 +471,21 @@ dropDownContainer: {
   marginBottom: 20,
   marginLeft: 16,
   zIndex: 999,
+  fontSize: textLarge ? 18 : 14,
 },
 dropDownStyle: {
   backgroundColor: '#fafafa',
   borderColor: '#ccc',
   borderWidth: 1,
+  fontSize: textLarge ? 18 : 14,
 },
 dropDownItemStyle: {
   justifyContent: 'flex-start',
+  fontSize: textLarge ? 18 : 14,
 },
 dropDownDropdownStyle: {
   backgroundColor: '#fafafa',
+  fontSize: textLarge ? 18 : 14,
 },
 dropDownSearchable: {
   borderRadius: 5,
@@ -452,6 +493,7 @@ dropDownSearchable: {
   borderWidth: 1,
   paddingLeft: 15,
   paddingRight: 40,
+  fontSize: textLarge ? 18 : 14,
 },
 dropDownSearchableError: {
   borderColor: 'red',
@@ -496,13 +538,13 @@ dropDownSearchableError: {
   weeklyReports: { //reports text
     marginTop: 10,
     marginLeft: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 48,
     color: "#000",
     textAlign: "left",
     display: "flex",
     alignItems: "center",
-    width: 116,
+    width: 200,
     height: 40,
   },
   weeklyReportsSwitch: {
@@ -512,13 +554,13 @@ dropDownSearchableError: {
   groceryList: { //Grocery text
     marginTop: 10,
     marginLeft: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 48,
     color: "#000",
     textAlign: "left",
     display: "flex",
     alignItems: "center",
-    width: 105,
+    width: 200,
     height: 40,
   },
   groceryListSwitch: {
@@ -528,13 +570,13 @@ dropDownSearchableError: {
   healthReport: { //health text
     marginTop: 10,
     marginLeft: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 48,
     color: "#000",
     textAlign: "left",
     display: "flex",
     alignItems: "center",
-    width: 122,
+    width: 200,
     height: 40,
   },
   healthReportSwitch: {
@@ -553,7 +595,7 @@ dropDownSearchableError: {
   gP: { //gp text
     marginTop: 10,
     marginLeft: 15, 
-    fontSize: 19,
+    fontSize: textLarge ? 24 : 20,
     lineHeight: 48,
     fontWeight: "600",
     color: "#000",
@@ -605,7 +647,7 @@ dropDownSearchableError: {
   },
   */
     continueText: {
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     letterSpacing: 0,
     lineHeight: 20,
     fontWeight: "700",
@@ -616,7 +658,7 @@ dropDownSearchableError: {
     marginBottom: 40,
     marginLeft: 16,
     borderRadius: 100,
-    backgroundColor: "#8273a9",
+    backgroundColor: colourBlind ? "red":"#8273a9",
     width: "90%",
     overflow: "hidden",
     flexDirection: "column",
@@ -637,4 +679,4 @@ dropDownSearchableError: {
   },
 });
 
-export default Access;
+export default AccessScreen;

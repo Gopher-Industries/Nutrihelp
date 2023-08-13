@@ -46,7 +46,8 @@
     "react-native-sensors": "^7.3.6",
     "react-native-vector-icons": "^9.2.0",
     "react-navigation-tabs": "^2.11.2",
-    "expo-dev-client": "~2.0.1"
+    "expo-dev-client": "~2.0.1",
+    "expo-speech": "~11.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

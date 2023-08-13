@@ -8,6 +8,12 @@ import Groceries from "./TabNavigation/BottomNavigationScreens/Groceries";
 import Unnamed from "./TabNavigation/BottomNavigationScreens/Unnamed";
 import Preferences from "./TabNavigation/BottomNavigationScreens/Preferences";
 import { View, StyleSheet } from "react-native";
+import { Access } from "./Accessibility";
+import * as Speech from 'expo-speech';
+
+let colourBlind =  Access.colourBlind;
+let textLarge =  Access.textLarge;
+let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const Tab = createMaterialBottomTabNavigator();
 

@@ -10,11 +10,24 @@ import {
 } from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome"; //this is not the correct arrow, need to change
+import { Access } from "./Accessibility";
+import * as Speech from 'expo-speech';
+
+let colourBlind =  Access.colourBlind;
+let textLarge =  Access.textLarge;
+let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
 export default function GettingStartedInfo2({ navigation }) {
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
   return (
     <SafeAreaView style={styles.gettingStartedTwo}>
       <ImageBackground
@@ -27,7 +40,9 @@ export default function GettingStartedInfo2({ navigation }) {
           size={20}
           color="black"
           type="entypo"
-          onPress={() => navigation.goBack()}
+          onPress={() => {if (isVoiceOverOn == true) {
+            speak("Back");
+          };navigation.goBack()}}
         />
         <View style={styles.textContainer}>
           <Text style={styles.text}>
@@ -36,7 +51,10 @@ export default function GettingStartedInfo2({ navigation }) {
             <TouchableOpacity
               style={[styles.button, { backgroundColor: "#8273A9" }]}
             // //testing for now, go to Confirm Screen
-              onPress={() => navigation.navigate("GettingStartedInfo3")}
+              onPress={() => 
+                {if (isVoiceOverOn == true) {
+                  speak("Continue");
+                };navigation.navigate("GettingStartedInfo3")}}
             >
             <Text style={styles.buttonText}>Continue</Text>
           </TouchableOpacity>
@@ -68,7 +86,7 @@ const styles = StyleSheet.create({
 
   // Description
   text: {
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     fontFamily: "OpenSans_400Regular",
     color: "black",
     justifyContent: "center",
@@ -95,7 +113,7 @@ const styles = StyleSheet.create({
 
  //Continue button text
   buttonText: {
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     letterSpacing: 0.1,
     lineHeight: 20,
     fontWeight: '700',

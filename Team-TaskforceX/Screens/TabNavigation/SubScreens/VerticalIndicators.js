@@ -1,4 +1,10 @@
 import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
+import { Access } from "../../Accessibility";
+import * as Speech from 'expo-speech';
+
+let colourBlind =  Access.colourBlind;
+let textLarge =  Access.textLarge;
+let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -7,7 +13,7 @@ const VerticalBarMain = () => {
   return (
     <View style={styles.verticalBarContainer}>
       <View style={styles.verticalBar}>
-        <Text style={{ fontSize: 15, textAlign: "center" }}>Health</Text>
+        <Text style={{ fontSize: textLarge ? 19 : 15, textAlign: "center" }}>Health</Text>
         <View style={styles.verticalPill}>
           <View style={styles.healthPill} />
           <View style={styles.healthCircle}>
@@ -20,7 +26,7 @@ const VerticalBarMain = () => {
       </View>
 
       <View style={styles.verticalBar}>
-        <Text style={{ fontSize: 15, textAlign: "center" }}>Food</Text>
+        <Text style={{ fontSize: textLarge ? 19 : 15, textAlign: "center" }}>Food</Text>
         <View style={styles.verticalPill}>
           <View style={styles.foodPill} />
           <View style={styles.foodCircle}>
@@ -33,7 +39,7 @@ const VerticalBarMain = () => {
       </View>
 
       <View style={styles.verticalBar}>
-        <Text style={{ fontSize: 15, textAlign: "center" }}>Vitamin</Text>
+        <Text style={{ fontSize: textLarge ? 19 : 15, textAlign: "center" }}>Vitamin</Text>
         <View style={styles.verticalPill}>
           <View style={styles.vitaminPill} />
           <View style={styles.vitaminCircle}>
@@ -46,7 +52,7 @@ const VerticalBarMain = () => {
       </View>
 
       <View style={styles.verticalBar}>
-        <Text style={{ fontSize: 15, textAlign: "center" }}>Water</Text>
+        <Text style={{ fontSize: textLarge ? 19 : 15, textAlign: "center" }}>Water</Text>
         <View style={styles.verticalPill}>
           <View style={styles.waterPill} />
           <View style={styles.waterCircle}>
@@ -161,7 +167,7 @@ const styles = StyleSheet.create({
     top: "76%",
     borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
-    backgroundColor: "#e9aaaa",
+    backgroundColor: colourBlind ? "#8273a9":"#e9aaaa",
     width: 40,
     height: 32,
   },
@@ -172,7 +178,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 40 / 2,
-    backgroundColor: "#e9aaaa",
+    backgroundColor:  colourBlind ? "#8273a9":"#e9aaaa",
     alignItems: "center",
     justifyContent: "center",
   },

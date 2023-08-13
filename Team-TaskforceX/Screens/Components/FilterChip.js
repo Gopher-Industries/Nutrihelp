@@ -7,6 +7,12 @@ import {
   Pressable,
   Dimensions,
 } from 'react-native';
+import { Access } from "../Accessibility";
+import * as Speech from 'expo-speech';
+
+let colourBlind =  Access.colourBlind;
+let textLarge =  Access.textLarge;
+let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
   },
   unchecked: {
     position: 'relative',
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     letterSpacing: 0.1,
     lineHeight: 20,
     fontWeight: '600',
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
   },
   checked: {
     position: 'relative',
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     letterSpacing: 0.1,
     lineHeight: 20,
     fontWeight: '600',

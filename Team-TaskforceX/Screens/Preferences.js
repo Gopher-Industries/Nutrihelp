@@ -16,6 +16,13 @@ import { selected_items_allergy } from "./Allergies";
 import { selected_items_dislikes } from "./Dislikes";
 import { selected_items_health } from "./HealthConditions";
 import { firebase } from "../config";
+import { Access } from "./Accessibility";
+import * as Speech from 'expo-speech';
+
+let colourBlind =  Access.colourBlind;
+let textLarge =  Access.textLarge;
+let isVoiceOverOn =  Access.isVoiceOverOn;
+
 
 // const SCREENHEIGHT = Dimensions.get('window').height;
 const SCREENWIDTH = Dimensions.get("window").width;
@@ -30,10 +37,18 @@ const HEALTH_DATA = selected_items_health;
 //next trim need to get values from the previous pages and output it here.
 export default function Preferences({ navigation }) {
 
-const [dietData, setDietData] = React.useState(DIET_DATA);
-const [allergyData, setAllergyData] = React.useState(ALLERGY_DATA);
-const [dislikesData, setDislikesData] = React.useState(DISLIKES_DATA);
-const [healthData, setHealthData] = React.useState(HEALTH_DATA);
+  const [dietData, setDietData] = React.useState(DIET_DATA);
+  const [allergyData, setAllergyData] = React.useState(ALLERGY_DATA);
+  const [dislikesData, setDislikesData] = React.useState(DISLIKES_DATA);
+  const [healthData, setHealthData] = React.useState(HEALTH_DATA);
+
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
 
 
   const CommitDietryData = () => {
@@ -193,7 +208,10 @@ const [healthData, setHealthData] = React.useState(HEALTH_DATA);
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => 
+          {if (isVoiceOverOn) {
+            speak("Back");
+          }navigation.goBack()}}
       />
       <View>
         <Text style={styles.title}>Your preferences</Text>
@@ -211,7 +229,10 @@ const [healthData, setHealthData] = React.useState(HEALTH_DATA);
           renderItem={({ item, index }) => (
             <View style={styles.item}>
               <TouchableOpacity
-                onPress={() => setDietData((prevData) => prevData.filter((_, i) => i !== index))}
+                onPress={() => 
+                  {if (isVoiceOverOn) {
+                    speak(item.title + "Removed");} 
+                    setDietData((prevData) => prevData.filter((_, i) => i !== index))}}
               >
                 <View style={styles.itemContent}>
                   <Text style={styles.itemText}>{item.title}</Text>
@@ -231,7 +252,10 @@ const [healthData, setHealthData] = React.useState(HEALTH_DATA);
           renderItem={({ item, index }) => (
             <View style={styles.item}>
               <TouchableOpacity
-                onPress={() => setAllergyData((prevData) => prevData.filter((_, i) => i !== index))}
+                onPress={() => 
+                  {if (isVoiceOverOn) {
+                    speak(item.title + "Removed");} 
+                    setAllergyData((prevData) => prevData.filter((_, i) => i !== index))}}
               >
                 <View style={styles.itemContent}>
                   <Text style={styles.itemText}>{item.title}</Text>
@@ -251,7 +275,10 @@ const [healthData, setHealthData] = React.useState(HEALTH_DATA);
           renderItem={({ item, index }) => (
             <View style={styles.item}>
               <TouchableOpacity
-                onPress={() => setDislikesData((prevData) => prevData.filter((_, i) => i !== index))}
+                onPress={() => 
+                  {if (isVoiceOverOn) {
+                    speak(item.title + "Removed");} 
+                    setDislikesData((prevData) => prevData.filter((_, i) => i !== index))}}
               >
                 <View style={styles.itemContent}>
                   <Text style={styles.itemText}>{item.title}</Text>
@@ -271,7 +298,10 @@ const [healthData, setHealthData] = React.useState(HEALTH_DATA);
           renderItem={({ item, index }) => (
             <View style={styles.item}>
               <TouchableOpacity
-                onPress={() => setHealthData((prevData) => prevData.filter((_, i) => i !== index))}
+                onPress={() =>
+                  {if (isVoiceOverOn) {
+                    speak(item.title + "Removed");} 
+                    setHealthData((prevData) => prevData.filter((_, i) => i !== index))}}
               >
                 <View style={styles.itemContent}>
                   <Text style={styles.itemText}>{item.title}</Text>
@@ -290,6 +320,8 @@ const [healthData, setHealthData] = React.useState(HEALTH_DATA);
               CommitAllergyData();
               CommitDislikesData();
               CommitHealthConditions();
+              {if (isVoiceOverOn) {
+                speak("Confirm Choices");}}
               navigation.navigate("DailyNutritionPlan");
             }}
             accessibilityLabel="Confirm your preference selection"
@@ -298,7 +330,10 @@ const [healthData, setHealthData] = React.useState(HEALTH_DATA);
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.altButton}
-            onPress={() => navigation.navigate("DietryRequirements")}
+            onPress={() => 
+              {if (isVoiceOverOn) {
+                speak("Redo Choices");}
+                navigation.navigate("DietryRequirements")}}
             accessibilityLabel="Redo your preference selection"
           >
             <Text style={styles.altButtonText}>Redo</Text>
@@ -318,24 +353,24 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   title: {
-    fontSize: 25,
+    fontSize: textLarge ? 30 : 24,
     color: "black",
     marginBottom: 20,
     marginTop: 20,
     // paddingBottom: 10,
   },
   text: {
-    fontSize: 15,
+    fontSize: textLarge ? 18 : 14,
     marginBottom: 10,
   },
   preference: {
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: textLarge ? 22 : 18,
     paddingTop: 5,
     paddingBottom: 5,
   },
   button: {
-    backgroundColor: "#8d71ad",
+    backgroundColor: colourBlind ? "red":"#8273a9",
     height: 55,
     alignItems: "center",
     justifyContent: "center",
@@ -355,13 +390,13 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    fontSize: 18,
+    fontSize: textLarge ? 20 : 16,
     color: "white",
     fontWeight: "bold",
   },
 
   altButtonText: {
-    fontSize: 18,
+    fontSize: textLarge ? 20 : 16,
     color: "#8d71ad",
     fontWeight: "bold",
     top: 0,
@@ -401,6 +436,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: "black",
+    fontSize: textLarge ? 18 : 14,
     // fontFamily: 'Times',
   },
   crossIcon: {

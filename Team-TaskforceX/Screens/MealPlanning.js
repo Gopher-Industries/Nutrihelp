@@ -9,18 +9,37 @@ import {
   Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { FilterChip } from "./Components/FilterChip";
 import { firebase } from "../config";
+import { Access } from "./Accessibility";
+import * as Speech from 'expo-speech';
+
+let colourBlind =  Access.colourBlind;
+let textLarge =  Access.textLarge;
+let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const windowWidth = Dimensions.get("window").width;
 
 const MealPlanning = () => {
+  
   const navigation = useNavigation();
   const [none, setNone] = useState(true);
   const [breakfast, setBreakfast] = useState(false);
   const [lunch, setLunch] = useState(false);
   const [dinner, setDinner] = useState(false);
   const [desert, setDesert] = useState(false);
+
+  //call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  
 
   const CommitMealPlanData = () => {
     const mealPlanData = {
@@ -80,6 +99,7 @@ const MealPlanning = () => {
       checked={checked}
       getData={getName}
       invisible={invisible}
+      
     />
   );
 
@@ -152,19 +172,19 @@ const MealPlanning = () => {
 
   return (
     <View style={styles.mealPlanningView}>
-      <Pressable style={styles.topAppBarPressable}>
-        <Pressable
-          style={styles.leadingIconPressable}
-          onPress={() => navigation.navigate("DailyNutritionPlan")}
-        >
-          <Image
-            style={styles.icon}
-            resizeMode="cover"
-            source={require("../assets/images/leadingicon.png")}
-          />
+      <Icon //Back arrow
+        style={styles.leadingIconPressable}
+        name="arrow-left"
+        size={20}
+        color="black"
+        type="entypo"
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Back");
+          };navigation.goBack()}}
+      />
           <Text style={styles.headlineText}>Meal Planning</Text>
-        </Pressable>
-      </Pressable>
+       
 
       <Text style={styles.paragraphText}>
         Select which recipes our nutritionist will automatically recommend based
@@ -186,6 +206,9 @@ const MealPlanning = () => {
       <Pressable
         style={styles.buttonPressable}
         onPress={() => {
+          if (isVoiceOverOn == true) {
+            speak("Continue");
+          };
           CommitMealPlanData();
           navigation.navigate("Permissions");
         }}
@@ -200,6 +223,7 @@ const styles = StyleSheet.create({
   paragraphText: {
     position: "relative",
     letterSpacing: -0.2,
+    fontSize: textLarge ? 18 : 14,
     lineHeight: 24,
     fontFamily: "OpenSans_400Regular",
     color: "#000",
@@ -207,7 +231,7 @@ const styles = StyleSheet.create({
     height: 74,
     marginLeft: 16,
     marginRight: 16,
-    marginTop: 68,
+    marginTop: 38,
   },
   mealPlanningView: {
     position: "relative",
@@ -216,9 +240,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     overflow: "hidden",
+    
   },
   column: {
     flexShrink: 1,
+    
   },
   buttonPressable: {
     position: "absolute",
@@ -239,7 +265,7 @@ const styles = StyleSheet.create({
   },
   continueLabel: {
     position: "relative",
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     letterSpacing: 0.1,
     lineHeight: 20,
     fontWeight: "700",
@@ -262,17 +288,12 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   headlineText: {
-    position: "absolute",
-    top: 36,
-    left: 0,
-    fontSize: 24,
-    lineHeight: 32,
+    marginLeft: 16,
+    fontSize: textLarge ? 30 : 24,
     fontFamily: "OpenSans_400Regular",
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 328,
+    color: "black",
+    marginTop: 32,
+    lineHeight: 32,
   },
 
   list: {

@@ -12,6 +12,12 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { firebase } from "../config";
+import { Access } from "./Accessibility";
+import * as Speech from 'expo-speech';
+
+let colourBlind =  Access.colourBlind;
+let textLarge =  Access.textLarge;
+let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
@@ -82,6 +88,21 @@ export default function HealthConditions({ navigation }) {
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
 
+  //call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  const handleInputFocus = (label) => {
+    if (isVoiceOverOn) {
+      speak(label);
+    }
+  };
+
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
     if (text) {
@@ -147,6 +168,8 @@ export default function HealthConditions({ navigation }) {
                       console.log(selected_items_health);
                       // BUG: need to remove item.id if its already selected before
                       setHealthCondition((prevHealthCondition) => [...prevHealthCondition, item.id]);
+                      if (isVoiceOverOn == true) {
+                        speak(item.title);}
                     }}
                   >
                     <View style={styles.itemContent}>
@@ -185,7 +208,10 @@ export default function HealthConditions({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Back");
+          }navigation.goBack()}}
       />
       <View>
         <Text style={styles.title}>Health Conditions</Text>
@@ -194,6 +220,7 @@ export default function HealthConditions({ navigation }) {
         placeholder="Search Health Conditions"
         onChangeText={(text) => searchFilterFunction(text)}
         value={searchQuery}
+        onFocus={() => handleInputFocus("Search Health Conditions")}
       />
       <View>
       <FlatList
@@ -212,6 +239,8 @@ export default function HealthConditions({ navigation }) {
                   var index0 = filteredDataSource.indexOf(item);
                   filteredDataSource.splice(index0, 1);
                   setHealthCondition((prevHealthCondition) => [...prevHealthCondition, item.id]);
+                  if (isVoiceOverOn == true) {
+                    speak(item.title);}
                 }}
               >
                 <Text style={styles.itemText}>{item.title}</Text>
@@ -255,9 +284,10 @@ export default function HealthConditions({ navigation }) {
                   console.log(item.choice);
                   console.log(selected_items_health);
                 }
-                // BUG: need to remove item.id if its already selected before
+                
                 setHealthCondition((prevHealthCondition) => [...prevHealthCondition, item.id]);
-                //BUG: need to change colour when selected
+                if (isVoiceOverOn == true) {
+                  speak(item.title);}
               }}
             >
               <View style={styles.itemContent}>
@@ -282,6 +312,8 @@ export default function HealthConditions({ navigation }) {
               selected_items_health.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
             }
           }
+          {if (isVoiceOverOn == true) {
+            speak("continue");}}
           navigation.navigate("Preferences")
         }}
         >
@@ -299,20 +331,20 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   title: {
-    fontSize: 25,
+    fontSize: textLarge ? 30 : 24,
     color: "black",
     marginTop: 20,
     marginBottom: 20,
   },
   text: {
-    fontSize: 20,
+    fontSize: textLarge ? 24 : 20,
     marginBottom: 10,
     marginTop: 20,
     fontWeight: "bold",
     color: "black",
   },
   button: {
-    backgroundColor: "#8d71ad",
+    backgroundColor: colourBlind ? "red":"#8273a9",
     height: 55,
     alignItems: "center",
     justifyContent: "center",
@@ -321,7 +353,7 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: textLarge ? 20 : 16,
     color: "white",
     fontWeight: "bold",
   },
@@ -343,7 +375,8 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: "black",
-    // fontFamily: 'Times',
+    fontSize: textLarge ? 18 : 14,
+      // fontFamily: 'Times',
   },
   addeditem: {
     marginTop: 10,
