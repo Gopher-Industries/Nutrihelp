@@ -16,12 +16,10 @@ import { selected_items_allergy } from "./Allergies";
 import { selected_items_dislikes } from "./Dislikes";
 import { selected_items_health } from "./HealthConditions";
 import { firebase } from "../config";
-import { Access } from "./Accessibility";
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
 import * as Speech from 'expo-speech';
+import { useState } from "react";
 
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
 
 
 // const SCREENHEIGHT = Dimensions.get('window').height;
@@ -41,6 +39,12 @@ export default function Preferences({ navigation }) {
   const [allergyData, setAllergyData] = React.useState(ALLERGY_DATA);
   const [dislikesData, setDislikesData] = React.useState(DISLIKES_DATA);
   const [healthData, setHealthData] = React.useState(HEALTH_DATA);
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
 
   const speak = (text) => {
     Speech.speak(text, {
@@ -200,6 +204,107 @@ export default function Preferences({ navigation }) {
     });
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#FFFBFE",
+      padding: 30,
+      fontSize: 150,
+      textAlign: "left",
+    },
+    title: {
+      fontSize: textLarge ? 30 : 24,
+      color: "black",
+      marginBottom: 20,
+      marginTop: 20,
+      // paddingBottom: 10,
+    },
+    text: {
+      fontSize: textLarge ? 18 : 14,
+      marginBottom: 10,
+    },
+    preference: {
+      fontWeight: "bold",
+      fontSize: textLarge ? 22 : 18,
+      paddingTop: 5,
+      paddingBottom: 5,
+    },
+    button: {
+      backgroundColor: colourBlind ? "red":"#8273a9",
+      height: 55,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 25,
+      top: 10,
+    },
+  
+    altButton: {
+      backgroundColor: "white",
+      height: 55,
+      justifyContent: "center",
+      borderRadius: 25,
+      borderWidth: 1,
+      borderColor: "gray",
+      top: 10,
+      margin: 10,
+    },
+  
+    buttonText: {
+      fontSize: textLarge ? 20 : 16,
+      color: "white",
+      fontWeight: "bold",
+    },
+  
+    altButtonText: {
+      fontSize: textLarge ? 20 : 16,
+      color: "#8d71ad",
+      fontWeight: "bold",
+      top: 0,
+      alignSelf: "center",
+      padding: 10,
+    },
+    columnView: {
+      // flex: 1,
+      // flexDirection: 'row',
+      // flexWrap: 'wrap',
+      // alignItems: 'flex-start',
+    },
+  
+    // item: {
+    //   width: '50%',
+    //   flex: 1,
+    //   flexDirection: 'row',
+    //   flexWrap: 'wrap',
+    //   alignItems: 'flex-start',
+    // }
+    item: {
+      marginTop: 10,
+      backgroundColor: 'lavender',
+      borderColor: "black",
+      borderWidth: 1,
+      maxWidth: SCREENWIDTH / 2 - 40,
+      padding: 10,
+      alignItems: "center",
+      borderRadius: 10,
+      justifyContent: "space-around",
+      margin: 5,
+      flex: 0.5,
+    },
+    itemContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    itemText: {
+      color: "black",
+      fontSize: textLarge ? 18 : 14,
+      // fontFamily: 'Times',
+    },
+    crossIcon: {
+      marginLeft: 5, // Adjust this value to add spacing between the label and check mark
+    },
+  });
+
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -344,102 +449,3 @@ export default function Preferences({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFBFE",
-    padding: 30,
-    fontSize: 150,
-    textAlign: "left",
-  },
-  title: {
-    fontSize: textLarge ? 30 : 24,
-    color: "black",
-    marginBottom: 20,
-    marginTop: 20,
-    // paddingBottom: 10,
-  },
-  text: {
-    fontSize: textLarge ? 18 : 14,
-    marginBottom: 10,
-  },
-  preference: {
-    fontWeight: "bold",
-    fontSize: textLarge ? 22 : 18,
-    paddingTop: 5,
-    paddingBottom: 5,
-  },
-  button: {
-    backgroundColor: colourBlind ? "red":"#8273a9",
-    height: 55,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 25,
-    top: 10,
-  },
-
-  altButton: {
-    backgroundColor: "white",
-    height: 55,
-    justifyContent: "center",
-    borderRadius: 25,
-    borderWidth: 1,
-    borderColor: "gray",
-    top: 10,
-    margin: 10,
-  },
-
-  buttonText: {
-    fontSize: textLarge ? 20 : 16,
-    color: "white",
-    fontWeight: "bold",
-  },
-
-  altButtonText: {
-    fontSize: textLarge ? 20 : 16,
-    color: "#8d71ad",
-    fontWeight: "bold",
-    top: 0,
-    alignSelf: "center",
-    padding: 10,
-  },
-  columnView: {
-    // flex: 1,
-    // flexDirection: 'row',
-    // flexWrap: 'wrap',
-    // alignItems: 'flex-start',
-  },
-
-  // item: {
-  //   width: '50%',
-  //   flex: 1,
-  //   flexDirection: 'row',
-  //   flexWrap: 'wrap',
-  //   alignItems: 'flex-start',
-  // }
-  item: {
-    marginTop: 10,
-    backgroundColor: 'lavender',
-    borderColor: "black",
-    borderWidth: 1,
-    maxWidth: SCREENWIDTH / 2 - 40,
-    padding: 10,
-    alignItems: "center",
-    borderRadius: 10,
-    justifyContent: "space-around",
-    margin: 5,
-    flex: 0.5,
-  },
-  itemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  itemText: {
-    color: "black",
-    fontSize: textLarge ? 18 : 14,
-    // fontFamily: 'Times',
-  },
-  crossIcon: {
-    marginLeft: 5, // Adjust this value to add spacing between the label and check mark
-  },
-});

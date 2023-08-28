@@ -27,12 +27,10 @@ import * as Contacts from 'expo-contacts';
 //import { DropDownPicker } from "react-native-element-dropdown";
 import  DropDownPicker  from 'react-native-dropdown-picker'
 import {KeyboardAwareScrollView , KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view'
-import { Access } from "./Accessibility";
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
 import * as Speech from 'expo-speech';
 
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
+
 
 
 const AccessScreen = () => {
@@ -54,6 +52,11 @@ const AccessScreen = () => {
   //const [familyInputFocused, setFamilyInputFocused] = useState(false);
   //const [gpInputFocused, setGpInputFocused] = useState(false);
   const [showContactPicker, setShowContactPicker] = useState(false);
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
 
   const speak = (text) => {
     Speech.speak(text, {
@@ -197,217 +200,6 @@ const handleGpSwitchChange = (value) => {
     setGpText(text.trim().toLowerCase());
     searchContacts(text)
   };
-*/
-
-  return (
-    
-    
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <KeyboardAvoidingView style={styles.container} behavior="height">
-    <View style = {styles.inner}>
-    <Icon style={styles.backButton}
-        name="arrow-left"
-        size={20}
-        color="black"
-        type="entypo"
-        onPress={() => 
-          {if (isVoiceOverOn == true) {
-          speak("Back");
-        };navigation.goBack()}}
-      />
-    <View>
-        <Text style={styles.headline}>Access</Text>
-    </View>
-      <Text style={styles.wouldYouLikeToGiveYourFa}>
-          Would you like to give your Family / Carer or GP access to your
-          nutritional and health information?
-      </Text>
-      <Text style={styles.familyCarer}>Family / Carer</Text>
-      <Switch
-        style={styles.familyCarerSwitch}
-        value={familyCarerSwitchValue}
-        onValueChange={handleFamilySwitchChange}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <DropDownPicker
-        open={open}
-        setOpen={setOpen}
-        onOpen={handleContactPicker}
-        multiple={true}
-        searchable={true}
-        placeholder="Search contacts"
-        searchPlaceholder="Type Contact Name or Number"
-        searchPlaceholderTextColor="#49454f"
-        searchableError={() => <Text>Contacts not found</Text>}
-        searchableStyle={styles.dropDownSearchable}
-        searchableErrorStyle={styles.dropDownSearchableError}
-        items={contacts.map((contact) => ({
-          label: `${contact.name} (${contact.phoneNumbers.join(', ')})`,
-          value: `${contact.name} (${contact.phoneNumbers.join(', ')})`,
-        }))}
-        defaultValue={selectedContact}
-        containerStyle={styles.dropDownContainer}
-        style={styles.dropDownStyle}
-        itemStyle={styles.dropDownItemStyle}
-        dropDownStyle={styles.dropDownDropdownStyle}
-        onSelectItem={(items) =>
-          handleContactSelection(items.map((item) => item.value))}
-      />
-      <Text style={styles.weeklyReports}>Weekly Reports</Text>
-      <Switch
-        style={styles.weeklyReportsSwitch}
-        value={weeklyReportsSwitchValue}
-        onValueChange={(value) => {
-          handleSwitchChange("weekly report", value)
-          setWeeklyReportsSwitchValue(value)}}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Text style={styles.groceryList}>Grocery List</Text>
-      <Switch
-        style={styles.groceryListSwitch}
-        value={groceryListSwitchValue}
-        onValueChange={(value) => {
-          handleSwitchChange("Grocery list", value)
-          setGroceryListSwitchValue(value)}}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Text style={styles.healthReport}>Health Report</Text>
-      <Switch
-        style={styles.healthReportSwitch}
-        value={healthReportSwitchValue}
-        onValueChange={(value) => {
-          handleSwitchChange("Health report", value)
-          setHealthReportSwitchValue(value);
-        }}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <View style={styles.lineView} />
-      <Text style={styles.gP}>GP</Text>
-      <Switch
-        style={styles.gpSwitch}
-        value={gpSwitchValue}
-        onValueChange={handleGpSwitchChange}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <DropDownPicker
-        open={gpOpen}
-        setOpen={setGpOpen}
-        onOpen={handleContactPicker}
-        multiple={true}
-        searchable={true}
-        placeholder="Search contacts"
-        searchPlaceholder="Type Contact Name or Number"
-        searchablePlaceholderTextColor="#49454f"
-        searchableError={() => <Text>Contacts not found</Text>}
-        searchableStyle={styles.dropDownSearchable}
-        searchableErrorStyle={styles.dropDownSearchableError}
-        items={contacts.map((contact) => ({
-          label: `${contact.name} (${contact.phoneNumbers.join(', ')})`,
-          value: contact.name,
-        }))}
-        defaultValue={selectedContact}
-        containerStyle={styles.dropDownContainer}
-        style={styles.dropDownStyle}
-        itemStyle={styles.dropDownItemStyle}
-        dropDownStyle={styles.dropDownDropdownStyle}
-        onChangeItem={(item) => handleGPSelection(item.value)}
-      />
-      <TouchableOpacity
-        style={styles.continueButton}
-        onPress={() => 
-          {if (isVoiceOverOn == true) {
-            speak("Continue");}
-            navigation.navigate("Notifications")}}
-      >
-        <Text style={styles.continueText}>Continue</Text>
-      </TouchableOpacity>
-      </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
-    
-    
-    
-  );
-};
-/*
-const FamilyFlatList = ({ contacts, handleContactSelection }) => (
-  
-  <FlatList
-    data={contacts}
-    renderItem={({ item }) => (
-      <TouchableOpacity onPress={() => handleContactSelection(item.name)}>
-        <Text style={styles.flatListText}>
-          {item.name} - {" "}
-          {item.phoneNumbers && item.phoneNumbers.length > 0 ?
-            item.phoneNumbers
-              .map((phoneNumber) => phoneNumber.number)
-              .join(", ") :
-            "No phone numbers"
-          }
-        </Text>
-      </TouchableOpacity>
-    )}
-    keyExtractor={(item) => item.id}
-    style={styles.familyFlatList}
-  />
-);
-
-const GPFlatList = ({ contacts, handleContactSelection }) => (
-  
-  <FlatList
-    data={contacts}
-    renderItem={({ item }) => (
-      <TouchableOpacity onPress={() => handleContactSelection(item.name)}>
-        <Text style={styles.gpFlatListText}>
-          {item.name} - {" "}
-          {item.phoneNumbers && item.phoneNumbers.length > 0 ?
-            item.phoneNumbers
-              .map((phoneNumber) => phoneNumber.number)
-              .join(", ") :
-            "No phone numbers"
-          }
-        </Text>
-      </TouchableOpacity>
-    )}
-    keyExtractor={(item) => item.id}
-    style={styles.gpFlatList}
-  />
-);
-
-<TextInput
-        onFocus={() => setFamilyInputFocused(true)}
-        style={styles.FamilySearchBox}
-        placeholder="          Search contacts"
-        keyboardType="default"
-        placeholderTextColor="#49454f"
-        onChangeText={handleFamilySearch}
-        value={familyCarerSwitchValue ? familyText : "          Search contacts"}
-        editable = {familyCarerSwitchValue}
-      /> 
-      {familyInputFocused && familyCarerSwitchValue && familyText ? (
-              <FamilyFlatList contacts={contacts} handleContactSelection={handleContactSelection} />
-            ) : null}
-
-
-            <TextInput
-        onFocus={() => setGpInputFocused(true)}
-        style={styles.gpSearchBox}
-        placeholder="          Search contacts"
-        keyboardType="default"
-        placeholderTextColor="#49454f"
-        onChangeText={handleGpSearch}
-        value={gpSwitchValue ? gpText : "          Search contacts"}
-        editable = {gpSwitchValue}
-      />
-      {gpInputFocused && gpSwitchValue && gpText ? (
-              <GPFlatList contacts={contacts} handleContactSelection={handleGPSelection} />
-            ) : null}
-
 */
 
 const styles = StyleSheet.create({
@@ -678,5 +470,219 @@ dropDownSearchableError: {
     height: "100%",
   },
 });
+
+
+  return (
+    
+    
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <KeyboardAvoidingView style={styles.container} behavior="height">
+    <View style = {styles.inner}>
+    <Icon style={styles.backButton}
+        name="arrow-left"
+        size={20}
+        color="black"
+        type="entypo"
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+          speak("Back");
+        };navigation.goBack()}}
+      />
+    <View>
+        <Text style={styles.headline}>Access</Text>
+    </View>
+      <Text style={styles.wouldYouLikeToGiveYourFa}>
+          Would you like to give your Family / Carer or GP access to your
+          nutritional and health information?
+      </Text>
+      <Text style={styles.familyCarer}>Family / Carer</Text>
+      <Switch
+        style={styles.familyCarerSwitch}
+        value={familyCarerSwitchValue}
+        onValueChange={handleFamilySwitchChange}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <DropDownPicker
+        open={open}
+        setOpen={setOpen}
+        onOpen={handleContactPicker}
+        multiple={true}
+        searchable={true}
+        placeholder="Search contacts"
+        searchPlaceholder="Type Contact Name or Number"
+        searchPlaceholderTextColor="#49454f"
+        searchableError={() => <Text>Contacts not found</Text>}
+        searchableStyle={styles.dropDownSearchable}
+        searchableErrorStyle={styles.dropDownSearchableError}
+        items={contacts.map((contact) => ({
+          label: `${contact.name} (${contact.phoneNumbers.join(', ')})`,
+          value: `${contact.name} (${contact.phoneNumbers.join(', ')})`,
+        }))}
+        defaultValue={selectedContact}
+        containerStyle={styles.dropDownContainer}
+        style={styles.dropDownStyle}
+        itemStyle={styles.dropDownItemStyle}
+        dropDownStyle={styles.dropDownDropdownStyle}
+        onSelectItem={(items) =>
+          handleContactSelection(items.map((item) => item.value))}
+      />
+      <Text style={styles.weeklyReports}>Weekly Reports</Text>
+      <Switch
+        style={styles.weeklyReportsSwitch}
+        value={weeklyReportsSwitchValue}
+        onValueChange={(value) => {
+          handleSwitchChange("weekly report", value)
+          setWeeklyReportsSwitchValue(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Text style={styles.groceryList}>Grocery List</Text>
+      <Switch
+        style={styles.groceryListSwitch}
+        value={groceryListSwitchValue}
+        onValueChange={(value) => {
+          handleSwitchChange("Grocery list", value)
+          setGroceryListSwitchValue(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Text style={styles.healthReport}>Health Report</Text>
+      <Switch
+        style={styles.healthReportSwitch}
+        value={healthReportSwitchValue}
+        onValueChange={(value) => {
+          handleSwitchChange("Health report", value)
+          setHealthReportSwitchValue(value);
+        }}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <View style={styles.lineView} />
+      <Text style={styles.gP}>GP</Text>
+      <Switch
+        style={styles.gpSwitch}
+        value={gpSwitchValue}
+        onValueChange={handleGpSwitchChange}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <DropDownPicker
+        open={gpOpen}
+        setOpen={setGpOpen}
+        onOpen={handleContactPicker}
+        multiple={true}
+        searchable={true}
+        placeholder="Search contacts"
+        searchPlaceholder="Type Contact Name or Number"
+        searchablePlaceholderTextColor="#49454f"
+        searchableError={() => <Text>Contacts not found</Text>}
+        searchableStyle={styles.dropDownSearchable}
+        searchableErrorStyle={styles.dropDownSearchableError}
+        items={contacts.map((contact) => ({
+          label: `${contact.name} (${contact.phoneNumbers.join(', ')})`,
+          value: contact.name,
+        }))}
+        defaultValue={selectedContact}
+        containerStyle={styles.dropDownContainer}
+        style={styles.dropDownStyle}
+        itemStyle={styles.dropDownItemStyle}
+        dropDownStyle={styles.dropDownDropdownStyle}
+        onChangeItem={(item) => handleGPSelection(item.value)}
+      />
+      <TouchableOpacity
+        style={styles.continueButton}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Continue");}
+            navigation.navigate("Notifications")}}
+      >
+        <Text style={styles.continueText}>Continue</Text>
+      </TouchableOpacity>
+      </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
+    
+    
+    
+  );
+};
+/*
+const FamilyFlatList = ({ contacts, handleContactSelection }) => (
+  
+  <FlatList
+    data={contacts}
+    renderItem={({ item }) => (
+      <TouchableOpacity onPress={() => handleContactSelection(item.name)}>
+        <Text style={styles.flatListText}>
+          {item.name} - {" "}
+          {item.phoneNumbers && item.phoneNumbers.length > 0 ?
+            item.phoneNumbers
+              .map((phoneNumber) => phoneNumber.number)
+              .join(", ") :
+            "No phone numbers"
+          }
+        </Text>
+      </TouchableOpacity>
+    )}
+    keyExtractor={(item) => item.id}
+    style={styles.familyFlatList}
+  />
+);
+
+const GPFlatList = ({ contacts, handleContactSelection }) => (
+  
+  <FlatList
+    data={contacts}
+    renderItem={({ item }) => (
+      <TouchableOpacity onPress={() => handleContactSelection(item.name)}>
+        <Text style={styles.gpFlatListText}>
+          {item.name} - {" "}
+          {item.phoneNumbers && item.phoneNumbers.length > 0 ?
+            item.phoneNumbers
+              .map((phoneNumber) => phoneNumber.number)
+              .join(", ") :
+            "No phone numbers"
+          }
+        </Text>
+      </TouchableOpacity>
+    )}
+    keyExtractor={(item) => item.id}
+    style={styles.gpFlatList}
+  />
+);
+
+<TextInput
+        onFocus={() => setFamilyInputFocused(true)}
+        style={styles.FamilySearchBox}
+        placeholder="          Search contacts"
+        keyboardType="default"
+        placeholderTextColor="#49454f"
+        onChangeText={handleFamilySearch}
+        value={familyCarerSwitchValue ? familyText : "          Search contacts"}
+        editable = {familyCarerSwitchValue}
+      /> 
+      {familyInputFocused && familyCarerSwitchValue && familyText ? (
+              <FamilyFlatList contacts={contacts} handleContactSelection={handleContactSelection} />
+            ) : null}
+
+
+            <TextInput
+        onFocus={() => setGpInputFocused(true)}
+        style={styles.gpSearchBox}
+        placeholder="          Search contacts"
+        keyboardType="default"
+        placeholderTextColor="#49454f"
+        onChangeText={handleGpSearch}
+        value={gpSwitchValue ? gpText : "          Search contacts"}
+        editable = {gpSwitchValue}
+      />
+      {gpInputFocused && gpSwitchValue && gpText ? (
+              <GPFlatList contacts={contacts} handleContactSelection={handleGPSelection} />
+            ) : null}
+
+*/
+
+
 
 export default AccessScreen;

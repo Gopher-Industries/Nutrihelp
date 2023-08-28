@@ -8,19 +8,23 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import React from "react";
+import React, {useState} from "react";
 import Icon from "react-native-vector-icons/FontAwesome"; //this is not the correct arrow, need to change
-import { Access } from "./Accessibility";
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
 import * as Speech from 'expo-speech';
 
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
 export default function GettingStartedInfo3({ navigation }) {
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+
    //call this for voiceover
    const speak = (text) => {
     Speech.speak(text, {
@@ -29,6 +33,68 @@ export default function GettingStartedInfo3({ navigation }) {
       rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
     });
   };
+  
+  const styles = StyleSheet.create({
+    gettingStartedThree: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  
+    //Back arrow
+    backArrow: {
+      top: 52,
+      left: 16,
+    },
+  
+    textContainer: {
+      width: SCREENWIDTH,
+      height: SCREENHEIGHT - SCREENHEIGHT / 3,
+      backgroundColor: "transparent",
+      marginTop: SCREENHEIGHT / 3,
+    },
+  
+    // Description
+    text: {
+      fontSize: textLarge ? 20 : 16,
+      fontFamily: "OpenSans_400Regular",
+      color: "black",
+      justifyContent: "center",
+      padding: 20,
+      paddingLeft: 25, //increased for clarity
+      paddingRight: 25, //increased for clarity
+      textAlign: "center",
+      top: 315,
+      letterSpacing: -0.2,
+      lineHeight: 24,
+    },
+  
+    //Continue button
+    button: { 
+      backgroundColor: "#8273A9",
+      width: "90%",
+      height: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      alignSelf: "center",
+      borderRadius: 100,
+      top: 325,
+    },
+  
+   //Continue button text
+    buttonText: {
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '700',
+      fontFamily: 'OpenSans_400Regular',
+      color: '#fff',
+      textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
+
   return (
     <SafeAreaView style={styles.gettingStartedThree}>
       <ImageBackground
@@ -64,65 +130,6 @@ export default function GettingStartedInfo3({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  gettingStartedThree: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  //Back arrow
-  backArrow: {
-    top: 52,
-    left: 16,
-  },
-
-  textContainer: {
-    width: SCREENWIDTH,
-    height: SCREENHEIGHT - SCREENHEIGHT / 3,
-    backgroundColor: "transparent",
-    marginTop: SCREENHEIGHT / 3,
-  },
-
-  // Description
-  text: {
-    fontSize: textLarge ? 20 : 16,
-    fontFamily: "OpenSans_400Regular",
-    color: "black",
-    justifyContent: "center",
-    padding: 20,
-    paddingLeft: 25, //increased for clarity
-    paddingRight: 25, //increased for clarity
-    textAlign: "center",
-    top: 315,
-    letterSpacing: -0.2,
-    lineHeight: 24,
-  },
-
-  //Continue button
-  button: { 
-    backgroundColor: "#8273A9",
-    width: "90%",
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "center",
-    borderRadius: 100,
-    top: 325,
-  },
-
- //Continue button text
-  buttonText: {
-    fontSize: textLarge ? 20 : 16,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '700',
-    fontFamily: 'OpenSans_400Regular',
-    color: '#fff',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 

@@ -12,12 +12,9 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { firebase } from "../config";
-import { Access } from "./Accessibility";
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
 import * as Speech from 'expo-speech';
 
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
@@ -46,6 +43,12 @@ export default function DietryRequirements({ navigation }) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
 
   //call this for voiceover
   const speak = (text) => {
@@ -163,6 +166,87 @@ export default function DietryRequirements({ navigation }) {
   console.log(searchQuery);
   // console.log(item);
   // console.log(isSelected)
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#FFFBFE",
+      padding: 30,
+    },
+    title: {
+      fontSize: textLarge ? 30 : 24,
+      color: "black",
+      marginTop: 20,
+      marginBottom: 20,
+    },
+    text: {
+      fontSize: textLarge ? 24 : 20,
+      marginBottom: 10,
+      marginTop: 20,
+      fontWeight: "bold",
+      color: "black",
+    },
+    button: {
+      backgroundColor: colourBlind ? "red":"#8273a9",
+      height: 55,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 25,
+      top: 10,
+      marginBottom: 50,
+    },
+    buttonText: {
+      fontSize: textLarge ? 20 : 16,
+      color: "white",
+      fontWeight: "bold",
+    },
+    item: {
+      flexDirection: 'row', 
+      alignItems: 'center', 
+      marginTop: 10,
+      // backgroundColor: 'green',
+      borderColor: "black",
+      borderWidth: 1,
+      maxWidth: SCREENWIDTH / 2 - 40,
+      padding: 10,
+      alignItems: "center",
+      borderRadius: 10,
+      justifyContent: "space-around",
+      margin: 5,
+      flex: 0.5,
+      //backgroundColor: 'pink',
+    },
+    itemText: {
+      color: "black",
+      fontSize: textLarge ? 18 : 14,
+      // fontFamily: 'Times',
+    },
+    addeditem: {
+      marginTop: 10,
+      backgroundColor: 'lavender',
+      borderColor: "black",
+      borderWidth: 1,
+      maxWidth: SCREENWIDTH / 2 - 40,
+      padding: 10,
+      alignItems: "center",
+      borderRadius: 10,
+      justifyContent: "space-around",
+      margin: 5,
+      flex: 0.5,
+    },
+    itemContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    checkIcon: {
+      marginRight: 5, // Adjust this value to add spacing between the label and check mark
+    },
+    listStyle: {
+      paddingTop: 10,
+    },
+  });
+  
+  
   return (
     <SafeAreaView style={styles.container}>
       <Icon
@@ -290,84 +374,6 @@ export default function DietryRequirements({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFBFE",
-    padding: 30,
-  },
-  title: {
-    fontSize: textLarge ? 30 : 24,
-    color: "black",
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  text: {
-    fontSize: textLarge ? 24 : 20,
-    marginBottom: 10,
-    marginTop: 20,
-    fontWeight: "bold",
-    color: "black",
-  },
-  button: {
-    backgroundColor: colourBlind ? "red":"#8273a9",
-    height: 55,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 25,
-    top: 10,
-    marginBottom: 50,
-  },
-  buttonText: {
-    fontSize: textLarge ? 20 : 16,
-    color: "white",
-    fontWeight: "bold",
-  },
-  item: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginTop: 10,
-    // backgroundColor: 'green',
-    borderColor: "black",
-    borderWidth: 1,
-    maxWidth: SCREENWIDTH / 2 - 40,
-    padding: 10,
-    alignItems: "center",
-    borderRadius: 10,
-    justifyContent: "space-around",
-    margin: 5,
-    flex: 0.5,
-    //backgroundColor: 'pink',
-  },
-  itemText: {
-    color: "black",
-    fontSize: textLarge ? 18 : 14,
-    // fontFamily: 'Times',
-  },
-  addeditem: {
-    marginTop: 10,
-    backgroundColor: 'lavender',
-    borderColor: "black",
-    borderWidth: 1,
-    maxWidth: SCREENWIDTH / 2 - 40,
-    padding: 10,
-    alignItems: "center",
-    borderRadius: 10,
-    justifyContent: "space-around",
-    margin: 5,
-    flex: 0.5,
-  },
-  itemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  checkIcon: {
-    marginRight: 5, // Adjust this value to add spacing between the label and check mark
-  },
-  listStyle: {
-    paddingTop: 10,
-  },
-});
 
 // import { StatusBar } from "expo-status-bar";
 // import { Button, StyleSheet, Text, View } from "react-native";

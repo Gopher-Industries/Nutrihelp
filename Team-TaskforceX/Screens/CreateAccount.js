@@ -9,12 +9,8 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome"; //Wrong arrow, need to change
 import { TextInput as RNPTextInput } from "react-native-paper";
 import { useRoute } from '@react-navigation/native';
-import { Access } from "./Accessibility";
 import * as Speech from 'expo-speech';
-
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
 
 export default function CreateAccount({ navigation }) {
   const [email, setEmail] = useState("");
@@ -23,6 +19,11 @@ export default function CreateAccount({ navigation }) {
   const [passwordConfrim, setPasswordConfirm] = useState("");
   const [checkValidEmail, setCheckValidEmail] = useState("");
   
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
   //call this for voiceover
   const speak = (text) => {
     Speech.speak(text, {
@@ -67,6 +68,84 @@ export default function CreateAccount({ navigation }) {
     }
   };
   
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#FFFBFE',
+      padding: 16,
+    },
+  
+    //Back Arrow
+    backArrow: {
+      marginTop: 32,
+    },
+  
+    //Title
+    title: {
+      fontSize: textLarge ? 30 : 24,
+      fontFamily: "OpenSans_400Regular",
+      color: "black",
+      marginTop: 32,
+      marginBottom: 16,
+      lineHeight: 32,
+    },
+  
+    //User input fields
+    TextInputRNPTextInput: {
+      borderRadius: 4,
+      borderColor: "black",
+      borderStyle: "solid",
+      width: 361,
+      height: 56,
+      backgroundColor: "#FFFBFE",
+      marginTop: 16,
+    },
+  
+    //Small text
+    text: {
+      color: "black",
+      fontSize: textLarge ? 16: 12,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '600',
+      fontFamily: 'OpenSans_400Regular',
+      marginTop: 8,
+    },
+  
+    //Validation text
+    emailValidationText: {
+      color: "red",
+      fontSize: textLarge ? 16: 12,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '600',
+      fontFamily: 'OpenSans_400Regular',
+    },
+  
+    //Continue button
+    button: {
+      borderRadius: 100,
+      height: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor:  colourBlind ? "red":"#8273a9",
+      marginTop: 160,
+      marginBottom: 32,
+    },
+  
+    //Continue button text
+    buttonText: {
+      fontSize: textLarge ? 20: 16,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '700',
+      fontFamily: 'OpenSans_400Regular',
+      color: '#fff',
+      textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -182,82 +261,5 @@ export default function CreateAccount({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFBFE',
-    padding: 16,
-  },
 
-  //Back Arrow
-  backArrow: {
-    marginTop: 32,
-  },
-
-  //Title
-  title: {
-    fontSize: textLarge ? 30 : 24,
-    fontFamily: "OpenSans_400Regular",
-    color: "black",
-    marginTop: 32,
-    marginBottom: 16,
-    lineHeight: 32,
-  },
-
-  //User input fields
-  TextInputRNPTextInput: {
-    borderRadius: 4,
-    borderColor: "black",
-    borderStyle: "solid",
-    width: 361,
-    height: 56,
-    backgroundColor: "#FFFBFE",
-    marginTop: 16,
-  },
-
-  //Small text
-  text: {
-    color: "black",
-    fontSize: textLarge ? 16: 12,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '600',
-    fontFamily: 'OpenSans_400Regular',
-    marginTop: 8,
-  },
-
-  //Validation text
-  emailValidationText: {
-    color: "red",
-    fontSize: textLarge ? 16: 12,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '600',
-    fontFamily: 'OpenSans_400Regular',
-  },
-
-  //Continue button
-  button: {
-    borderRadius: 100,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor:  colourBlind ? "red":"#8273a9",
-    marginTop: 160,
-    marginBottom: 32,
-  },
-
-  //Continue button text
-  buttonText: {
-    fontSize: textLarge ? 20: 16,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '700',
-    fontFamily: 'OpenSans_400Regular',
-    color: '#fff',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 

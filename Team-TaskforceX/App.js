@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { AccessibilityProvider } from "./Screens/Components/AccessibilityContext"; // Update the path as needed
 
 import LandingPage from "./Screens/LandingPage";
 import GettingStartedInfo1 from "./Screens/GettingStartedInfo1";
@@ -34,6 +35,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
 
   return (
+    <AccessibilityProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -148,5 +150,6 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </AccessibilityProvider>
   );
 }

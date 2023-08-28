@@ -20,12 +20,9 @@ import { Notifications } from 'expo';
 //import messaging from '@react-native-firebase/messaging';
 //import { NotificationContainer, NotificationManager } from 'react-notifications';
 //import 'react-notifications/lib/notifications.css';
-import { Access } from "./Accessibility";
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
 import * as Speech from 'expo-speech';
 
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -38,6 +35,12 @@ const Notification = () => {
   const [notificationSwitch2Value, setNotificationSwitch2Value] = useState(false);
   const [notificationSwitch5Value, setNotificationSwitch5Value] = useState(false);
   const navigation = useNavigation();
+  
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
   
   const speak = (text) => {
     Speech.speak(text, {
@@ -68,87 +71,6 @@ const Notification = () => {
     }
   }, [notificationSwitch1Value]);
 //*/
-
-    return (
-    <View style={styles.notifications}>
-      <Text style={styles.wouldYouLikeUsToSendYou}>
-          Would you like us to send you reminders throughout the day?
-        </Text>
-      <StatusBar barStyle="default" translucent={true} />
-      <Text style={styles.notification1}>Drink Water</Text>
-      <Text style={styles.notification2}>Eat Next Meal</Text>
-      <Text style={styles.notification3}>Notification</Text>
-      <Text style={styles.notification4}>Notification</Text>
-      <Text style={styles.notification5}>Notification</Text>
-      <Switch
-        style={styles.notificationSwitch1}
-        value={notificationSwitch1Value}
-        onValueChange={(value) => {
-          handleSwitchChange("Drink Water notification", value)
-          setNotificationSwitch1Value(value)}}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-        <Switch
-        style={styles.notificationSwitch2}
-        value={notificationSwitch2Value}
-        onValueChange={(value) => {
-          handleSwitchChange("Eat meal notification", value)
-          setNotificationSwitch2Value(value)}}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
-        style={styles.notificationSwitch3}
-        value={notificationSwitch3Value}
-        onValueChange={(value) => {
-          handleSwitchChange("notification3", value)
-          setNotificationSwitch3Value(value)}}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
-        style={styles.notificationSwitch4}
-        value={notificationSwitch4Value}
-        onValueChange={(value) => {
-          handleSwitchChange("notification4", value)
-          setNotificationSwitch4Value(value)}}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
-        style={styles.notificationSwitch5}
-        value={notificationSwitch5Value}
-        onValueChange={(value) => {
-          handleSwitchChange("notification5", value)
-          setNotificationSwitch5Value(value)}}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <TouchableOpacity
-        style={styles.continueButton}
-        onPress={() => 
-          {if (isVoiceOverOn == true) {
-            speak("Continue");}
-            navigation.navigate("TodaysPlan")}}
-      >
-        <Text style={styles.continueText}>Continue</Text>
-      </TouchableOpacity>
-      <View >
-      <Icon style={styles.backButton}
-        name="arrow-left"
-        size={20}
-        color="black"
-        type="entypo"
-        onPress={() => {if (isVoiceOverOn == true) {
-          speak("Back");
-        }navigation.goBack()}}
-      />
-        <Text style={styles.headline}>Notifications</Text>
-      </View>
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   wouldYouLikeUsToSendYou: { // would you like text
@@ -311,5 +233,89 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 });
+
+
+    return (
+    <View style={styles.notifications}>
+      <Text style={styles.wouldYouLikeUsToSendYou}>
+          Would you like us to send you reminders throughout the day?
+        </Text>
+      <StatusBar barStyle="default" translucent={true} />
+      <Text style={styles.notification1}>Drink Water</Text>
+      <Text style={styles.notification2}>Eat Next Meal</Text>
+      <Text style={styles.notification3}>Notification</Text>
+      <Text style={styles.notification4}>Notification</Text>
+      <Text style={styles.notification5}>Notification</Text>
+      <Switch
+        style={styles.notificationSwitch1}
+        value={notificationSwitch1Value}
+        onValueChange={(value) => {
+          handleSwitchChange("Drink Water notification", value)
+          setNotificationSwitch1Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+        <Switch
+        style={styles.notificationSwitch2}
+        value={notificationSwitch2Value}
+        onValueChange={(value) => {
+          handleSwitchChange("Eat meal notification", value)
+          setNotificationSwitch2Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch
+        style={styles.notificationSwitch3}
+        value={notificationSwitch3Value}
+        onValueChange={(value) => {
+          handleSwitchChange("notification3", value)
+          setNotificationSwitch3Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch
+        style={styles.notificationSwitch4}
+        value={notificationSwitch4Value}
+        onValueChange={(value) => {
+          handleSwitchChange("notification4", value)
+          setNotificationSwitch4Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch
+        style={styles.notificationSwitch5}
+        value={notificationSwitch5Value}
+        onValueChange={(value) => {
+          handleSwitchChange("notification5", value)
+          setNotificationSwitch5Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <TouchableOpacity
+        style={styles.continueButton}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Continue");}
+            navigation.navigate("TodaysPlan")}}
+      >
+        <Text style={styles.continueText}>Continue</Text>
+      </TouchableOpacity>
+      <View >
+      <Icon style={styles.backButton}
+        name="arrow-left"
+        size={20}
+        color="black"
+        type="entypo"
+        onPress={() => {if (isVoiceOverOn == true) {
+          speak("Back");
+        }navigation.goBack()}}
+      />
+        <Text style={styles.headline}>Notifications</Text>
+      </View>
+    </View>
+  );
+};
+
+
 
 export default Notification;

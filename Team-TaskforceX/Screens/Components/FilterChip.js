@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from "react";
 import {
   Text,
   StyleSheet,
@@ -7,12 +8,9 @@ import {
   Pressable,
   Dimensions,
 } from 'react-native';
-import { Access } from "../Accessibility";
+import { useAccessibilityContext } from "./AccessibilityContext"; // Import the context hook
 import * as Speech from 'expo-speech';
 
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -22,6 +20,46 @@ const FilterChip = props => {
       props.getData(props.label);
     }
   };
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+    },
+    unchecked: {
+      position: 'relative',
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '600',
+      fontFamily: 'OpenSans_400Regular',
+      color: '#49454f',
+      textAlign: 'center',
+    },
+    checkbox: {
+      position: 'relative',
+      width: 18,
+      height: 18,
+      flexShrink: 0,
+    },
+    checked: {
+      position: 'relative',
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '600',
+      fontFamily: 'OpenSans_400Regular',
+      color: '#1d192b',
+      textAlign: 'center',
+      marginLeft: 8,
+    },
+  });
 
   return (
     <View>
@@ -102,39 +140,6 @@ const FilterChip = props => {
 };
 
 // React Native Styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  unchecked: {
-    position: 'relative',
-    fontSize: textLarge ? 20 : 16,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '600',
-    fontFamily: 'OpenSans_400Regular',
-    color: '#49454f',
-    textAlign: 'center',
-  },
-  checkbox: {
-    position: 'relative',
-    width: 18,
-    height: 18,
-    flexShrink: 0,
-  },
-  checked: {
-    position: 'relative',
-    fontSize: textLarge ? 20 : 16,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '600',
-    fontFamily: 'OpenSans_400Regular',
-    color: '#1d192b',
-    textAlign: 'center',
-    marginLeft: 8,
-  },
-});
+
 
 export {FilterChip};

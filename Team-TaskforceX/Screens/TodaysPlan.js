@@ -8,16 +8,39 @@ import Groceries from "./TabNavigation/BottomNavigationScreens/Groceries";
 import Unnamed from "./TabNavigation/BottomNavigationScreens/Unnamed";
 import Preferences from "./TabNavigation/BottomNavigationScreens/Preferences";
 import { View, StyleSheet } from "react-native";
-import { Access } from "./Accessibility";
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
 import * as Speech from 'expo-speech';
+import { useState } from "react";
 
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
+
 
 const Tab = createMaterialBottomTabNavigator();
 
 export default function TodaysPlan() {
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+  const styles = StyleSheet.create({
+    iconBackgroundOnPress: {
+      height: 26,
+      width: 55,
+      backgroundColor: "#e2d5f7", //"#e8def8",
+      borderRadius: 13,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    iconBackgroundNoPress: {
+      height: 26,
+      width: 55,
+      backgroundColor: "#f0ebf7", //"#e8def8",
+      borderRadius: 13,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });
+  
   return (
     <Tab.Navigator
       initialRouteName="Plan"
@@ -119,21 +142,4 @@ export default function TodaysPlan() {
   );
 }
 
-const styles = StyleSheet.create({
-  iconBackgroundOnPress: {
-    height: 26,
-    width: 55,
-    backgroundColor: "#e2d5f7", //"#e8def8",
-    borderRadius: 13,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  iconBackgroundNoPress: {
-    height: 26,
-    width: 55,
-    backgroundColor: "#f0ebf7", //"#e8def8",
-    borderRadius: 13,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+

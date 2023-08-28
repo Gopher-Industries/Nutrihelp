@@ -14,12 +14,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 //import { RESULTS } from "react-native-permissions";
 import { PermissionsAndroid, Platform } from 'react-native';
-import { Access } from "./Accessibility";
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
 import * as Speech from 'expo-speech';
 
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
+
 
 
 //import { BleManager } from 'react-native-ble-plx'
@@ -34,6 +32,12 @@ const Permissions = () => {
   const [bluetoothSwitchValue, setBluetoothSwitchValue] = useState(false);
   const [healthSwitchValue, setHealthSwitchValue] = useState(false);
   const navigation = useNavigation();
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
 
   //call this for voiceover
   const speak = (text) => {
@@ -350,6 +354,174 @@ const handleBluetoothSwitch = async (value) => {
     
   };
 
+  const styles = StyleSheet.create({
+    weNeedAccessToTheFollowin: { //We need access text
+      position: "absolute",
+      top: 180,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: 0,
+      lineHeight: 24,
+      color: "#000",
+      textAlign: "left",
+      width: "85%",
+      height: 50,
+    },
+    lineView: { //line seperator
+      position: "absolute",
+      top: 250,
+      left: 16,
+      borderStyle: "solid",
+      borderColor: "#dbdbdb",
+      borderTopWidth: 1,
+      width: "90%",
+      height: 1,
+    },
+    camera: { //camera text
+      position: "absolute",
+      top: 260,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 84,
+      height: 50,
+    },
+    cameraSwitch: { //camera switch
+      position: "absolute",
+      top: 260,
+      left: "80%",
+    },
+    location: { //location text
+      position: "absolute",
+      top: 310,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 87,
+      height: 50,
+    },
+    locationSwitch: { //location switch
+      position: "absolute",
+      top: 310,
+      left: "80%",
+    },
+    contacts: { //contacts text
+      position: "absolute",
+      top: 360,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 84,
+      height: 50,
+    },
+    contactsSwitch: { //contacts switch
+      position: "absolute",
+      top: 360,
+      left: "80%",
+    },
+    bluetooth: { //bluetooth text
+      position: "absolute",
+      top: 410,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 87,
+      height: 50,
+    },
+    bluetoothSwitch: { //bluetooth switch
+      position: "absolute",
+      top: 410,
+      left: "80%",
+    },
+    health: { //health text
+      position: "absolute",
+      top: 460,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 66,
+      height: 50,
+    },
+    healthSwitch: { //health switch
+      position: "absolute",
+      top: 460,
+      left: "80%",
+  
+    },
+    backButton: { //back button
+      position: "absolute",
+      left: 16,
+      top: 70,
+      width: 24,
+      height: 24,
+    },
+    headline: { //permissions headline
+      position: "absolute",
+      top: 120,
+      left: 16,
+      fontSize: textLarge ? 30 : 24,
+      lineHeight: 32,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 328,
+    },
+    continueText: { //continue button text
+      position: "relative",
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: 0,
+      lineHeight: 20,
+      fontWeight: "700",
+      color: "#fff",
+      textAlign: "center",
+    },
+    continue: { //continue button
+      position: "absolute",
+      bottom: 32,
+      left: 16,
+      borderRadius: 100,
+      backgroundColor: colourBlind ? "red":"#8273a9",
+      width: "90%",
+      overflow: "hidden",
+      flexDirection: "column",
+      paddingHorizontal: 24,
+      paddingVertical: 10,
+      boxSizing: "border-box",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    permissions: { 
+      position: "relative",
+      borderRadius: 0,
+      backgroundColor: "#fffbfe",
+      flex: 10,
+      width: "100%",
+      overflow: "hidden",
+    },
+  });
 
   return (
     <View style={styles.permissions}>
@@ -424,173 +596,6 @@ const handleBluetoothSwitch = async (value) => {
   );
 };
 
-const styles = StyleSheet.create({
-  weNeedAccessToTheFollowin: { //We need access text
-    position: "absolute",
-    top: 180,
-    left: 16,
-    fontSize: textLarge ? 20 : 16,
-    letterSpacing: 0,
-    lineHeight: 24,
-    color: "#000",
-    textAlign: "left",
-    width: "85%",
-    height: 50,
-  },
-  lineView: { //line seperator
-    position: "absolute",
-    top: 250,
-    left: 16,
-    borderStyle: "solid",
-    borderColor: "#dbdbdb",
-    borderTopWidth: 1,
-    width: "90%",
-    height: 1,
-  },
-  camera: { //camera text
-    position: "absolute",
-    top: 260,
-    left: 16,
-    fontSize: textLarge ? 20 : 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 84,
-    height: 50,
-  },
-  cameraSwitch: { //camera switch
-    position: "absolute",
-    top: 260,
-    left: "80%",
-  },
-  location: { //location text
-    position: "absolute",
-    top: 310,
-    left: 16,
-    fontSize: textLarge ? 20 : 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 87,
-    height: 50,
-  },
-  locationSwitch: { //location switch
-    position: "absolute",
-    top: 310,
-    left: "80%",
-  },
-  contacts: { //contacts text
-    position: "absolute",
-    top: 360,
-    left: 16,
-    fontSize: textLarge ? 20 : 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 84,
-    height: 50,
-  },
-  contactsSwitch: { //contacts switch
-    position: "absolute",
-    top: 360,
-    left: "80%",
-  },
-  bluetooth: { //bluetooth text
-    position: "absolute",
-    top: 410,
-    left: 16,
-    fontSize: textLarge ? 20 : 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 87,
-    height: 50,
-  },
-  bluetoothSwitch: { //bluetooth switch
-    position: "absolute",
-    top: 410,
-    left: "80%",
-  },
-  health: { //health text
-    position: "absolute",
-    top: 460,
-    left: 16,
-    fontSize: textLarge ? 20 : 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 66,
-    height: 50,
-  },
-  healthSwitch: { //health switch
-    position: "absolute",
-    top: 460,
-    left: "80%",
 
-  },
-  backButton: { //back button
-    position: "absolute",
-    left: 16,
-    top: 70,
-    width: 24,
-    height: 24,
-  },
-  headline: { //permissions headline
-    position: "absolute",
-    top: 120,
-    left: 16,
-    fontSize: textLarge ? 30 : 24,
-    lineHeight: 32,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 328,
-  },
-  continueText: { //continue button text
-    position: "relative",
-    fontSize: textLarge ? 20 : 16,
-    letterSpacing: 0,
-    lineHeight: 20,
-    fontWeight: "700",
-    color: "#fff",
-    textAlign: "center",
-  },
-  continue: { //continue button
-    position: "absolute",
-    bottom: 32,
-    left: 16,
-    borderRadius: 100,
-    backgroundColor: colourBlind ? "red":"#8273a9",
-    width: "90%",
-    overflow: "hidden",
-    flexDirection: "column",
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    boxSizing: "border-box",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
-  permissions: { 
-    position: "relative",
-    borderRadius: 0,
-    backgroundColor: "#fffbfe",
-    flex: 10,
-    width: "100%",
-    overflow: "hidden",
-  },
-});
 
 export default Permissions;

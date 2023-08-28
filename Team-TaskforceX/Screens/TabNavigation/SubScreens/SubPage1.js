@@ -1,12 +1,8 @@
 import { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Meal from "./Meal";
-import { Access } from "../../Accessibility";
+import { useAccessibilityContext } from "../../Components/AccessibilityContext"; // Import the context hook
 import * as Speech from 'expo-speech';
-
-let colourBlind =  Access.colourBlind;
-let textLarge =  Access.textLarge;
-let isVoiceOverOn =  Access.isVoiceOverOn;
 
 
 export default function SubPage1({
@@ -23,6 +19,12 @@ export default function SubPage1({
   const [subPageData1, updateSubPageData1] = useState(todaysLunchPlan);
   const [subPageData2, updateSubPageData2] = useState(todaysDinnerPlan);
   const [subPageData3, updateSubPageData3] = useState(todaysSnackPlan);
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
 
   // Used to trigger an update of data passed from
   // calling function on re-render.
