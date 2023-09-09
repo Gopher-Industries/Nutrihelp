@@ -1,15 +1,12 @@
 import React from 'react';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
+
+import Landing from './components/Landing';
 
 
 function App() {
     return (
       <div>
-        <div style={{marginBottom: "40px"}}>
-        <SignIn />
-        </div>
-        <SignUp />
+        <Landing />
       </div>
     );
   }
