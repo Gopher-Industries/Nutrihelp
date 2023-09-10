@@ -24,7 +24,7 @@ promote nutritional health through food intake and increase transparency and awa
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ```
-git clone https://github.com/Gopher-Industries/Team-TaskforceX
+git clone https://github.com/Gopher-Industries/Nutrihelp
 ```
 ### Prerequisites
 
