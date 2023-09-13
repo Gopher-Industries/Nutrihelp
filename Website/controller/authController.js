@@ -29,7 +29,6 @@ const signup = async (req, res) => {
           }			
           response.end();
          });
-         
         if (existingUser) {
           return res.status(400).json({ message: 'User already exists' });
         }
@@ -45,6 +44,7 @@ const signup = async (req, res) => {
         };
     
         // Add the user to the in-memory database
+
         //users.push(newUser);
         con.query(`INSERT INTO usersTable VALUES ( ${username}, ${password}`, function(error, results, fields) {
           if (error) throw error;	
@@ -74,7 +74,8 @@ const login = async (req, res) => {
           }			
           response.end();
          }); 
-
+      
+      
         if (!user) {
           return res.status(401).json({ message: 'Invalid username or password' });
         }
