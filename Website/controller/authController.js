@@ -70,7 +70,7 @@ const login = async (req, res) => {
           if (results.length > 0) {
               user['username'] = username;
               user['password'] = password;
-              response.redirect('/home.ejs');
+              response.redirect('/home');
           }			
           response.end();
          }); 
