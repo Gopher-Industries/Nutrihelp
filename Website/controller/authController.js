@@ -1,15 +1,34 @@
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const mysql = require('mysql2');
+
 
 // In-memory user database (replace with a database in a production environment)
-const users = [];
+// const users = [];
+
+var con = mysql.createConnection({
+  host: "127.0.0.1",
+  user: "root",
+  password: "",
+  port: 3306,
+  database: "Nutrihelp"
+});
 
 const signup = async (req, res) => {
     try {
         const { username, password } = req.body;
     
         // Check if the user already exists
-        const existingUser = users.find((user) => user.username === username);
+        //const existingUser = users.find((user) => user.username === username);
+        const existingUser = false;
+        con.query(`SELECT userName, userPassword FROM usersTable WHERE userName = ${username} AND userPassword = ${password}`, function(error, results, fields) {
+          if (error) throw error;
+          if (results.length > 0) {
+              existingUser = true;
+          }			
+          response.end();
+        });
+
         if (existingUser) {
           return res.status(400).json({ message: 'User already exists' });
         }
@@ -25,7 +44,11 @@ const signup = async (req, res) => {
         };
     
         // Add the user to the in-memory database
-        users.push(newUser);
+        //users.push(newUser);
+        con.query(`INSERT INTO usersTable VALUES ( ${username}, ${password}`, function(error, results, fields) {
+          if (error) throw error;	
+          response.end();
+        });
     
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
@@ -39,7 +62,18 @@ const login = async (req, res) => {
         const { username, password } = req.body;
     
         // Find the user in the in-memory database
-        const user = users.find((user) => user.username === username);
+        //const user = users.find((user) => user.username === username);
+        const user = {};
+        con.query(`SELECT userName, userPassword FROM usersTable WHERE userName = ${username} AND userPassword = ${password}`, function(error, results, fields) {
+          if (error) throw error;
+          if (results.length > 0) {
+              user['username'] = username;
+              user['password'] = password;
+              response.redirect('/home');
+          }			
+          response.end();
+        });
+         
         if (!user) {
           return res.status(401).json({ message: 'Invalid username or password' });
         }
