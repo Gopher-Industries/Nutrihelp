@@ -6,13 +6,13 @@ const mysql = require('mysql2');
 // In-memory user database (replace with a database in a production environment)
 // const users = [];
 
-var con = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "",
-  port: 3306,
-  database: "Nutrihelp"
-});
+//var con = mysql.createConnection({
+//  host: "127.0.0.1",
+//  user: "root",
+//  password: "",
+//  port: 3306,
+//  database: "Nutrihelp"
+//});
 
 const signup = async (req, res) => {
     try {
@@ -73,7 +73,7 @@ const login = async (req, res) => {
           }			
           response.end();
         });
-         
+
         if (!user) {
           return res.status(401).json({ message: 'Invalid username or password' });
         }
