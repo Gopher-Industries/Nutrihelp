@@ -4,6 +4,7 @@
   "description": "NutriHelp is an Android application that aims to promote healthy eating habits for Australia's senior population,",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -18,6 +19,7 @@
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "ejs": "^3.1.7",
     "express": "^4.18.2",
