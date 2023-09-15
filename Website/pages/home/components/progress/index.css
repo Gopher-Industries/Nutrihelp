@@ -1,0 +1,12 @@
+.custom-progress {
+  width: 400px;
+  height: 20px;
+  background-color: rgb(176, 175, 175);
+
+  border-radius: 20px;
+}
+.progress-25 {
+  width: 25%;
+  background-color: rgb(255, 85, 85);
+  border-radius: 20px;
+}

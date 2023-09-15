@@ -1,0 +1,104 @@
+ul {
+  list-style: none;
+  padding-inline-start: 0;
+}
+.container {
+  width: 1500px;
+  margin: 0 auto;
+  height: 100%;
+}
+.header {
+  background-color: #e3def1;
+  padding: 10px 0px;
+}
+.header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  height: 100px;
+}
+.header-right .icon {
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border-radius: 100%;
+  padding: 10px;
+  color: #8472a9;
+  border: 2px solid #8472a9;
+}
+.header-right {
+  display: flex;
+  gap: 10px;
+}
+.navigation-background {
+  background: linear-gradient(#8472a9, #b5a4d6);
+}
+.navigation {
+  height: 40px;
+  align-items: center;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+.navigation li {
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  width: 25%;
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+}
+.navigation li:hover {
+  background-color: #e5def4;
+  color: #8472a9;
+  transition: 500ms;
+}
+.nutrition-section {
+  padding-top: 30px;
+}
+.nutrition {
+  margin: 0px 5px 20px 20px;
+  display: flex;
+}
+.nutrition-title {
+  width: 80px;
+}
+.meal-plan {
+  text-align: center;
+}
+.meal-plan-title {
+  color: #8472a9;
+  font-size: 20px;
+  font-weight: bold;
+}
+.meal-option {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+}
+.meal-option button {
+  background-color: #8472a9;
+  color: white;
+  border: none;
+  font-size: 20px;
+  width: 150px;
+  padding: 5px;
+  height: 30px;
+}
+.meal-option button:hover {
+  background-color: #e5def4;
+  color: #8472a9;
+  transition: 400ms;
+}
+.meal-option .today {
+  border-radius: 10px 0px 0px 10px;
+}
+.meal-option .week {
+  border-radius: 0px 10px 10px 0px;
+}
+.main-content {
+  background-color: white;
+}
