@@ -1,0 +1,305 @@
+.backImage{
+    display: flex;
+    width: 47%;
+    height: 80%;
+    margin-left: 53%;
+}
+.imgB{
+    height: 600px;
+    width: 601px;
+    border-radius: 20px;
+}
+.contain
+{
+    display: flex;
+    align-items: center;
+}
+h6
+{
+    /* margin-left: 2%; */
+    font-weight: bold;
+    font-size: 30px;
+    font-family: "Montserrat", sans-serif;
+}
+h7
+{
+    font-size: larger;
+    font-family: "Montserrat", sans-serif;
+    /* font-weight: bold; */
+}
+p{
+    font-family: "Montserrat", sans-serif;
+}
+.ditryCont{
+    display: flex;
+    align-items: center;
+    margin-top: -46%;
+}
+.special{
+    width:200px;
+    height:180px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(141, 100, 172, 0.271);
+}
+.allg{
+    margin-left: 2%;
+    width:200px;
+    height:180px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(141, 100, 172, 0.271);
+}
+
+.dislike{
+    margin-left: 2%;
+    width:200px;
+    height:180px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(141, 100, 172, 0.271);
+}
+.secCont{
+    display: flex;
+    align-items: center;
+}
+.health{
+    width:650px;
+    height:320px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(141, 100, 172, 0.271);
+}
+.backwork
+{
+    background-color: rgba(81, 38, 115, 0.271); 
+    color:rgba(10, 1, 17, 0.709);
+    display: inline-block; 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    margin-right: 8px; 
+}
+.backwork img.close 
+{
+    width: 10px; 
+    height: 10px; 
+}
+.confirm-button 
+{
+    flex: 1;
+    align-items: center;
+    font-family: "Montserrat", sans-serif;
+    background-color:rgb(140, 53, 227); 
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 15px 30px;
+    margin: 10px;
+    cursor: pointer;
+    float: left;
+} 
+.redo-button 
+{
+    flex: 1;
+    align-items: center;
+    font-family: "Montserrat", sans-serif;
+    background-color: white;
+    color: rgba(10, 1, 17, 0.709);
+    border: 2px solid black;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 15px 30px;
+    float: left;
+    margin: 10px;
+    cursor: pointer;
+}
+.buttonCont
+{
+    display: flex;
+    justify-content: space-between; 
+    margin-top: 20px; 
+}
+.page-background
+{
+    background-color: rgba(141, 100, 172, 0.271);
+}
+
+/*DEIT PLAN*/
+h5
+{
+    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
+}
+table 
+{
+    width: 100%; 
+    border-collapse: separate;
+}
+td 
+{
+    padding: 8px; 
+    font-weight: bold;
+    font-size: 15px;
+    font-family: "Montserrat", sans-serif;
+}
+.clr{
+    color:rgba(101, 31, 158, 0.932);
+}
+.choice
+{
+    background-color: rgba(81, 38, 115, 0.271); 
+    color:rgba(10, 1, 17, 0.709);
+    display: inline-block; 
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    margin-right: 8px; 
+}
+.choice img.tick
+{
+    width: 30px; 
+    height: 30px; 
+}
+.continue-button 
+{
+    flex: 1;
+    align-items: center;
+    background-color: rgb(146, 71, 220); 
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 15px 30px;
+    margin: 10px;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+} 
+.buttonContinue
+{
+    display: flex;
+    justify-content: space-between; 
+    margin-top: 20px; 
+}
+hr{
+    background-color:  rgba(10, 1, 17, 0.709);
+    width: 118%;
+    margin-left: 1%;
+    font-family: "Montserrat", sans-serif;
+}
+
+/* GROCERIES */
+
+.buttonGro {
+    display: flex;
+    margin-left: 40%;
+}
+.online-button,
+.list-button 
+{
+    border: none;
+    border-radius: 20px; 
+    padding: 10px 20px;
+    margin-right: 10px; 
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+.online-button 
+{
+    background-color: rgb(178, 128, 228);
+    color: white; 
+}
+.list-button
+{
+    background-color: rgb(180, 160, 201); 
+    color: white; 
+}
+.section-all 
+{
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 2px solid rgb(180, 160, 201); 
+    border-radius: 20px;
+    width: 250px;
+}
+.section 
+{
+    flex: 1;
+    padding: 10px;
+    /* color: rgb(178, 128, 228); */
+    text-align: center;
+    font-size: small;
+}
+.section:not(:last-child) 
+{
+    border-right: 1px solid rgb(178, 128, 228);
+}
+.imgcircle 
+{
+    width: 20px; 
+    height: 20px; 
+}
+.grotable1
+{
+    width: 52%; 
+    border-collapse: separate;
+    font-family: "Montserrat", sans-serif;
+}
+.grotable2
+{
+    width: 60%; 
+    border-collapse: separate;
+    font-family: "Montserrat", sans-serif;
+}
+.grotable3
+{
+    width: 50%;
+    margin-left:50%;
+    margin-top: -27%;
+    border-collapse: separate;
+    font-family: "Montserrat", sans-serif;
+}
+.tablehead
+{
+    font-weight: bolder;
+}
+.grotable tbody tr {
+    line-height: 1;
+}
+.gro
+{
+    font-weight: 100;
+}
+.lastnav 
+{
+    display: flex;
+    justify-content: space-around;
+    align-items: flex; 
+    background-color: rgb(180, 160, 201);
+    width: 60%;
+    height: 55px; 
+    border-radius: 20px;
+    margin-left: 20%;
+}
+.lastnav figure 
+{
+    text-align: center;
+}
+.lastnav img 
+{
+    width: 30px;
+    height: 30px;
+}
+.lastnav figcaption 
+{
+    margin-top: 5px; 
+}
+
+  
+
+  
