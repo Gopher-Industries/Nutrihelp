@@ -27,7 +27,7 @@ const App = () => {
                 </a>
               </li>
               <li>
-                <a className="nav-link scrollto" href="#contact">
+                <a className="nav-link scrollto" href="#PREFe">
                   Contact
                 </a>
               </li>
