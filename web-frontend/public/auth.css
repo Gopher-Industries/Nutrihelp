@@ -143,6 +143,7 @@ figure {
   padding: 10px 29px;
   border-color: #ac82be;
   margin-top: 10px;
+  margin-right: 10px;
   cursor:cell;  
 }
 .sel:hover {
@@ -155,6 +156,12 @@ figure {
   content: "\2713"; 
   margin-right: 5px; 
 }
+
+.sel.confirm::before{
+  content: "\2717"; 
+  margin-right: 5px; 
+}
+
 .optbuttons {
   
   display: inline-block;
@@ -175,13 +182,12 @@ figure {
     margin-right: 10px; /* Adjust as needed for spacing */
   }
   
-
   h3 {
     margin: 10; /* Remove default margin */
     font-size: 14px; /* Adjust font size as needed */
     line-height: 25px; /* Align vertically with the toggle */
   }
-
+  
   .switch {
     font-size: 12px;
     position: relative;
@@ -268,22 +274,45 @@ figure {
 }
 
 /* Initially hide the dropdown */
-.searchable-dropdown #dropdown-list {
+.searchable-dropdown #diet-list {
   display: none;
 }
 
-.searchable-dropdown #dropdown-list li{
+.searchable-dropdown #diet-list li{
   border-radius: 20px;
   padding: 5px;
   cursor: pointer;
 }
 
-.searchable-dropdown #dropdown-list li:hover{
+.searchable-dropdown #diet-list li:hover{
   background-color: #d6ccf8;
   
 }
 
-#dropdown-list{
+#diet-list{
+ background-color: #ebe6fb;
+ height: 70px;
+ overflow-y:auto;
+
+}
+
+/* Initially hide the dropdown */
+.searchable-dropdown #allergy-list {
+  display: none;
+}
+
+.searchable-dropdown #allergy-list li{
+  border-radius: 20px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.searchable-dropdown #allergy-list li:hover{
+  background-color: #d6ccf8;
+  
+}
+
+#allergy-list{
  background-color: #ebe6fb;
  height: 70px;
  overflow-y:auto;
@@ -573,7 +602,6 @@ label {
     text-align: center; }
 
   .signin-form {
-
     order: 1;
     -moz-order: 1;
     -webkit-order: 1;
@@ -596,6 +624,5 @@ label {
   .social-label {
     margin-right: 0px;
     margin-bottom: 10px; } }
-
 
 
