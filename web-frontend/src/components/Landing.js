@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styles/landing.css';
-
+import { Link } from 'react-router-dom';
 const App = () => {
   return (
     <>
@@ -47,9 +47,7 @@ const App = () => {
                 nutrition advice
               </h2>
               <div>
-                <a href="#" className="btn-get-started scrollto">
-                  Get Started
-                </a>
+                  <Link to="/signin" className="btn-get-started">Get Started</Link>
               </div>
             </div>
             <div className="col-lg-6 order-1 order-lg-2 hero-img">

@@ -1,10 +1,17 @@
 import React from 'react';
 import '../styles/auth.css';
+import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
+  const navigate = useNavigate();
+    
+    const handleLogin = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/signin');
+    };
   return (
     <section className="signup">
-      <div className="container">
+      <div className="containerSign">
         <div className="signup-content">
           <div className="signup-form">
             <h2 className="form-title">Sign up</h2>
@@ -63,7 +70,7 @@ function SignUp() {
                   className="form-submit"
                   value="Register"
                 />
-                <input style={{marginLeft: "20px"}} type="submit" id="toLogin" className="btn" value="Login" />
+                <input style={{marginLeft: "20px"}} type="submit" id="toLogin" className="btn" value="Login" onClick={handleLogin} />
               </div>
             </form>
           </div>

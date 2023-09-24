@@ -1,10 +1,19 @@
 import React from 'react';
 import '../styles/auth.css';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
+    const navigate = useNavigate();
+    
+    const handleRegister = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/signup');
+    };
+
   return (
     <section className="sign-in">
-      <div className="container">
+      <div className="containerSign">
         <div className="signin-content">
           <div className="signin-image">
             <img src="./images/3.png" alt="Sign In" />
@@ -44,6 +53,7 @@ function SignIn() {
                   className="btn"
                   id="toSignUp"
                   value="Register"
+                  onClick={handleRegister}
                   style={{ marginTop: '5px' }}
                 />
               </div>
