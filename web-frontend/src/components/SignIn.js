@@ -1,6 +1,5 @@
 import React from 'react';
 import '../styles/auth.css';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
@@ -11,9 +10,13 @@ function SignIn() {
       navigate('/signup');
     };
 
+    const handleLogin = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/profile');
+    };
   return (
     <section className="sign-in">
-      <div className="containerSign">
+      <div className="container">
         <div className="signin-content">
           <div className="signin-image">
             <img src="./images/3.png" alt="Sign In" />
@@ -23,13 +26,13 @@ function SignIn() {
             <form method="POST" className="register-form" id="login-form">
               <div className="form-group">
                 <label htmlFor="your_name">
-                  <span className="material-symbols-outlined">person</span>
+                  <span className="material-symbols-outlined"></span>
                 </label>
                 <input type="text" name="your_name" id="your_name" placeholder="Your Name" />
               </div>
               <div className="form-group">
                 <label htmlFor="your_pass">
-                  <span className="material-symbols-outlined">password</span>
+                  <span className="material-symbols-outlined"></span>
                 </label>
                 <input type="password" name="your_pass" id="your_pass" placeholder="Password" />
               </div>
@@ -45,7 +48,7 @@ function SignIn() {
                 </label>
               </div>
               <div className="form-group form-button">
-                <input type="submit" name="signin" id="signin" className="form-submit" value="Log in" />
+                <input type="submit" name="signin" id="signin" className="form-submit" value="Log in" onClick={handleLogin} />
                 <hr />
                 <p style={{ marginBottom: '15px' }}>don't have an account?</p>
                 <input

@@ -1,6 +1,16 @@
 import React from 'react';
 import '../styles/auth.css'
+import { useNavigate } from 'react-router-dom';
+
 function Allergy() {
+  const navigate = useNavigate();
+    
+    const handleContinue = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/preference');
+    };
+
+
   return (
     <div className="main">
       <section className="signup">
@@ -18,7 +28,7 @@ function Allergy() {
               </div>
               <hr />
               <div className="form-group form-button">
-                <input type="submit" name="continue" className="form-submit" value="Continue" />
+                <input type="submit" name="continue" className="form-submit" onClick={handleContinue} value="Continue" />
               </div>
             </div>
           </div>

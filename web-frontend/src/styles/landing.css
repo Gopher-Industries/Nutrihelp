@@ -116,8 +116,10 @@ body {
     background-repeat: no-repeat;
   }
   
-  #hero .container {
+  #hero .landing {
     padding-top: 84px;
+    padding-left: 50px;
+    padding-right: 50px;
   }
   
   #hero h1 {
