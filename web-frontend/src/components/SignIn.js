@@ -1,7 +1,19 @@
 import React from 'react';
 import '../styles/auth.css';
+import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
+    const navigate = useNavigate();
+    
+    const handleRegister = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/signup');
+    };
+
+    const handleLogin = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/profile');
+    };
   return (
     <section className="sign-in">
       <div className="container">
@@ -14,13 +26,13 @@ function SignIn() {
             <form method="POST" className="register-form" id="login-form">
               <div className="form-group">
                 <label htmlFor="your_name">
-                  <span className="material-symbols-outlined">person</span>
+                  <span className="material-symbols-outlined"></span>
                 </label>
                 <input type="text" name="your_name" id="your_name" placeholder="Your Name" />
               </div>
               <div className="form-group">
                 <label htmlFor="your_pass">
-                  <span className="material-symbols-outlined">password</span>
+                  <span className="material-symbols-outlined"></span>
                 </label>
                 <input type="password" name="your_pass" id="your_pass" placeholder="Password" />
               </div>
@@ -36,7 +48,7 @@ function SignIn() {
                 </label>
               </div>
               <div className="form-group form-button">
-                <input type="submit" name="signin" id="signin" className="form-submit" value="Log in" />
+                <input type="submit" name="signin" id="signin" className="form-submit" value="Log in" onClick={handleLogin} />
                 <hr />
                 <p style={{ marginBottom: '15px' }}>don't have an account?</p>
                 <input
@@ -44,6 +56,7 @@ function SignIn() {
                   className="btn"
                   id="toSignUp"
                   value="Register"
+                  onClick={handleRegister}
                   style={{ marginTop: '5px' }}
                 />
               </div>

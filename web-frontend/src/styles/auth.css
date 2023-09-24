@@ -175,12 +175,13 @@ figure {
     margin-right: 10px; /* Adjust as needed for spacing */
   }
   
+
   h3 {
     margin: 10; /* Remove default margin */
     font-size: 14px; /* Adjust font size as needed */
     line-height: 25px; /* Align vertically with the toggle */
   }
-  
+
   .switch {
     font-size: 12px;
     position: relative;
@@ -572,6 +573,7 @@ label {
     text-align: center; }
 
   .signin-form {
+
     order: 1;
     -moz-order: 1;
     -webkit-order: 1;
@@ -594,5 +596,6 @@ label {
   .social-label {
     margin-right: 0px;
     margin-bottom: 10px; } }
+
 
 

@@ -8,8 +8,9 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome"; //Wrong arrow, need to change
 import { TextInput as RNPTextInput } from "react-native-paper";
-import {switchColour , isLarge } from "./Accessibility";
 import { useRoute } from '@react-navigation/native';
+import * as Speech from 'expo-speech';
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
 
 export default function CreateAccount({ navigation }) {
   const [email, setEmail] = useState("");
@@ -17,11 +18,27 @@ export default function CreateAccount({ navigation }) {
   const [password, setPassword] = useState("");
   const [passwordConfrim, setPasswordConfirm] = useState("");
   const [checkValidEmail, setCheckValidEmail] = useState("");
-
-  const route = useRoute();
-  const isLarge = route.params?.isLarge;
-  const switchColour = route.params?.switchColour;
   
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+  //call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  const handleInputFocus = (label) => {
+    if (isVoiceOverOn) {
+      speak(label);
+    }
+  };
+
 
   const handleCheckEmail = (val) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -50,7 +67,7 @@ export default function CreateAccount({ navigation }) {
       setCheckValidEmail('');
     }
   };
-
+  
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -65,7 +82,7 @@ export default function CreateAccount({ navigation }) {
   
     //Title
     title: {
-      fontSize: isLarge ? 30 : 24,
+      fontSize: textLarge ? 30 : 24,
       fontFamily: "OpenSans_400Regular",
       color: "black",
       marginTop: 32,
@@ -87,7 +104,7 @@ export default function CreateAccount({ navigation }) {
     //Small text
     text: {
       color: "black",
-      fontSize: isLarge ? 16: 12,
+      fontSize: textLarge ? 16: 12,
       letterSpacing: 0.1,
       lineHeight: 20,
       fontWeight: '600',
@@ -98,7 +115,7 @@ export default function CreateAccount({ navigation }) {
     //Validation text
     emailValidationText: {
       color: "red",
-      fontSize: isLarge ? 16: 12,
+      fontSize: textLarge ? 16: 12,
       letterSpacing: 0.1,
       lineHeight: 20,
       fontWeight: '600',
@@ -111,14 +128,14 @@ export default function CreateAccount({ navigation }) {
       height: 40,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor:  switchColour ? "red":"#8273a9",
+      backgroundColor:  colourBlind ? "red":"#8273a9",
       marginTop: 160,
       marginBottom: 32,
     },
   
     //Continue button text
     buttonText: {
-      fontSize: isLarge ? 20: 16,
+      fontSize: textLarge ? 20: 16,
       letterSpacing: 0.1,
       lineHeight: 20,
       fontWeight: '700',
@@ -129,7 +146,6 @@ export default function CreateAccount({ navigation }) {
       justifyContent: 'center',
     },
   });
-  
 
   return (
     <View style={styles.container}>
@@ -139,7 +155,11 @@ export default function CreateAccount({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Back");
+          };
+          navigation.goBack()}}
       />
       <View>
         <Text style={styles.title}>Create Account</Text>
@@ -154,6 +174,7 @@ export default function CreateAccount({ navigation }) {
         style={styles.TextInputRNPTextInput}
         placeholder="Email Address*"
         label="Email Address*"
+        onFocus={() => handleInputFocus("Email Address")}
         mode="outlined"
         activeOutlineColor="#8273a9"
         theme={{
@@ -170,6 +191,7 @@ export default function CreateAccount({ navigation }) {
         style={styles.TextInputRNPTextInput}
         placeholder="Confirm Email Address*"
         label="Confirm Email Address*"
+        onFocus={() => handleInputFocus("Confirm Email Address")}
         mode="outlined"
         activeOutlineColor="#8273a9"
         theme={{
@@ -186,6 +208,7 @@ export default function CreateAccount({ navigation }) {
         style={styles.TextInputRNPTextInput}
         placeholder="Password*"
         label="Password*"
+        onFocus={() => handleInputFocus("Password")}
         mode="outlined"
         activeOutlineColor="#8273a9"
         theme={{
@@ -206,6 +229,7 @@ export default function CreateAccount({ navigation }) {
           style={styles.TextInputRNPTextInput}
           placeholder="Confirm Password*"
           label="Confirm Password*"
+          onFocus={() => handleInputFocus("Confirm Password")}
           mode="outlined"
           activeOutlineColor="#8273a9"
           theme={{
@@ -225,11 +249,17 @@ export default function CreateAccount({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Authentication",{ switchColour, isLarge})}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Continue");
+          };
+          navigation.navigate("Authentication")}}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
     </View>
   );
 }
+
+
 

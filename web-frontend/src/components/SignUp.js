@@ -1,7 +1,18 @@
 import React from 'react';
 import '../styles/auth.css';
+import { useNavigate } from 'react-router-dom';
 
 function SignUp() {
+  const navigate = useNavigate();
+    
+    const handleLogin = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/signin');
+    };
+    const handleSignin = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/profile');
+    };
   return (
     <section className="signup">
       <div className="container">
@@ -62,8 +73,9 @@ function SignUp() {
                   id="signup"
                   className="form-submit"
                   value="Register"
+                  onClick={handleSignin}
                 />
-                <input style={{marginLeft: "20px"}} type="submit" id="toLogin" className="btn" value="Login" />
+                <input style={{marginLeft: "20px"}} type="submit" id="toLogin" className="btn" value="Login" onClick={handleLogin} />
               </div>
             </form>
           </div>

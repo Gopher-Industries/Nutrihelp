@@ -12,6 +12,8 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Searchbar } from "react-native-paper";
 import { firebase } from "../config";
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
+import * as Speech from 'expo-speech';
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
@@ -42,6 +44,26 @@ export default function DietryRequirements({ navigation }) {
   const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
 
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+
+  //call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  const handleInputFocus = (label) => {
+    if (isVoiceOverOn) {
+      speak(label); }
+  };
+  
   const searchFilterFunction = (text) => {
     // Check if searched text is not blank
     if (text) {
@@ -84,6 +106,9 @@ export default function DietryRequirements({ navigation }) {
     setDiet((prevDiet) => [...prevDiet, item.id]);
     setSearchQuery("");
     // BUG: Need to hide flatlist everytime after an item is added.
+    if (isVoiceOverOn) {
+
+      speak(item.title.toString());}
   };
 
   const AddedByYou = () => {
@@ -108,6 +133,9 @@ export default function DietryRequirements({ navigation }) {
                       console.log(selected_items_diet);
                       // BUG: need to remove item.id if its already selected before
                       setDiet((prevDiet) => [...prevDiet, item.id]);
+                      if (isVoiceOverOn) {
+
+                        speak(item.title.toString());}
                     }}
                   >
                     <View style={styles.itemContent}>
@@ -138,6 +166,87 @@ export default function DietryRequirements({ navigation }) {
   console.log(searchQuery);
   // console.log(item);
   // console.log(isSelected)
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#FFFBFE",
+      padding: 30,
+    },
+    title: {
+      fontSize: textLarge ? 30 : 24,
+      color: "black",
+      marginTop: 20,
+      marginBottom: 20,
+    },
+    text: {
+      fontSize: textLarge ? 24 : 20,
+      marginBottom: 10,
+      marginTop: 20,
+      fontWeight: "bold",
+      color: "black",
+    },
+    button: {
+      backgroundColor: colourBlind ? "red":"#8273a9",
+      height: 55,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 25,
+      top: 10,
+      marginBottom: 50,
+    },
+    buttonText: {
+      fontSize: textLarge ? 20 : 16,
+      color: "white",
+      fontWeight: "bold",
+    },
+    item: {
+      flexDirection: 'row', 
+      alignItems: 'center', 
+      marginTop: 10,
+      // backgroundColor: 'green',
+      borderColor: "black",
+      borderWidth: 1,
+      maxWidth: SCREENWIDTH / 2 - 40,
+      padding: 10,
+      alignItems: "center",
+      borderRadius: 10,
+      justifyContent: "space-around",
+      margin: 5,
+      flex: 0.5,
+      //backgroundColor: 'pink',
+    },
+    itemText: {
+      color: "black",
+      fontSize: textLarge ? 18 : 14,
+      // fontFamily: 'Times',
+    },
+    addeditem: {
+      marginTop: 10,
+      backgroundColor: 'lavender',
+      borderColor: "black",
+      borderWidth: 1,
+      maxWidth: SCREENWIDTH / 2 - 40,
+      padding: 10,
+      alignItems: "center",
+      borderRadius: 10,
+      justifyContent: "space-around",
+      margin: 5,
+      flex: 0.5,
+    },
+    itemContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    checkIcon: {
+      marginRight: 5, // Adjust this value to add spacing between the label and check mark
+    },
+    listStyle: {
+      paddingTop: 10,
+    },
+  });
+  
+  
   return (
     <SafeAreaView style={styles.container}>
       <Icon
@@ -145,13 +254,17 @@ export default function DietryRequirements({ navigation }) {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Back");
+          };navigation.goBack()}}
       />
       <View>
         <Text style={styles.title}>Dietary Requirements</Text>
       </View>
       <Searchbar
         placeholder="Search Dietary Requirements"
+        onFocus={() => handleInputFocus("Search Dietary Requirements")}
         onChangeText={(text) => searchFilterFunction(text)}
         value={searchQuery}
       />
@@ -172,6 +285,9 @@ export default function DietryRequirements({ navigation }) {
                   var index0 = filteredDataSource.indexOf(item);
                   filteredDataSource.splice(index0, 1);
                   setDiet((prevDiet) => [...prevDiet, item.id]);
+                  if (isVoiceOverOn) {
+
+                    speak(item.title.toString());}
                 }}
               >
                 <Text style={styles.itemText}>{item.title}</Text>
@@ -219,6 +335,9 @@ export default function DietryRequirements({ navigation }) {
                 // BUG: need to remove item.id if its already selected before
                 setDiet((prevDiet) => [...prevDiet, item.id]);
                 // BUG: need to change colour when selected
+                if (isVoiceOverOn) {
+
+                  speak(item.title.toString());}
               }}
             >
               <View style={styles.itemContent}>
@@ -244,6 +363,8 @@ export default function DietryRequirements({ navigation }) {
               selected_items_diet.splice(noneIndex, 1); // Remove the "None" element from selected_items_diet
             }
           }
+          if (isVoiceOverOn == true) {
+            speak("Continue");}
           navigation.navigate("Allergies")
         }}
       >
@@ -253,83 +374,6 @@ export default function DietryRequirements({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFBFE",
-    padding: 30,
-  },
-  title: {
-    fontSize: 25,
-    color: "black",
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  text: {
-    fontSize: 20,
-    marginBottom: 10,
-    marginTop: 20,
-    fontWeight: "bold",
-    color: "black",
-  },
-  button: {
-    backgroundColor: "#8d71ad",
-    height: 55,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 25,
-    top: 10,
-    marginBottom: 50,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "white",
-    fontWeight: "bold",
-  },
-  item: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginTop: 10,
-    // backgroundColor: 'green',
-    borderColor: "black",
-    borderWidth: 1,
-    maxWidth: SCREENWIDTH / 2 - 40,
-    padding: 10,
-    alignItems: "center",
-    borderRadius: 10,
-    justifyContent: "space-around",
-    margin: 5,
-    flex: 0.5,
-    //backgroundColor: 'pink',
-  },
-  itemText: {
-    color: "black",
-    // fontFamily: 'Times',
-  },
-  addeditem: {
-    marginTop: 10,
-    backgroundColor: 'lavender',
-    borderColor: "black",
-    borderWidth: 1,
-    maxWidth: SCREENWIDTH / 2 - 40,
-    padding: 10,
-    alignItems: "center",
-    borderRadius: 10,
-    justifyContent: "space-around",
-    margin: 5,
-    flex: 0.5,
-  },
-  itemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  checkIcon: {
-    marginRight: 5, // Adjust this value to add spacing between the label and check mark
-  },
-  listStyle: {
-    paddingTop: 10,
-  },
-});
 
 // import { StatusBar } from "expo-status-bar";
 // import { Button, StyleSheet, Text, View } from "react-native";

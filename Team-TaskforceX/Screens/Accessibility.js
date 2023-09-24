@@ -2,48 +2,77 @@ import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View, Pressable, Image, Switch,TouchableOpacity } from "react-native";
 import * as React from "react";
 import { useState } from "react";
-import { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useEffect, useContext } from "react";
+//import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useRoute } from "@react-navigation/native"
-//import './Accessibility.css';
+import * as Speech from 'expo-speech';
+import { AccessibilityContext } from "./Components/AccessibilityContext"; 
 
 
+export default function Accessibility ({navigation}) {
+  const { accessibilitySettings, setAccessibilitySettings } = useContext(
+    AccessibilityContext
+  );
 
-const Accessibility = () => {
-  const [switchColour, setColourValue] = useState(false);
-  //toggle colourblind mode
-  
-  const navigation = useNavigation();
-  const [switchVoice, setVoiceValue] = useState(false);
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
 
-  // text size
-  const [isLarge, setIsLarge] = useState(false);
-  const [isLargePressed, setIsLargePressed] = useState(false);
-  const [isNormalPressed, setIsNormalPressed] = useState(true);
   //handle text size button presses
   const handleLargePress = () => {
-  if (isLargePressed == false){
-  setIsLargePressed(!isLargePressed);
-    setIsNormalPressed(!isNormalPressed);
+   if (textLarge == false){
+    setAccessibilitySettings(prevSettings => ({
+      ...prevSettings,
+      textLarge: true,}))
+    console.log("large text: " + !textLarge);
   }
-};
-const handleNormalPress = () => {
-  if (isNormalPressed == false){
-  setIsNormalPressed(!isNormalPressed);
-  setIsLargePressed(!isLargePressed);
+  if (isVoiceOverOn == true) {
+    speak("Large text");
+  }
+  };
   
+  const handleNormalPress = () => {
+    if (textLarge == true){
+    setAccessibilitySettings(prevSettings => ({
+      ...prevSettings,
+      textLarge: false,}))
+    console.log("large text: " + !textLarge);
   }
-};
+  if (isVoiceOverOn == true) {
+    speak("Normal text");
+  }
+  };
 
 
-const updateSwitchColour = (newColour) => {
-  setColourValue(newColour);
-  navigation.setParams(newColour)
-}
+  const updateSwitchColour = (newColour) => {
+    setAccessibilitySettings(prevSettings => ({
+    ...prevSettings,
+    colourBlind: !accessibilitySettings.colourBlind,}))
+  console.log("colourblind: " +  !accessibilitySettings.colourBlind);
+  if (isVoiceOverOn == true) {
+    speak(newColour ? "Colour blind Mode on": "Colour blind Mode off");
+  }
+  }
 
+//call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
 
-//stylesheet
+  const handleVoiceOverSwitch = (newValue) => {
+    setAccessibilitySettings(prevSettings => ({
+      ...prevSettings,
+      isVoiceOverOn: newValue,}))
+    console.log("colourblind: " +  !accessibilitySettings.isVoiceOverOn);
+    speak(newValue ? "Voice Over On" : "");
+  };
+
+  //stylesheet
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -60,7 +89,7 @@ const updateSwitchColour = (newColour) => {
       position: "absolute",
       top: 190,
       left: 16,
-      fontSize: isLarge ? 24 : 16,
+      fontSize: textLarge ? 24 : 16,
       letterSpacing: -0.2,
       lineHeight: 24,
       //fontFamily: "Open Sans",
@@ -73,7 +102,7 @@ const updateSwitchColour = (newColour) => {
       position: "absolute",
       top: 260,
       left: 16,
-      fontSize: isLarge ? 30 : 19,
+      fontSize: textLarge ? 30 : 19,
       lineHeight: 48,
       fontWeight: "600",
       //fontFamily: "Open Sans",
@@ -96,7 +125,7 @@ const updateSwitchColour = (newColour) => {
       position: "absolute",
       top: 55,
       left: 16,
-      fontSize: isLarge ? 31 : 24,
+      fontSize: textLarge ? 31 : 24,
       lineHeight: 50,
      // fontFamily: "Open Sans",
       color: "#1c1b1f",
@@ -117,7 +146,7 @@ const updateSwitchColour = (newColour) => {
       position: "absolute",
       top: 395,
       left: 16,
-      fontSize: isLarge ? 24 : 16,
+      fontSize: textLarge ? 24 : 16,
       lineHeight: 48,
      // fontFamily: "Open Sans",
       color: "#000",
@@ -136,7 +165,7 @@ const updateSwitchColour = (newColour) => {
       position: "absolute",
       top: 440,
       left: 16,
-      fontSize: isLarge ? 24 : 16,
+      fontSize: textLarge ? 24 : 16,
       lineHeight: 48,
       //fontFamily: "Open Sans",
       color: "#000",
@@ -153,7 +182,7 @@ const updateSwitchColour = (newColour) => {
     },
     buttonText: { //continue text
       position: "relative",
-      fontSize: isLarge ? 20 : 16,
+      fontSize: textLarge ? 20 : 16,
       letterSpacing: 0,
       lineHeight: 20,
       fontWeight: "700",
@@ -166,7 +195,7 @@ const updateSwitchColour = (newColour) => {
       top: 685,
       left: 26,
       borderRadius: 100,
-      backgroundColor: switchColour ? "#f54242": "#8273a9",
+      backgroundColor: colourBlind ? "#f54242": "#8273a9",
       width: 328,
       overflow: "hidden",
       flexDirection: "column",
@@ -193,7 +222,7 @@ const updateSwitchColour = (newColour) => {
     },
     labelText1: { //'large' text
       position: "relative",
-      fontSize: isLarge ? 20 : 16,
+      fontSize: textLarge ? 20 : 16,
       letterSpacing: 0,
       lineHeight: 20,
       fontWeight: "600",
@@ -210,7 +239,7 @@ const updateSwitchColour = (newColour) => {
     },
     labelText2: { //'normal' text
       position: "relative",
-      fontSize: isLarge ? 20 : 16,
+      fontSize: textLarge ? 20 : 16,
       letterSpacing: 0,
       lineHeight: 20,
       fontWeight: "600",
@@ -264,11 +293,11 @@ const updateSwitchColour = (newColour) => {
 //change button background
   const buttonLargeStyles = [
     styles.buttonLarge,
-    isLargePressed && styles.purpleBackground,
+    accessibilitySettings.textLarge && styles.purpleBackground,
   ];
   const buttonNormalStyles = [
     styles.buttonNormal,
-    isNormalPressed && styles.purpleBackground,
+    !accessibilitySettings.textLarge && styles.purpleBackground,
   ];
 //export text size and colourblind settings
   //module.exports = {switchColour, isLarge};
@@ -293,42 +322,48 @@ const updateSwitchColour = (newColour) => {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Back");
+          };
+          navigation.goBack()}}
       />
         <Text style={styles.headline}>{`Accessibility  `}</Text>
       </View>
       <Switch //colourblind switch
         style={styles.colourSwitch}
-        value={switchColour}
-        onValueChange = {setColourValue}
+        value={colourBlind}
+        onValueChange = {updateSwitchColour}
         thumbColor="#fff"
         trackColor={{ false: "#79747e", true: "#8273a9" }}
       />
       <Switch //voice over switch
         style={styles.voiceSwitch}
-        value={switchVoice}
-        onValueChange={setVoiceValue}
+        value={isVoiceOverOn}
+        onValueChange={handleVoiceOverSwitch}
         thumbColor="#fff"
         trackColor={{ false: "#79747e", true: "#8273a9" }}
       />
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={() => navigation.navigate("CreateAccount", { switchColour, isLarge})}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+          speak("Continue");
+        };
+          navigation.navigate("CreateAccount")}}
       >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
       <Pressable
         style={buttonLargeStyles}
-        onPress={() => {if (isLargePressed == false){
-          setIsLarge(!isLarge)};
+        onPress={() => {
            handleLargePress()}}
         >
         <Text style={styles.labelText1}>Large</Text>
       </Pressable>
       <Pressable 
         style={buttonNormalStyles}
-        onPress={() => {if (isLargePressed == true){
-          setIsLarge(!isLarge)};
+        onPress={() => {
           handleNormalPress()}}
         >
         <Text style={[styles.labelText2]}>Normal</Text>
@@ -337,6 +372,5 @@ const updateSwitchColour = (newColour) => {
     </View>
   
   );
-};
+}
 
-export default Accessibility;

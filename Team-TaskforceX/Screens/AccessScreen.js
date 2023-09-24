@@ -27,10 +27,13 @@ import * as Contacts from 'expo-contacts';
 //import { DropDownPicker } from "react-native-element-dropdown";
 import  DropDownPicker  from 'react-native-dropdown-picker'
 import {KeyboardAwareScrollView , KeyboardAwareFlatList} from 'react-native-keyboard-aware-scroll-view'
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
+import * as Speech from 'expo-speech';
 
 
 
-const Access = () => {
+
+const AccessScreen = () => {
   const [familyCarerSwitchValue, setFamilyCarerSwitchValue] = useState(false);
   const [weeklyReportsSwitchValue, setWeeklyReportsSwitchValue] = useState(false);
   const [healthReportSwitchValue, setHealthReportSwitchValue] = useState(false);
@@ -50,6 +53,24 @@ const Access = () => {
   //const [gpInputFocused, setGpInputFocused] = useState(false);
   const [showContactPicker, setShowContactPicker] = useState(false);
 
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  const handleInputFocus = (label) => {
+    if (isVoiceOverOn) {
+      speak(label);
+    }
+  };
 
     // Function to fetch contacts data from an API or local storage
     const fetchContacts = async () => {
@@ -122,7 +143,7 @@ const Access = () => {
 const handleFamilySwitchChange = (value) => {
   setFamilyCarerSwitchValue(value);
   setOpen(value);
-
+  handleSwitchChange("Family Carer", value);
   if (familyCarerSwitchValue == true)
   {
     setSelectedFamilyContact([]);
@@ -132,7 +153,7 @@ const handleFamilySwitchChange = (value) => {
 const handleGpSwitchChange = (value) => {
   setGpSwitchValue(value);
   setGpOpen(value);
-
+  handleSwitchChange("GP", value);
   if (gpSwitchValue == true)
   {
     setSelectedGPContact([]);
@@ -142,6 +163,7 @@ const handleGpSwitchChange = (value) => {
 
   const handleContactPicker = () => {
     setShowContactPicker(true);
+    handleInputFocus("Search Contacts")
   };
 
 
@@ -151,7 +173,6 @@ const handleGpSwitchChange = (value) => {
       setSelectedFamilyContact(prevValue => [...prevValue, contact]);
     }
 
-    console.log("test")
     for (let i = 0; i < selectedContact.length; i++) {
       console.log(selectedContact[i]);
     }
@@ -164,6 +185,12 @@ const handleGpSwitchChange = (value) => {
       setSelectedGPContact(prevValue => [...prevValue, contact])
     }
   };
+
+  const handleSwitchChange = (text, value) => {
+    {if (isVoiceOverOn == true) {
+    const switchStatus = value ? "on" : "off";
+    speak(text + " " + switchStatus);}}
+  };
 /*
   const handleFamilySearch = (text) => {
     setFamilyText(text.trim().toLowerCase());
@@ -174,6 +201,276 @@ const handleGpSwitchChange = (value) => {
     searchContacts(text)
   };
 */
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
+    backgroundColor: '#FFFBFE',
+  },
+  inner:{
+    flexGrow: 1,
+    flexShrink: 1,
+    justifyContent: "flex-end",
+  },
+  backButton: { //back button
+    marginLeft: 16,
+    marginBottom: 20,
+    width: 200,
+    height: 24,
+  },
+  headline: { //access text
+    marginBottom: 10,
+    marginLeft: 16,
+    fontSize: textLarge ? 30 : 24,
+    color: "#000",
+    textAlign: "left",
+    display: "flex",
+    width: 328,
+    height: 50,
+  },
+  wouldYouLikeToGiveYourFa: {
+    marginTop: 10,
+    marginLeft: 16,
+    fontSize: textLarge ? 20 : 16,
+    lineHeight: 24,
+    color: "#000",
+    textAlign: "left",
+    width: "90%",
+    height: textLarge ? 70 : 50,
+  },
+  familyCarer: { //family header text
+    marginTop: 15,
+    marginLeft: 16,
+    fontSize: textLarge ? 24 : 20,
+    lineHeight: 48,
+    fontWeight: "600",
+    color: "#000",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    width: 157,
+    height: 40,
+  },
+  familyCarerSwitch: {
+    marginTop: -40,
+    marginRight: 16,
+  },
+dropDownContainer: {
+  width: '90%',
+  height: 60,
+  marginBottom: 20,
+  marginLeft: 16,
+  zIndex: 999,
+  fontSize: textLarge ? 18 : 14,
+},
+dropDownStyle: {
+  backgroundColor: '#fafafa',
+  borderColor: '#ccc',
+  borderWidth: 1,
+  fontSize: textLarge ? 18 : 14,
+},
+dropDownItemStyle: {
+  justifyContent: 'flex-start',
+  fontSize: textLarge ? 18 : 14,
+},
+dropDownDropdownStyle: {
+  backgroundColor: '#fafafa',
+  fontSize: textLarge ? 18 : 14,
+},
+dropDownSearchable: {
+  borderRadius: 5,
+  borderColor: '#79747e',
+  borderWidth: 1,
+  paddingLeft: 15,
+  paddingRight: 40,
+  fontSize: textLarge ? 18 : 14,
+},
+dropDownSearchableError: {
+  borderColor: 'red',
+},
+/*
+  FamilySearchBox: { //Family / Carer search box
+    marginTop: 20,
+    marginLeft: 16,
+    padding: 15,
+    borderRadius: 5,
+    borderStyle: "solid",
+    borderColor: "#79747e",
+    borderWidth: 1,
+    width: "90%",
+    height: 60,
+    marginBottom: 10,
+  },
+  familyFlatList: { //Flatlist
+    top: -11,
+    paddingHorizontal: 10,
+    paddingVertical: 0,
+    backgroundColor: '#fffbfe',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginLeft: 16,
+    width: "90%",
+    zIndex: 1
+  },
+  flatListText: { //Flatline text
+    fontSize: 16,
+    lineHeight: 50,
+    fontWeight: "600",
+    color: "#000",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    height: 40,
+  },
+  */
+  weeklyReports: { //reports text
+    marginTop: 10,
+    marginLeft: 16,
+    fontSize: textLarge ? 20 : 16,
+    lineHeight: 48,
+    color: "#000",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    width: 200,
+    height: 40,
+  },
+  weeklyReportsSwitch: {
+    marginTop: -40,
+    marginRight: 16,
+  },
+  groceryList: { //Grocery text
+    marginTop: 10,
+    marginLeft: 16,
+    fontSize: textLarge ? 20 : 16,
+    lineHeight: 48,
+    color: "#000",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    width: 200,
+    height: 40,
+  },
+  groceryListSwitch: {
+    marginTop: -40,
+    marginRight: 16,
+  },
+  healthReport: { //health text
+    marginTop: 10,
+    marginLeft: 16,
+    fontSize: textLarge ? 20 : 16,
+    lineHeight: 48,
+    color: "#000",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    width: 200,
+    height: 40,
+  },
+  healthReportSwitch: {
+    marginTop: -40,
+    marginRight: 16,
+  },
+  lineView: { //line seperator
+    marginTop: 20,
+    marginLeft: 16,
+    borderStyle: "solid",
+    borderColor: "#dbdbdb",
+    borderTopWidth: 1,
+    width: "90%",
+    height: 1,
+  },
+  gP: { //gp text
+    marginTop: 10,
+    marginLeft: 15, 
+    fontSize: textLarge ? 24 : 20,
+    lineHeight: 48,
+    fontWeight: "600",
+    color: "#000",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    width: 51,
+    height: 40,
+  },
+  gpSwitch: {
+    marginTop: -40,
+    marginRight: 16,
+  },
+  /*
+  gpSearchBox: { //GP search box
+    padding: 15,
+    marginBottom: 20,
+    marginLeft: 16,
+    borderRadius: 5,
+    borderStyle: "solid",
+    borderColor: "#79747e",
+    borderWidth: 1,
+    width: "90%",
+    height: 60,
+  },
+  
+  gpFlatList: { //flatlist
+    top: -21,
+    paddingHorizontal: 10,
+    paddingVertical: 45,
+    backgroundColor: '#fffbfe',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginLeft: 16,
+    width: "90%",
+    alignItems: "start",
+    zIndex: 1
+  },
+  gpFlatListText: { //Flatline text
+    fontSize: 16,
+    lineHeight: 50,
+    fontWeight: "600",
+    color: "#000",
+    textAlign: "left",
+    display: "flex",
+    width: "100%",
+    height: 40,
+  },
+  */
+    continueText: {
+    fontSize: textLarge ? 20 : 16,
+    letterSpacing: 0,
+    lineHeight: 20,
+    fontWeight: "700",
+    color: "#fff",
+    textAlign: "center",
+  },
+  continueButton: {
+    marginBottom: 40,
+    marginLeft: 16,
+    borderRadius: 100,
+    backgroundColor: colourBlind ? "red":"#8273a9",
+    width: "90%",
+    overflow: "hidden",
+    flexDirection: "column",
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    boxSizing: "border-box",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingLeft: 16,
+    paddingRight: 16,
+  },
+  access: {
+    borderRadius: 20,
+    backgroundColor: "#fffbfe",
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+});
+
 
   return (
     
@@ -186,7 +483,10 @@ const handleGpSwitchChange = (value) => {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+          speak("Back");
+        };navigation.goBack()}}
       />
     <View>
         <Text style={styles.headline}>Access</Text>
@@ -231,7 +531,9 @@ const handleGpSwitchChange = (value) => {
       <Switch
         style={styles.weeklyReportsSwitch}
         value={weeklyReportsSwitchValue}
-        onValueChange={setWeeklyReportsSwitchValue}
+        onValueChange={(value) => {
+          handleSwitchChange("weekly report", value)
+          setWeeklyReportsSwitchValue(value)}}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
@@ -239,7 +541,9 @@ const handleGpSwitchChange = (value) => {
       <Switch
         style={styles.groceryListSwitch}
         value={groceryListSwitchValue}
-        onValueChange={setGroceryListSwitchValue}
+        onValueChange={(value) => {
+          handleSwitchChange("Grocery list", value)
+          setGroceryListSwitchValue(value)}}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
@@ -247,7 +551,10 @@ const handleGpSwitchChange = (value) => {
       <Switch
         style={styles.healthReportSwitch}
         value={healthReportSwitchValue}
-        onValueChange={setHealthReportSwitchValue}
+        onValueChange={(value) => {
+          handleSwitchChange("Health report", value)
+          setHealthReportSwitchValue(value);
+        }}
         thumbColor="#fff"
         trackColor={{ false: "#939393", true: "#8273a9" }}
       />
@@ -285,7 +592,10 @@ const handleGpSwitchChange = (value) => {
       />
       <TouchableOpacity
         style={styles.continueButton}
-        onPress={() => navigation.navigate("Notifications")}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Continue");}
+            navigation.navigate("Notifications")}}
       >
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
@@ -373,268 +683,6 @@ const GPFlatList = ({ contacts, handleContactSelection }) => (
 
 */
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexGrow: 1,
-    flexShrink: 1,
-    backgroundColor: '#FFFBFE',
-  },
-  inner:{
-    flexGrow: 1,
-    flexShrink: 1,
-    justifyContent: "flex-end",
-  },
-  backButton: { //back button
-    marginLeft: 16,
-    marginBottom: 20,
-    width: 200,
-    height: 24,
-  },
-  headline: { //access text
-    marginBottom: 10,
-    marginLeft: 16,
-    fontSize: 24,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    width: 328,
-    height: 50,
-  },
-  wouldYouLikeToGiveYourFa: {
-    marginTop: 10,
-    marginLeft: 16,
-    fontSize: 16,
-    lineHeight: 24,
-    color: "#000",
-    textAlign: "left",
-    width: "90%",
-    height: 50,
-  },
-  familyCarer: { //family header text
-    marginTop: 15,
-    marginLeft: 16,
-    fontSize: 19,
-    lineHeight: 48,
-    fontWeight: "600",
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 157,
-    height: 40,
-  },
-  familyCarerSwitch: {
-    marginTop: -40,
-    marginRight: 16,
-  },
-dropDownContainer: {
-  width: '90%',
-  height: 60,
-  marginBottom: 20,
-  marginLeft: 16,
-  zIndex: 999,
-},
-dropDownStyle: {
-  backgroundColor: '#fafafa',
-  borderColor: '#ccc',
-  borderWidth: 1,
-},
-dropDownItemStyle: {
-  justifyContent: 'flex-start',
-},
-dropDownDropdownStyle: {
-  backgroundColor: '#fafafa',
-},
-dropDownSearchable: {
-  borderRadius: 5,
-  borderColor: '#79747e',
-  borderWidth: 1,
-  paddingLeft: 15,
-  paddingRight: 40,
-},
-dropDownSearchableError: {
-  borderColor: 'red',
-},
-/*
-  FamilySearchBox: { //Family / Carer search box
-    marginTop: 20,
-    marginLeft: 16,
-    padding: 15,
-    borderRadius: 5,
-    borderStyle: "solid",
-    borderColor: "#79747e",
-    borderWidth: 1,
-    width: "90%",
-    height: 60,
-    marginBottom: 10,
-  },
-  familyFlatList: { //Flatlist
-    top: -11,
-    paddingHorizontal: 10,
-    paddingVertical: 0,
-    backgroundColor: '#fffbfe',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    marginLeft: 16,
-    width: "90%",
-    zIndex: 1
-  },
-  flatListText: { //Flatline text
-    fontSize: 16,
-    lineHeight: 50,
-    fontWeight: "600",
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: "100%",
-    height: 40,
-  },
-  */
-  weeklyReports: { //reports text
-    marginTop: 10,
-    marginLeft: 16,
-    fontSize: 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 116,
-    height: 40,
-  },
-  weeklyReportsSwitch: {
-    marginTop: -40,
-    marginRight: 16,
-  },
-  groceryList: { //Grocery text
-    marginTop: 10,
-    marginLeft: 16,
-    fontSize: 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 105,
-    height: 40,
-  },
-  groceryListSwitch: {
-    marginTop: -40,
-    marginRight: 16,
-  },
-  healthReport: { //health text
-    marginTop: 10,
-    marginLeft: 16,
-    fontSize: 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 122,
-    height: 40,
-  },
-  healthReportSwitch: {
-    marginTop: -40,
-    marginRight: 16,
-  },
-  lineView: { //line seperator
-    marginTop: 20,
-    marginLeft: 16,
-    borderStyle: "solid",
-    borderColor: "#dbdbdb",
-    borderTopWidth: 1,
-    width: "90%",
-    height: 1,
-  },
-  gP: { //gp text
-    marginTop: 10,
-    marginLeft: 15, 
-    fontSize: 19,
-    lineHeight: 48,
-    fontWeight: "600",
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 51,
-    height: 40,
-  },
-  gpSwitch: {
-    marginTop: -40,
-    marginRight: 16,
-  },
-  /*
-  gpSearchBox: { //GP search box
-    padding: 15,
-    marginBottom: 20,
-    marginLeft: 16,
-    borderRadius: 5,
-    borderStyle: "solid",
-    borderColor: "#79747e",
-    borderWidth: 1,
-    width: "90%",
-    height: 60,
-  },
-  
-  gpFlatList: { //flatlist
-    top: -21,
-    paddingHorizontal: 10,
-    paddingVertical: 45,
-    backgroundColor: '#fffbfe',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    marginLeft: 16,
-    width: "90%",
-    alignItems: "start",
-    zIndex: 1
-  },
-  gpFlatListText: { //Flatline text
-    fontSize: 16,
-    lineHeight: 50,
-    fontWeight: "600",
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    width: "100%",
-    height: 40,
-  },
-  */
-    continueText: {
-    fontSize: 16,
-    letterSpacing: 0,
-    lineHeight: 20,
-    fontWeight: "700",
-    color: "#fff",
-    textAlign: "center",
-  },
-  continueButton: {
-    marginBottom: 40,
-    marginLeft: 16,
-    borderRadius: 100,
-    backgroundColor: "#8273a9",
-    width: "90%",
-    overflow: "hidden",
-    flexDirection: "column",
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    boxSizing: "border-box",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
-  access: {
-    borderRadius: 20,
-    backgroundColor: "#fffbfe",
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-});
 
-export default Access;
+
+export default AccessScreen;

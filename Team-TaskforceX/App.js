@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { AccessibilityProvider } from "./Screens/Components/AccessibilityContext"; // Update the path as needed
 
 import LandingPage from "./Screens/LandingPage";
 import GettingStartedInfo1 from "./Screens/GettingStartedInfo1";
@@ -17,13 +18,13 @@ import Preferences from "./Screens/Preferences";
 import DailyNutritionPlan from "./Screens/DailyNutritionPlan";
 import MealPlanning from "./Screens/MealPlanning";
 import Permissions from "./Screens/Permissions";
-import Access from "./Screens/Access";
+import AccessScreen from "./Screens/AccessScreen";
 import Notifications from "./Screens/Notifications";
 import TodaysPlan from "./Screens/TodaysPlan";
 import NutritionalReport from "./Screens/NutritionalReport";
 import LogIn from "./Screens/LogIn";
 import GoogleAuthScreen from "./Screens/GoogleAuthScreen";
-import { LogBox } from 'react-native'; 
+import { LogBox } from 'react-native';
 // This is there to stop the warnings show up in the actual device/emulator 
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs();//Ignore all log notifications
@@ -34,6 +35,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
 
   return (
+    <AccessibilityProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
@@ -117,8 +119,8 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Access"
-          component={Access}
+          name="AccessScreen"
+          component={AccessScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -148,5 +150,6 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </AccessibilityProvider>
   );
 }

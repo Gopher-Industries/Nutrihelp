@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Meal from "./Meal";
+import { useAccessibilityContext } from "../../Components/AccessibilityContext"; // Import the context hook
+import * as Speech from 'expo-speech';
+
 
 export default function SubPage1({
   todaysBreakfastPlan,
@@ -16,6 +19,12 @@ export default function SubPage1({
   const [subPageData1, updateSubPageData1] = useState(todaysLunchPlan);
   const [subPageData2, updateSubPageData2] = useState(todaysDinnerPlan);
   const [subPageData3, updateSubPageData3] = useState(todaysSnackPlan);
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
 
   // Used to trigger an update of data passed from
   // calling function on re-render.
@@ -46,7 +55,7 @@ export default function SubPage1({
         <View style={{ flex: 1 }}>
           <Text
             style={{
-              fontSize: 22,
+              fontSize: textLarge ? 24 : 22,
               fontFamily: "OpenSans_600SemiBold", //"OpenSans_600SemiBold", //"OpenSans_400Regular",
               textAlign: "left",
             }}
@@ -80,7 +89,7 @@ export default function SubPage1({
           <Text
             style={{
               bottom: "2%",
-              fontSize: 20,
+              fontSize: textLarge ? 24 : 20,
               fontWeight: "bold",
               left: "52%",
               color: props.textColour,
@@ -93,7 +102,7 @@ export default function SubPage1({
           <Text
             style={{
               top: "6%",
-              fontSize: 20,
+              fontSize: textLarge ? 24 : 20,
               fontFamily: "OpenSans_600SemiBold",
               //"OpenSans_700Bold",//"OpenSans_500Medium", //"OpenSans_400Regular",
               //fontWeight: "400",
@@ -105,7 +114,7 @@ export default function SubPage1({
           <Text
             style={{
               top: "8%",
-              fontSize: 20,
+              fontSize: textLarge ? 24 : 20,
               textAlign: "right",
               color: "#707070",
             }}
@@ -122,8 +131,8 @@ export default function SubPage1({
       <TitleBar
         title="Breakfast"
         indicatorValue={80}
-        indicatorColour="#b0c2a7"
-        textColour="#b0c2a7"
+        indicatorColour= {colourBlind ? "#8273a9":"#b0c2a7"}
+        textColour= {colourBlind ? "#8273a9":"#b0c2a7"}
         calories="1836 KJ"
         recommended="1532 - 1930 KJ"
       />
@@ -157,7 +166,7 @@ export default function SubPage1({
       <Meal mealData={subPageData3} updateMealData={UpdateSubPageData3} />
     </View>
   );
-}
+} 
 
 const styles = StyleSheet.create({
   subContainer0: {

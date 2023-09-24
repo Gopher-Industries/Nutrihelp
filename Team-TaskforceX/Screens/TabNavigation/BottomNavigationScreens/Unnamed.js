@@ -8,6 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useAccessibilityContext } from "../../Components/AccessibilityContext"; // Import the context hook
+import * as Speech from 'expo-speech';
 //import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function Unnamed({ navigation }) {
@@ -23,6 +25,25 @@ export default function Unnamed({ navigation }) {
   // useEffect(() => {
   //   result(text);
   // }, [text]);
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  const handleInputFocus = (label) => {
+    if (isVoiceOverOn) {
+      speak(label);
+    }
+  };
 
   const takePhotoAndPerformOCR = async () => {
     // Launch camera. Camera closes after image is taken
@@ -129,12 +150,18 @@ export default function Unnamed({ navigation }) {
         <ScrollView>
           <Text>{text}</Text>
         </ScrollView>
-        <Button title="Take Photo" onPress={takePhotoAndPerformOCR} />
+        <Button title="Take Photo" onPress={() => {
+          takePhotoAndPerformOCR();
+          handleInputFocus("Take Photo");
+          }} />
       </View>
       <View style={styles.tranlateView}>
         <Button
           title="translate"
-          onPress={() => translateText(capturedText)} // "你好", "Xin chào","原料"
+          onPress={() => {
+            translateText(capturedText);
+            handleInputFocus("Translate");
+          }}// "你好", "Xin chào","原料"
         />
         <ScrollView>
           <Text style={{ fontSize: 24 }}>{translatedText}</Text>
@@ -145,7 +172,8 @@ export default function Unnamed({ navigation }) {
           title="clear screen"
           onPress={() => {
             setText("");
-            setTranslatedText("");
+            setTranslatedText("")
+            handleInputFocus("Clear Screen");
           }}
         />
       </View>

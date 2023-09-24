@@ -1,11 +1,12 @@
 import React from 'react';
-import PreferencesComponent from './components/pref-dis-health';
+import Routes from './routes';
+
 
 
 function App() {
     return (
       <div>
-        <PreferencesComponent />
+        <Routes />
       </div>
     );
   }

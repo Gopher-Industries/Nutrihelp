@@ -20,8 +20,11 @@ import { Notifications } from 'expo';
 //import messaging from '@react-native-firebase/messaging';
 //import { NotificationContainer, NotificationManager } from 'react-notifications';
 //import 'react-notifications/lib/notifications.css';
-const windowWidth = Dimensions.get("window").width;
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
+import * as Speech from 'expo-speech';
 
+
+const windowWidth = Dimensions.get("window").width;
 
 
 const Notification = () => {
@@ -33,6 +36,26 @@ const Notification = () => {
   const [notificationSwitch5Value, setNotificationSwitch5Value] = useState(false);
   const navigation = useNavigation();
   
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+  
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  const handleSwitchChange = (text, value) => {
+    {if (isVoiceOverOn == true) {
+    const switchStatus = value ? "on" : "off";
+    speak(text + " " + switchStatus);}}
+  };
+
 /* //potential implimentation for notifications
   useEffect(() => {
     if (notificationSwitch1Value == true) {
@@ -49,78 +72,12 @@ const Notification = () => {
   }, [notificationSwitch1Value]);
 //*/
 
-    return (
-    <View style={styles.notifications}>
-      <Text style={styles.wouldYouLikeUsToSendYou}>
-          Would you like us to send you reminders throughout the day?
-        </Text>
-      <StatusBar barStyle="default" translucent={true} />
-      <Text style={styles.notification1}>Drink Water</Text>
-      <Text style={styles.notification2}>Eat Next Meal</Text>
-      <Text style={styles.notification3}>Notification</Text>
-      <Text style={styles.notification4}>Notification</Text>
-      <Text style={styles.notification5}>Notification</Text>
-      <Switch
-        style={styles.notificationSwitch1}
-        value={notificationSwitch1Value}
-        onValueChange={setNotificationSwitch1Value}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-        <Switch
-        style={styles.notificationSwitch2}
-        value={notificationSwitch2Value}
-        onValueChange={setNotificationSwitch2Value}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
-        style={styles.notificationSwitch3}
-        value={notificationSwitch3Value}
-        onValueChange={setNotificationSwitch3Value}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
-        style={styles.notificationSwitch4}
-        value={notificationSwitch4Value}
-        onValueChange={setNotificationSwitch4Value}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <Switch
-        style={styles.notificationSwitch5}
-        value={notificationSwitch5Value}
-        onValueChange={setNotificationSwitch5Value}
-        thumbColor="#fff"
-        trackColor={{ false: "#939393", true: "#8273a9" }}
-      />
-      <TouchableOpacity
-        style={styles.continueButton}
-        onPress={() => navigation.navigate("TodaysPlan")}
-      >
-        <Text style={styles.continueText}>Continue</Text>
-      </TouchableOpacity>
-      <View >
-      <Icon style={styles.backButton}
-        name="arrow-left"
-        size={20}
-        color="black"
-        type="entypo"
-        onPress={() => navigation.goBack()}
-      />
-        <Text style={styles.headline}>Notifications</Text>
-      </View>
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
   wouldYouLikeUsToSendYou: { // would you like text
     position: "absolute",
     top: 175,
     left: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 24,
     color: "#000",
     textAlign: "left",
@@ -131,7 +88,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 120,
     left: 16,
-    fontSize: 24,
+    fontSize: textLarge ? 30 : 24,
     lineHeight: 32,
     color: "#000",
     textAlign: "left",
@@ -150,7 +107,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 240,
     left: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 48,
     color: "#000",
     textAlign: "left",
@@ -168,7 +125,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 300,
     left: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 48,
     color: "#000",
     textAlign: "left",
@@ -186,7 +143,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 360,
     left: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 48,
     color: "#000",
     textAlign: "left",
@@ -204,7 +161,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 420,
     left: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 48,
     color: "#000",
     textAlign: "left",
@@ -222,7 +179,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 480,
     left: 16,
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     lineHeight: 48,
     color: "#000",
     textAlign: "left",
@@ -240,7 +197,7 @@ const styles = StyleSheet.create({
  
   continueText: { //continue button text
     position: "relative",
-    fontSize: 16,
+    fontSize: textLarge ? 20 : 16,
     letterSpacing: 0,
     lineHeight: 20,
     fontWeight: "700",
@@ -252,7 +209,7 @@ const styles = StyleSheet.create({
       bottom: 32,
       left: 16,
       borderRadius: 100,
-      backgroundColor: "#8273a9",
+      backgroundColor: colourBlind ? "red":"#8273a9",
       width: windowWidth - 32,
       overflow: "hidden",
       flexDirection: "column",
@@ -276,5 +233,89 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 });
+
+
+    return (
+    <View style={styles.notifications}>
+      <Text style={styles.wouldYouLikeUsToSendYou}>
+          Would you like us to send you reminders throughout the day?
+        </Text>
+      <StatusBar barStyle="default" translucent={true} />
+      <Text style={styles.notification1}>Drink Water</Text>
+      <Text style={styles.notification2}>Eat Next Meal</Text>
+      <Text style={styles.notification3}>Notification</Text>
+      <Text style={styles.notification4}>Notification</Text>
+      <Text style={styles.notification5}>Notification</Text>
+      <Switch
+        style={styles.notificationSwitch1}
+        value={notificationSwitch1Value}
+        onValueChange={(value) => {
+          handleSwitchChange("Drink Water notification", value)
+          setNotificationSwitch1Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+        <Switch
+        style={styles.notificationSwitch2}
+        value={notificationSwitch2Value}
+        onValueChange={(value) => {
+          handleSwitchChange("Eat meal notification", value)
+          setNotificationSwitch2Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch
+        style={styles.notificationSwitch3}
+        value={notificationSwitch3Value}
+        onValueChange={(value) => {
+          handleSwitchChange("notification3", value)
+          setNotificationSwitch3Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch
+        style={styles.notificationSwitch4}
+        value={notificationSwitch4Value}
+        onValueChange={(value) => {
+          handleSwitchChange("notification4", value)
+          setNotificationSwitch4Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <Switch
+        style={styles.notificationSwitch5}
+        value={notificationSwitch5Value}
+        onValueChange={(value) => {
+          handleSwitchChange("notification5", value)
+          setNotificationSwitch5Value(value)}}
+        thumbColor="#fff"
+        trackColor={{ false: "#939393", true: "#8273a9" }}
+      />
+      <TouchableOpacity
+        style={styles.continueButton}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Continue");}
+            navigation.navigate("TodaysPlan")}}
+      >
+        <Text style={styles.continueText}>Continue</Text>
+      </TouchableOpacity>
+      <View >
+      <Icon style={styles.backButton}
+        name="arrow-left"
+        size={20}
+        color="black"
+        type="entypo"
+        onPress={() => {if (isVoiceOverOn == true) {
+          speak("Back");
+        }navigation.goBack()}}
+      />
+        <Text style={styles.headline}>Notifications</Text>
+      </View>
+    </View>
+  );
+};
+
+
 
 export default Notification;

@@ -1,7 +1,21 @@
 import React from 'react';
 import '../styles/auth.css';
+import { useNavigate } from 'react-router-dom';
 
 function PreferencesComponent() {
+  const navigate = useNavigate();
+    
+    const handleContinue = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/plan');
+    };
+    const handleRedo = () => {
+      // Use the navigate function to navigate to a different route
+      navigate('/allergy');
+    };
+    
+
+
   return (
     <div className="main">
       <section className="signup">
@@ -36,8 +50,8 @@ function PreferencesComponent() {
               </div>
               <hr />
               <div className="form-group form-button">
-                <input type="submit" name="continue" className="form-submit" value="Continue" />
-                <input type="submit" name="redo" className="form-submit" value="Redo" style={{ position: 'absolute', right: '10px' }} />
+                <input type="submit" name="continue" className="form-submit" onClick={handleContinue} value="Continue" />
+                <input type="submit" name="redo" className="form-submit" onClick={handleRedo} value="Redo" style={{ position: 'absolute', right: '10px' }} />
               </div>
             </div>
           </div>

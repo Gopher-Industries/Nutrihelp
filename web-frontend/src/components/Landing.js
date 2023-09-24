@@ -1,18 +1,18 @@
 import React from 'react';
 import '../styles/landing.css';
-
+import { Link } from 'react-router-dom';
 const App = () => {
   return (
     <>
       <header id="header" className="fixed-top">
-        <div className="container d-flex align-items-center justify-content-between">
-          <a href="index.html" className="logo">
+        <div className="landing d-flex align-items-center justify-content-between">
+          <a href="#" className="logo">
             <img src="" alt="" />
           </a>
           <nav id="navbar" className="navbar">
             <ul>
               <li>
-                <a className="nav-link scrollto active" href="index.html">
+                <a className="nav-link scrollto active" href="#">
                   Home
                 </a>
               </li>
@@ -37,7 +37,7 @@ const App = () => {
       </header>
 
       <section id="hero" className="d-flex align-items-center">
-        <div className="container">
+        <div className="landing">
           <div className="row">
             <div className="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
               <h1>NutriHelp</h1>
@@ -47,9 +47,7 @@ const App = () => {
                 nutrition advice
               </h2>
               <div>
-                <a href="#" className="btn-get-started scrollto">
-                  Get Started
-                </a>
+                  <Link to="/signin" className="btn-get-started">Get Started</Link>
               </div>
             </div>
             <div className="col-lg-6 order-1 order-lg-2 hero-img">
@@ -61,7 +59,7 @@ const App = () => {
 
       <main id="main">
         <section id="about" className="about">
-          <div className="container">
+          <div className="landing">
             <div className="row">
               <div className="col-xl-5 col-lg-6 d-flex justify-content-center img-box align-items-stretch position-relative"></div>
               <div className="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5">
@@ -124,7 +122,7 @@ const App = () => {
         </section>
 
         <section id="services" className="services section-bg">
-          <div className="container">
+          <div className="landing">
             <div className="section-title">
               <h2>Services</h2>
               <p>
@@ -184,7 +182,7 @@ const App = () => {
         </section>
 
         <section id="contact" className="contact">
-          <div className="container">
+          <div className="landing">
             <div className="section-title">
               <h2>Contact</h2>
               <p>
@@ -281,7 +279,7 @@ const App = () => {
 
       <footer id="footer">
         <div className="footer-newsletter">
-          <div className="container">
+          <div className="landing">
             <div className="row justify-content-center">
               <div className="col-lg-6">
                 <h4>Subscribe to our Newsletter</h4>
@@ -296,7 +294,7 @@ const App = () => {
         </div>
 
         <div className="footer-top">
-          <div className="container">
+          <div className="landing">
             <div className="row">
               <div className="col-lg-3 col-md-6 footer-contact">
                 <h3>NutriHelp</h3>

@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, 
   Text, View,
    TouchableOpacity,Dimensions } from "react-native";
+import { useState } from "react";
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;

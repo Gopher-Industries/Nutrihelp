@@ -9,18 +9,40 @@ import {
   Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { FilterChip } from "./Components/FilterChip";
 import { firebase } from "../config";
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
+import * as Speech from 'expo-speech';
+
 
 const windowWidth = Dimensions.get("window").width;
 
 const MealPlanning = () => {
+  
   const navigation = useNavigation();
   const [none, setNone] = useState(true);
   const [breakfast, setBreakfast] = useState(false);
   const [lunch, setLunch] = useState(false);
   const [dinner, setDinner] = useState(false);
   const [desert, setDesert] = useState(false);
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+
+  //call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  
 
   const CommitMealPlanData = () => {
     const mealPlanData = {
@@ -80,6 +102,7 @@ const MealPlanning = () => {
       checked={checked}
       getData={getName}
       invisible={invisible}
+      
     />
   );
 
@@ -150,21 +173,107 @@ const MealPlanning = () => {
     }
   }
 
+  const styles = StyleSheet.create({
+    paragraphText: {
+      position: "relative",
+      letterSpacing: -0.2,
+      fontSize: textLarge ? 18 : 14,
+      lineHeight: 24,
+      fontFamily: "OpenSans_400Regular",
+      color: "#000",
+      textAlign: "left",
+      height: 74,
+      marginLeft: 16,
+      marginRight: 16,
+      marginTop: 38,
+    },
+    mealPlanningView: {
+      position: "relative",
+      backgroundColor: "#fffbfe",
+      flex: 1,
+      width: "100%",
+      height: "100%",
+      overflow: "hidden",
+      
+    },
+    column: {
+      flexShrink: 1,
+      
+    },
+    buttonPressable: {
+      position: "absolute",
+      bottom: 32,
+      left: 16,
+      borderRadius: 100,
+      backgroundColor: "#8273a9",
+      width: windowWidth - 32,
+      overflow: "hidden",
+      flexDirection: "column",
+      paddingHorizontal: 24,
+      paddingVertical: 10,
+      boxSizing: "border-box",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    continueLabel: {
+      position: "relative",
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: "700",
+      fontFamily: "OpenSans_400Regular",
+      color: "#fff",
+      textAlign: "center",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  
+    leadingIconPressable: {
+      position: "relative",
+      marginTop: 52,
+      marginLeft: 16,
+      width: 24,
+      height: 24,
+    },
+    icon: {
+      width: "100%",
+      height: "100%",
+    },
+    headlineText: {
+      marginLeft: 16,
+      fontSize: textLarge ? 30 : 24,
+      fontFamily: "OpenSans_400Regular",
+      color: "black",
+      marginTop: 32,
+      lineHeight: 32,
+    },
+  
+    list: {
+      position: "relative",
+      marginTop: 25,
+      marginLeft: 8,
+      marginRight: 8,
+    },
+  });
+
+
   return (
     <View style={styles.mealPlanningView}>
-      <Pressable style={styles.topAppBarPressable}>
-        <Pressable
-          style={styles.leadingIconPressable}
-          onPress={() => navigation.navigate("DailyNutritionPlan")}
-        >
-          <Image
-            style={styles.icon}
-            resizeMode="cover"
-            source={require("../assets/images/leadingicon.png")}
-          />
+      <Icon //Back arrow
+        style={styles.leadingIconPressable}
+        name="arrow-left"
+        size={20}
+        color="black"
+        type="entypo"
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+            speak("Back");
+          };navigation.goBack()}}
+      />
           <Text style={styles.headlineText}>Meal Planning</Text>
-        </Pressable>
-      </Pressable>
+       
 
       <Text style={styles.paragraphText}>
         Select which recipes our nutritionist will automatically recommend based
@@ -186,6 +295,9 @@ const MealPlanning = () => {
       <Pressable
         style={styles.buttonPressable}
         onPress={() => {
+          if (isVoiceOverOn == true) {
+            speak("Continue");
+          };
           CommitMealPlanData();
           navigation.navigate("Permissions");
         }}
@@ -196,91 +308,6 @@ const MealPlanning = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  paragraphText: {
-    position: "relative",
-    letterSpacing: -0.2,
-    lineHeight: 24,
-    fontFamily: "OpenSans_400Regular",
-    color: "#000",
-    textAlign: "left",
-    height: 74,
-    marginLeft: 16,
-    marginRight: 16,
-    marginTop: 68,
-  },
-  mealPlanningView: {
-    position: "relative",
-    backgroundColor: "#fffbfe",
-    flex: 1,
-    width: "100%",
-    height: "100%",
-    overflow: "hidden",
-  },
-  column: {
-    flexShrink: 1,
-  },
-  buttonPressable: {
-    position: "absolute",
-    bottom: 32,
-    left: 16,
-    borderRadius: 100,
-    backgroundColor: "#8273a9",
-    width: windowWidth - 32,
-    overflow: "hidden",
-    flexDirection: "column",
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    boxSizing: "border-box",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
-  continueLabel: {
-    position: "relative",
-    fontSize: 16,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: "700",
-    fontFamily: "OpenSans_400Regular",
-    color: "#fff",
-    textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  leadingIconPressable: {
-    position: "relative",
-    marginTop: 52,
-    marginLeft: 16,
-    width: 24,
-    height: 24,
-  },
-  icon: {
-    width: "100%",
-    height: "100%",
-  },
-  headlineText: {
-    position: "absolute",
-    top: 36,
-    left: 0,
-    fontSize: 24,
-    lineHeight: 32,
-    fontFamily: "OpenSans_400Regular",
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 328,
-  },
-
-  list: {
-    position: "relative",
-    marginTop: 25,
-    marginLeft: 8,
-    marginRight: 8,
-  },
-});
 
 export default MealPlanning;

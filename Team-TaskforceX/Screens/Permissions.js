@@ -12,8 +12,13 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
-import { PermissionsAndroid, Platform } from 'react-native';
 //import { RESULTS } from "react-native-permissions";
+import { PermissionsAndroid, Platform } from 'react-native';
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
+import * as Speech from 'expo-speech';
+
+
+
 
 //import { BleManager } from 'react-native-ble-plx'
 //import Contacts from 'react-native-contacts';
@@ -27,6 +32,21 @@ const Permissions = () => {
   const [bluetoothSwitchValue, setBluetoothSwitchValue] = useState(false);
   const [healthSwitchValue, setHealthSwitchValue] = useState(false);
   const navigation = useNavigation();
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+
+  //call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
 
   // check permission statuses when the component mounts
   React.useEffect(() => {
@@ -60,9 +80,16 @@ const Permissions = () => {
     checkPermissions();
   }, []);  
 
+  const handleSwitchChange = (text, value) => {
+    {if (isVoiceOverOn == true) {
+    const switchStatus = value ? "on" : "off";
+    speak(text + " " + switchStatus);}}
+  };
+
   //handle camera permissions
   const handleCameraSwitch = async (value) => {
     setCameraSwitchValue(value);
+    handleSwitchChange("Camera Permissions", value);
     
     if (value) {
       if (Platform.OS === 'android') {
@@ -114,6 +141,7 @@ const Permissions = () => {
   //handle location permissions
   const handleLocationSwitch = async (value) => {
     setLocationSwitchValue(value);
+    handleSwitchChange("Location Permissions", value);
   
     if (value) {
       if (Platform.OS === 'android') {
@@ -166,6 +194,7 @@ const Permissions = () => {
 //handle location permissions
 const handleBluetoothSwitch = async (value) => {
   setBluetoothSwitchValue(value);
+  handleSwitchChange("Bluetooth Permissions", value);
 
   if (value) {
     if (Platform.OS === 'android') {
@@ -219,6 +248,7 @@ const handleBluetoothSwitch = async (value) => {
   //handle contacts permissions
   const handleContactsSwitch = async (value) => {
     setContactsSwitchValue(value);
+    handleSwitchChange("Contacts Permissions", value);
   
     if (value) {
       if (Platform.OS === 'android') {
@@ -242,6 +272,7 @@ const handleBluetoothSwitch = async (value) => {
             return;
           }
         }
+        
       } else {
         // code to handle permission check for other platforms
       }
@@ -270,13 +301,14 @@ const handleBluetoothSwitch = async (value) => {
   //handle health switch
   const handleHealthSwitch = async (value) => {
     setHealthSwitchValue(value);
+    handleSwitchChange("Health Permissions", value);
 
     if (value) {
       if (Platform.OS === 'android') {
         const granted = await PermissionsAndroid.check(
           PermissionsAndroid.PERMISSIONS.BODY_SENSORS,
         );
-  
+        
         if (!granted) {
           const permissionResult = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.BODY_SENSORS,
@@ -290,8 +322,10 @@ const handleBluetoothSwitch = async (value) => {
   
           if (permissionResult !== PermissionsAndroid.RESULTS.GRANTED) {
             setHealthSwitchValue(false);
+            
             return;
           }
+          
         }
       } else {
         // code to handle permission check for other platforms
@@ -317,13 +351,182 @@ const handleBluetoothSwitch = async (value) => {
         // code to handle permission revocation for other platforms
       }
     }
+    
   };
 
+  const styles = StyleSheet.create({
+    weNeedAccessToTheFollowin: { //We need access text
+      position: "absolute",
+      top: 180,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: 0,
+      lineHeight: 24,
+      color: "#000",
+      textAlign: "left",
+      width: "85%",
+      height: 50,
+    },
+    lineView: { //line seperator
+      position: "absolute",
+      top: 250,
+      left: 16,
+      borderStyle: "solid",
+      borderColor: "#dbdbdb",
+      borderTopWidth: 1,
+      width: "90%",
+      height: 1,
+    },
+    camera: { //camera text
+      position: "absolute",
+      top: 260,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 84,
+      height: 50,
+    },
+    cameraSwitch: { //camera switch
+      position: "absolute",
+      top: 260,
+      left: "80%",
+    },
+    location: { //location text
+      position: "absolute",
+      top: 310,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 87,
+      height: 50,
+    },
+    locationSwitch: { //location switch
+      position: "absolute",
+      top: 310,
+      left: "80%",
+    },
+    contacts: { //contacts text
+      position: "absolute",
+      top: 360,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 84,
+      height: 50,
+    },
+    contactsSwitch: { //contacts switch
+      position: "absolute",
+      top: 360,
+      left: "80%",
+    },
+    bluetooth: { //bluetooth text
+      position: "absolute",
+      top: 410,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 87,
+      height: 50,
+    },
+    bluetoothSwitch: { //bluetooth switch
+      position: "absolute",
+      top: 410,
+      left: "80%",
+    },
+    health: { //health text
+      position: "absolute",
+      top: 460,
+      left: 16,
+      fontSize: textLarge ? 20 : 16,
+      lineHeight: 48,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 66,
+      height: 50,
+    },
+    healthSwitch: { //health switch
+      position: "absolute",
+      top: 460,
+      left: "80%",
+  
+    },
+    backButton: { //back button
+      position: "absolute",
+      left: 16,
+      top: 70,
+      width: 24,
+      height: 24,
+    },
+    headline: { //permissions headline
+      position: "absolute",
+      top: 120,
+      left: 16,
+      fontSize: textLarge ? 30 : 24,
+      lineHeight: 32,
+      color: "#000",
+      textAlign: "left",
+      display: "flex",
+      alignItems: "center",
+      width: 328,
+    },
+    continueText: { //continue button text
+      position: "relative",
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: 0,
+      lineHeight: 20,
+      fontWeight: "700",
+      color: "#fff",
+      textAlign: "center",
+    },
+    continue: { //continue button
+      position: "absolute",
+      bottom: 32,
+      left: 16,
+      borderRadius: 100,
+      backgroundColor: colourBlind ? "red":"#8273a9",
+      width: "90%",
+      overflow: "hidden",
+      flexDirection: "column",
+      paddingHorizontal: 24,
+      paddingVertical: 10,
+      boxSizing: "border-box",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingLeft: 16,
+      paddingRight: 16,
+    },
+    permissions: { 
+      position: "relative",
+      borderRadius: 0,
+      backgroundColor: "#fffbfe",
+      flex: 10,
+      width: "100%",
+      overflow: "hidden",
+    },
+  });
 
   return (
     <View style={styles.permissions}>
       <Text style={styles.weNeedAccessToTheFollowin}>
-        We need access to the following to provide the best experience for you
+        We need access to the following to provide the best experience for you.
       </Text>
       <Text style={styles.camera}>Camera</Text>
       <Text style={styles.location}>Location</Text>
@@ -337,7 +540,10 @@ const handleBluetoothSwitch = async (value) => {
         size={20}
         color="black"
         type="entypo"
-        onPress={() => navigation.goBack()}
+        onPress={() => 
+          {if (isVoiceOverOn == true) {
+          speak("Back");
+        };navigation.goBack()}}
       />
         <Text style={styles.headline}>Permissions</Text>
       </View>
@@ -379,7 +585,10 @@ const handleBluetoothSwitch = async (value) => {
       />
       <TouchableOpacity
         style={styles.continue}
-        onPress={() => navigation.navigate("Access")}
+        onPress={() =>
+          {if (isVoiceOverOn == true) {
+            speak("Continue");}
+             navigation.navigate("AccessScreen")}}
       >
         <Text style={styles.continueText}>Continue</Text>
       </TouchableOpacity>
@@ -387,173 +596,6 @@ const handleBluetoothSwitch = async (value) => {
   );
 };
 
-const styles = StyleSheet.create({
-  weNeedAccessToTheFollowin: { //We need access text
-    position: "absolute",
-    top: 180,
-    left: 16,
-    fontSize: 16,
-    letterSpacing: 0,
-    lineHeight: 24,
-    color: "#000",
-    textAlign: "left",
-    width: "85%",
-    height: 50,
-  },
-  lineView: { //line seperator
-    position: "absolute",
-    top: 250,
-    left: 16,
-    borderStyle: "solid",
-    borderColor: "#dbdbdb",
-    borderTopWidth: 1,
-    width: "90%",
-    height: 1,
-  },
-  camera: { //camera text
-    position: "absolute",
-    top: 260,
-    left: 16,
-    fontSize: 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 84,
-    height: 50,
-  },
-  cameraSwitch: { //camera switch
-    position: "absolute",
-    top: 260,
-    left: "80%",
-  },
-  location: { //location text
-    position: "absolute",
-    top: 310,
-    left: 16,
-    fontSize: 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 87,
-    height: 50,
-  },
-  locationSwitch: { //location switch
-    position: "absolute",
-    top: 310,
-    left: "80%",
-  },
-  contacts: { //contacts text
-    position: "absolute",
-    top: 360,
-    left: 16,
-    fontSize: 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 84,
-    height: 50,
-  },
-  contactsSwitch: { //contacts switch
-    position: "absolute",
-    top: 360,
-    left: "80%",
-  },
-  bluetooth: { //bluetooth text
-    position: "absolute",
-    top: 410,
-    left: 16,
-    fontSize: 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 87,
-    height: 50,
-  },
-  bluetoothSwitch: { //bluetooth switch
-    position: "absolute",
-    top: 410,
-    left: "80%",
-  },
-  health: { //health text
-    position: "absolute",
-    top: 460,
-    left: 16,
-    fontSize: 16,
-    lineHeight: 48,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 66,
-    height: 50,
-  },
-  healthSwitch: { //health switch
-    position: "absolute",
-    top: 460,
-    left: "80%",
 
-  },
-  backButton: { //back button
-    position: "absolute",
-    left: 16,
-    top: 70,
-    width: 24,
-    height: 24,
-  },
-  headline: { //permissions headline
-    position: "absolute",
-    top: 120,
-    left: 16,
-    fontSize: 24,
-    lineHeight: 32,
-    color: "#000",
-    textAlign: "left",
-    display: "flex",
-    alignItems: "center",
-    width: 328,
-  },
-  continueText: { //continue button text
-    position: "relative",
-    fontSize: 16,
-    letterSpacing: 0,
-    lineHeight: 20,
-    fontWeight: "700",
-    color: "#fff",
-    textAlign: "center",
-  },
-  continue: { //continue button
-    position: "absolute",
-    bottom: 32,
-    left: 16,
-    borderRadius: 100,
-    backgroundColor: "#8273a9",
-    width: "90%",
-    overflow: "hidden",
-    flexDirection: "column",
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    boxSizing: "border-box",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: 16,
-    paddingRight: 16,
-  },
-  permissions: { 
-    position: "relative",
-    borderRadius: 0,
-    backgroundColor: "#fffbfe",
-    flex: 10,
-    width: "100%",
-    overflow: "hidden",
-  },
-});
 
 export default Permissions;

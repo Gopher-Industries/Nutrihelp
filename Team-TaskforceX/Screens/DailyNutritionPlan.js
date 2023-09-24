@@ -11,13 +11,120 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome"; //Wrong arrow, need to change
 //import {useNavigation} from '@react-navigation/native';
+import { useAccessibilityContext } from "./Components/AccessibilityContext"; // Import the context hook
+import * as Speech from 'expo-speech';
+
+
 
 const SCREENHEIGHT = Dimensions.get("window").height;
 const SCREENWIDTH = Dimensions.get("window").width;
 
 export default function DailyNutritionPlan({ navigation }) {
+
+  const { accessibilitySettings, setAccessibilitySettings } = useAccessibilityContext();
+  const { colourBlind, textLarge, isVoiceOverOn } = accessibilitySettings;
+  // Set up a state to trigger re-renders when Access properties change
+  const [accessPropertiesUpdated, setAccessPropertiesUpdated] = useState(0);
+
+
+  //call this for voiceover
+  const speak = (text) => {
+    Speech.speak(text, {
+      language: 'en', // Language code (e.g., 'en', 'es', 'fr', etc.)
+      pitch: 1.0, // Pitch of the voice (0.5 to 2.0)
+      rate: 1.0, // Speaking rate (0.1 to 0.9 for slow, 1.0 for normal, 1.1 to 2.0 for fast)
+    });
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#fffbfe",
+      padding: 16,
+    },
+  
+    //Back Arrow
+    backArrow: {
+      marginTop: 52,
+    },
+  
+    //Main Title
+    title: { 
+      fontSize: textLarge ? 30 : 24,
+      lineHeight: 32,
+      fontFamily: "OpenSans_400Regular",
+      color: "black",
+      marginTop: 32,
+      marginBottom: 16,
+    },
+  
+    //Secondary headings
+    subHeading: { 
+      fontSize: textLarge ? 20 : 16,
+      marginTop: 16,
+      color: "black",
+      fontFamily: "OpenSans_400Regular",
+      fontWeight: "600",
+    },
+  
+    //Plan text
+    plan: {
+      textAlign: 'right',
+      marginTop: -25,
+      fontSize: textLarge ? 23 : 19,
+      color: "#6750a4",
+      fontFamily: "OpenSans_600SemiBold",
+      fontWeight: "600",
+  
+    },
+  
+    //Paragraph text
+    paragraphText: {
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: -0.2,
+      lineHeight: 24,
+      fontFamily: 'OpenSans_400Regular',
+      color: '#000',
+      textAlign: 'left',
+      marginTop: 16,
+      marginBottom: 16,
+  
+    },
+  
+    //Continue button
+    button: {
+      backgroundColor: colourBlind ? "red":"#8273a9",
+      height: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 16,
+      marginTop: 32,
+      borderRadius: 100,
+    },
+  
+    //Continue button text
+    buttonText: {
+      fontSize: textLarge ? 20 : 16,
+      letterSpacing: 0.1,
+      lineHeight: 20,
+      fontWeight: '700',
+      fontFamily: 'OpenSans_400Regular',
+      color: '#fff',
+      textAlign: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  
+    itemContainer: {
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+    },
+  });
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView alwaysBounceVertical = {false}>
@@ -27,7 +134,10 @@ export default function DailyNutritionPlan({ navigation }) {
           size={20}
           color="black"
           type="entypo"
-          onPress={() => navigation.goBack()}
+          onPress={() => 
+            {if (isVoiceOverOn == true) {
+              speak("Back");}
+              navigation.goBack()}}
         />
         <View>
           <Text style={styles.title}>Daily Nutrition Plan</Text>
@@ -100,7 +210,10 @@ export default function DailyNutritionPlan({ navigation }) {
           <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("MealPlanning")}
+            onPress={() => 
+              {if (isVoiceOverOn == true) {
+                speak("Continue");
+              }navigation.navigate("MealPlanning")}}
           >
           <Text style={styles.buttonText}>Continue</Text>
           </TouchableOpacity>
@@ -110,87 +223,3 @@ export default function DailyNutritionPlan({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fffbfe",
-    padding: 16,
-  },
-
-  //Back Arrow
-  backArrow: {
-    marginTop: 52,
-  },
-
-  //Main Title
-  title: { 
-    fontSize: 24,
-    lineHeight: 32,
-    fontFamily: "OpenSans_400Regular",
-    color: "black",
-    marginTop: 32,
-    marginBottom: 16,
-  },
-
-  //Secondary headings
-  subHeading: { 
-    fontSize: 16,
-    marginTop: 16,
-    color: "black",
-    fontFamily: "OpenSans_400Regular",
-    fontWeight: "600",
-  },
-
-  //Plan text
-  plan: {
-    textAlign: 'right',
-    marginTop: -25,
-    fontSize: 19,
-    color: "#6750a4",
-    fontFamily: "OpenSans_600SemiBold",
-    fontWeight: "600",
-
-  },
-
-  //Paragraph text
-  paragraphText: {
-    fontSize: 16,
-    letterSpacing: -0.2,
-    lineHeight: 24,
-    fontFamily: 'OpenSans_400Regular',
-    color: '#000',
-    textAlign: 'left',
-    marginTop: 16,
-    marginBottom: 16,
-
-  },
-
-  //Continue button
-  button: {
-    backgroundColor: "#8273a9",
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 16,
-    marginTop: 32,
-    borderRadius: 100,
-  },
-
-  //Continue button text
-  buttonText: {
-    fontSize: 16,
-    letterSpacing: 0.1,
-    lineHeight: 20,
-    fontWeight: '700',
-    fontFamily: 'OpenSans_400Regular',
-    color: '#fff',
-    textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  itemContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-});
