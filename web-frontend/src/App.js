@@ -14,6 +14,7 @@ function App() {
       {/* <Allergy /> */}
       {/* <DailyNutritionPlanComponent /> */}
       {/* <SignUpComponent /> */}
+
     </div>
   );
 }
