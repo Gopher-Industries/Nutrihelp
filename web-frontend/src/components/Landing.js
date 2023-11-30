@@ -1,5 +1,7 @@
 import React from 'react';
 import '../styles/landing.css';
+import Link from './general_components/Links/Link';
+import SubHeading from './general_components/headings/SubHeading/SubHeading';
 
 const Landing = () => {
   return (
@@ -16,11 +18,13 @@ const Landing = () => {
                   Home
                 </a>
               </li>
+              {/* <Link text='Home' /> */}
               <li>
                 <a className="nav-link scrollto" href="#about">
                   About
                 </a>
               </li>
+              {/* <Link text='About' /> */}
               <li>
                 <a className="nav-link scrollto" href="#services">
                   Services
@@ -41,11 +45,19 @@ const Landing = () => {
           <div className="row">
             <div className="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
               <h1>NutriHelp</h1>
-              <h2>
+              {/* <h2>
                 NutriHelp supports you in managing your general wellbeing,
                 nutrient-related diseases and deficiencies through personalised
                 nutrition advice
-              </h2>
+              </h2> */}
+
+              <SubHeading
+                linkToSomething='https://github.com/Gopher-Industries/Nutrihelp/branches'
+                text='NutriHelp supports you in managing your general wellbeing,
+              nutrient-related diseases and deficiencies through personalised
+                nutrition advice'
+              />
+
               <div>
                 <a href="#" className="btn-get-started scrollto">
                   Get Started
