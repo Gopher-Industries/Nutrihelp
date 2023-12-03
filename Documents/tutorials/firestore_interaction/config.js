@@ -3,7 +3,7 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAEIZckp_ukg_n9-fvWbfW6Cd9cNbzEcao",
+  apiKey: "<Input API Key>",
   authDomain: "sit-22t3-team-task-for-137936f.firebaseapp.com",
   projectId: "sit-22t3-team-task-for-137936f",
   storageBucket: "sit-22t3-team-task-for-137936f.appspot.com",
