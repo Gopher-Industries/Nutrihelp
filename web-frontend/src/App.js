@@ -8,6 +8,7 @@ import Login from './routes/Login/Login';
 import SignUp from './routes/SignUp/SignUp';
 import Landing from './components/Landing';
 import ForgotPassword from './routes/ForgotPassword/ForgotPassword';
+import PreferencesComponent from './components/pref-dis-health'
 
 
 
@@ -32,7 +33,8 @@ function App() {
         <Route path='/' >
 
           {/* Let the Login page be accessible by the path '/' alone */}
-          <Route index element={<Landing />} />
+          {/* <Route index element={<Landing />} /> */}
+          <Route index element={<PreferencesComponent />} />
 
           {/* List all the possible routes of under the path '/' (below): */}
           <Route path='login' element={<Login />} />
