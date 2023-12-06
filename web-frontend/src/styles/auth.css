@@ -596,3 +596,236 @@ label {
     margin-bottom: 10px; } }
 
 
+    body {
+      background-color: rgb(245, 243, 246);
+    }
+    
+    .container {
+      display: flex;
+      margin-top: 10%;
+      width: 48%;
+      border-radius: 20px;
+      height: 500px;
+    
+    }
+    
+    .left-side {
+      flex: 1;
+      background-color: rgb(119, 104, 159);
+      padding: 20px;
+      border-radius: 20px 0 0 20px;
+      text-align: center;
+      color: white;
+    
+    }
+    
+    .right-side {
+      flex: 1;
+      padding: 20px;
+      border-radius: 0 20px 20px 0;
+      background-color: white;
+      box-shadow: -4px 0 6px -4px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      font-family: "Montserrat", "sans-serif";
+      margin-top: 40%;
+    }
+    
+    h2{
+      font-family: "Montserrat", "sans-serif";
+      font-size: 40px;
+      text-align: center;
+    }
+    
+    h3 {
+      font-family: "Montserrat", "sans-serif";
+      font-size: medium;
+    }
+    .text{
+      margin-left: 10%;
+    }
+    .signIN, .signUP {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: rgb(119, 104, 159);
+      color: #ffffff;
+      border: 1px solid #ffffff;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s ease-in-out;
+      font-family: "Montserrat", "sans-serif";
+    }
+    
+    .signUP{
+      margin-left: 35%;
+      margin-top: -2px;
+    }
+    
+    .signIN:hover, .signUP:hover {
+      background-color: #2980b9;
+    }
+    
+    .fb, .ggle, .li {
+      border: 0.5px solid black;
+      border-radius: 20px;
+      width: 8%;
+      height: auto;
+      margin: 5px;
+      cursor: pointer;
+      margin-left: 15%;
+    }
+    
+    form {
+      text-align: left;
+      font-family: "Montserrat", "sans-serif";
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      font-family: "Montserrat", "sans-serif";
+      border-radius: 18px;
+      border: 1px solid black;
+    }
+    
+    .navbar {
+      padding: 10px;
+      margin-left: 40%;
+    }
+    .navbar ul {
+      margin: 0;
+      padding: 10px;
+      display: flex;
+      list-style: none;
+      align-items: center;
+    }
+    
+    .navbar li {
+      position: relative;
+    }
+    
+    .navbar a,
+    .navbar a:focus {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0 10px 30px;
+      font-family: "Montserrat", sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #000000;
+      white-space: nowrap;
+      transition: 0.3s;
+      text-transform: uppercase;
+    }
+    
+    .navbar a i,
+    .navbar a:focus i {
+      font-size: 12px;
+      line-height: 0;
+      margin-left: 5px;
+    }
+    
+    .navbar a:hover,
+    .navbar .active,
+    .navbar .active:focus,
+    .navbar li:hover>a {
+      color: #8531ce;
+    }
+    
+    .pro{
+      width: 5%;
+      height: auto;
+    }
+    
+    .searchcard{
+      width: 30%;
+      height: auto;
+      text-align: center;
+      margin-left: 35%;
+      border:1px solid rgb(119, 104, 159);
+    }
+    
+    .NutriCard-section {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px;
+    }
+    
+    .card {
+      flex: 1;
+      text-align: center;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      margin: 10px;
+      transition: transform 0.5s, box-shadow 0.3s;
+      overflow: hidden;
+      height: 600px;
+      width: 300px;
+    }
+    
+    .card:hover {
+      border: 1px solid dodgerblue;
+      transform: scale(1.05);
+      box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card img {
+      width: 100%; 
+      height: auto; 
+      object-fit: cover;
+      border-radius: 15px;
+    }
+    
+    .card p {
+      margin: 20px 0;
+    }
+    
+    .card a {
+      display: block;
+      margin: 10px 0;
+      text-decoration: none;
+      background-color: rgb(119, 104, 159);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      width: 12%;
+      margin-left: 40%;
+    }
+    
+    .card a:hover {
+      border: 1px solid #777;
+    }
+    button {
+      font-family: 'Roboto', sans-serif;
+      width: 8%;
+      height: 100%;
+      background-color: rgb(2, 102, 223);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin-left: 45%;
+      cursor: pointer;
+      border-radius: 25px;
+    }
+    
+    button:hover {
+      background-color: rgb(44, 145, 246);
+      border-radius: 25px;
+    }

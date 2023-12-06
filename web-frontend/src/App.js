@@ -11,6 +11,7 @@ import NavigationBarAndFooterSignedIn from './components/navigation_bars_and_foo
 import NavigationBarAndFooterSignedOut from './components/navigation_bars_and_footer/signed_out/NavigationBarAndFooterSignedOut';
 import CreateRecipe from './routes/CreateRecipe/CreateRecipe';
 import SearchRecipes from './routes/SearchRecipes/SearchRecipes';
+import Home from './components/homepage';
 
 function App() {
 
@@ -54,6 +55,7 @@ function App() {
           <Route path='forgotPassword' element={<ForgotPassword />} />
           <Route path='createRecipe' element={<CreateRecipe />} />
           <Route path='searchRecipes' element={<SearchRecipes />} />
+          <Route path='home' element={<Home/>}/>
         </Route>
       </Routes>
     </Router>
