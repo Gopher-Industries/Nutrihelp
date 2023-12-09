@@ -13,7 +13,7 @@ function PreferencesComponent() {
               <h4>Please confirm your selections</h4>
               <div className="form-group">
                 <h3>Special Dietary Requirements</h3>
-                <button className="sel confirm">None</button>
+                <button id="Info" onclick="Nutrition()">Nutriton-Snacks</button>
               </div>
               <hr />
               <div className="form-group">
