@@ -22,6 +22,7 @@ import Login from './routes/Login/Login';
 import SignUp from './routes/SignUp/SignUp';
 import Landing from './components/Landing';
 import ForgotPassword from './routes/ForgotPassword/ForgotPassword';
+<<<<<<< Updated upstream
 import NavigationBarAndFooterSignedIn from './components/navigation_bars_and_footer/signed_in/NavigationBarAndFooterSignedIn';
 import NavigationBarAndFooterSignedOut from './components/navigation_bars_and_footer/signed_out/NavigationBarAndFooterSignedOut';
 import CreateRecipe from './routes/CreateRecipe/CreateRecipe';
@@ -29,6 +30,12 @@ import SearchRecipes from './routes/SearchRecipes/SearchRecipes';
 import YourPreferences from './components/pref-dis-health'
 import SignInSignUp from './routes/UI-Only-Pages/SignInSignUp/SignInSignUp';
 import UserProfilePage from './routes/UI-Only-Pages/UserProfilePage/userprofile';
+=======
+import PreferencesComponent from './components/pref-dis-health';
+import Recipe from './components/Recipe'; 
+
+
+>>>>>>> Stashed changes
 
 function App() {
 
@@ -64,7 +71,11 @@ function App() {
         <Route path='/' element={isLoggedIn ? <NavigationBarAndFooterSignedIn /> : <NavigationBarAndFooterSignedOut />}>
 
           {/* Let the Login page be accessible by the path '/' alone */}
+<<<<<<< Updated upstream
           {<Route index element={<Landing />} />}
+=======
+          <Route index element={<Recipe />} />
+>>>>>>> Stashed changes
 
           {/* All the possible routes of under the path '/', followed by the path-name: */}
           <Route path='login' element={<Login />} />
