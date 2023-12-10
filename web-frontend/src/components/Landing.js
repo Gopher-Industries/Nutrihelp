@@ -1,5 +1,10 @@
-import React from 'react';
+
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+
+
 import '../styles/landing.css';
+import { UserContext } from "./../context/user.context";
 
 const Landing = () => {
   return (
@@ -18,7 +23,6 @@ const Landing = () => {
             <button className="action-button">Login</button>
           </div>
         </div>
-
         <div className="content-container">
           <div className="label1">
             <div className="text-wrapper1">NutriHelp™</div>
@@ -40,7 +44,6 @@ const Landing = () => {
             <img className="img" alt="Image" src="./images/pic1.png" />
           </div>
         </div>
-
         <div className="image">
           <img src="./images/containerx.png" alt="Image" className="img" />
         </div>
