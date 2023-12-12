@@ -1,18 +1,3 @@
-// import React, { useContext, useEffect } from 'react';
-// import 'semantic-ui-css/semantic.min.css'
-// import './App.css';
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import { UserContext } from "./context/user.context";
-// import Login from './routes/Login/Login';
-// import SignUp from './routes/SignUp/SignUp';
-// import Landing from './components/Landing';
-// import ForgotPassword from './routes/ForgotPassword/ForgotPassword';
-// import NavigationBarAndFooterSignedIn from './components/navigation_bars_and_footer/signed_in/NavigationBarAndFooterSignedIn';
-// import NavigationBarAndFooterSignedOut from './components/navigation_bars_and_footer/signed_out/NavigationBarAndFooterSignedOut';
-// import CreateRecipe from './routes/CreateRecipe/CreateRecipe';
-// import SearchRecipes from './routes/SearchRecipes/SearchRecipes';
-// import UserProfilePage from './routes/UserProfilePage/userprofile';
-
 import React, { useContext, useEffect } from 'react';
 import 'semantic-ui-css/semantic.min.css'
 import './App.css';
@@ -20,22 +5,18 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { UserContext } from "./context/user.context";
 import Login from './routes/Login/Login';
 import SignUp from './routes/SignUp/SignUp';
-import Landing from './components/Landing';
+import Landing from './routes/UI-Only-Pages/Landing/Landing';
 import ForgotPassword from './routes/ForgotPassword/ForgotPassword';
-<<<<<<< Updated upstream
 import NavigationBarAndFooterSignedIn from './components/navigation_bars_and_footer/signed_in/NavigationBarAndFooterSignedIn';
 import NavigationBarAndFooterSignedOut from './components/navigation_bars_and_footer/signed_out/NavigationBarAndFooterSignedOut';
 import CreateRecipe from './routes/CreateRecipe/CreateRecipe';
 import SearchRecipes from './routes/SearchRecipes/SearchRecipes';
-import YourPreferences from './components/pref-dis-health'
+import YourPreferences from './routes/UI-Only-Pages/YourPreferences/pref-dis-health'
 import SignInSignUp from './routes/UI-Only-Pages/SignInSignUp/SignInSignUp';
 import UserProfilePage from './routes/UI-Only-Pages/UserProfilePage/userprofile';
-=======
-import PreferencesComponent from './components/pref-dis-health';
-import Recipe from './components/Recipe'; 
-
-
->>>>>>> Stashed changes
+import Home from './routes/Home/Home';
+import DietaryRequirements from './routes/UI-Only-Pages/DietaryRequirements/Nutrition-Snacks';
+import Menu from './routes/UI-Only-Pages/Menu/Menu';
 
 function App() {
 
@@ -49,8 +30,6 @@ function App() {
       window.kommunicate = m; m._globals = kommunicateSettings;
     })(document, window.kommunicate || {});
   }, []);  // Empty dependency array ensures this runs only once after component mount
-
-
 
   //Obtain the current user from the UserContext (from user.context.jsx)
   const { currentUser } = useContext(UserContext)
@@ -71,11 +50,7 @@ function App() {
         <Route path='/' element={isLoggedIn ? <NavigationBarAndFooterSignedIn /> : <NavigationBarAndFooterSignedOut />}>
 
           {/* Let the Login page be accessible by the path '/' alone */}
-<<<<<<< Updated upstream
-          {<Route index element={<Landing />} />}
-=======
-          <Route index element={<Recipe />} />
->>>>>>> Stashed changes
+          {<Route index element={<Home />} />}
 
           {/* All the possible routes of under the path '/', followed by the path-name: */}
           <Route path='login' element={<Login />} />
@@ -85,9 +60,12 @@ function App() {
           <Route path='searchRecipes' element={<SearchRecipes />} />
 
           {/* UI-Only-Pages (in the path: ./routes/UI-Only-Pages/) */}
+          <Route path='landing' element={<Landing />} />
           <Route path='yourPreferences' element={<YourPreferences />} />
-          <Route path='signinsignup' element={<SignInSignUp />} />
+          <Route path='signInSignUp' element={<SignInSignUp />} />
           <Route path='userProfile' element={<UserProfilePage />} />
+          <Route path='dietaryRequirements' element={<DietaryRequirements />} />
+          <Route path='menu' element={<Menu />} />
 
         </Route>
       </Routes>
