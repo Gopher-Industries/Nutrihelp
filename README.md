@@ -7,7 +7,7 @@
 
 ---
 
-<p align="center"> NutriHelp is an Android application that aims to promote healthy eating habits for Australia's senior population,
+<p align="center"> NutriHelp is an Android and Web application that aims to promote healthy eating habits for Australia's senior population,
 by providing personalised recipes based on the user's specified health conditions and nutritional preferences.
 Our goal is to decrease the number of elderly people that are either malnourished or at risk of malnutrition,
 promote nutritional health through food intake and increase transparency and awareness of our user’s current nutritional health. 
@@ -26,6 +26,9 @@ These instructions will get you a copy of the project up and running on your loc
 ```
 git clone https://github.com/Gopher-Industries/Nutrihelp
 ```
+
+<h2 align="center">> Android app deployment </h2>
+
 ### Prerequisites
 
 The project requires Android studio for application to run.
@@ -69,3 +72,43 @@ After you have installed all the dependencies, to run the application use:
 ```
 npx expo start --android 
 ```
+
+<h2 align="center">> Web Frontend deployment </h2>
+
+### Getting Started with the web frontend. 
+
+ 
+
+These instructions will get you a copy of the web frontend up and running on your local machine for development and testing purposes. 
+
+
+ 
+
+<h4> Node.js </h4>
+
+ 
+ 
+
+The project requires Node.js to deploy the web frontend on your local machine. 
+
+To install Node.js, go to https://nodejs.org/en/download/ and download the latest version of Node.js.  
+
+Open the node.js command prompt you just installed and navigate to the path of your local web-frontend folder. 
+
+ 
+```
+cd <YOUR SYSTEM PATH>/Nutrihelp/web-frontend
+```
+
+Install all the necessary node modules that the project needs. 
+
+```
+npm intall
+```
+
+Compile and run your deployment locally. 
+
+```
+npm start
+```
+
