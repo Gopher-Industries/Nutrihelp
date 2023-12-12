@@ -1,7 +1,12 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://avatars.githubusercontent.com/u/100745757?s=200&v=4" alt="Project logo"></a>
+ <img width=300px height=160x src="https://github.com/Gopher-Industries/Nutrihelp/blob/master/web-frontend/public/images/logos_black.png?raw=true" alt="Project logo"></a>
 </p>
+
+<!-- <img width=200px height=200px src="https://avatars.githubusercontent.com/u/100745757?s=200&v=4" alt="Project logo"></a>-->
+<!--</p>-->
+
+
 
 <h3 align="center">NutriHelp - Aiming to promote healthy eating habits for Australia's senior population</h3>
 
@@ -17,7 +22,8 @@ promote nutritional health through food intake and increase transparency and awa
 ## Table of Contents
 
 - [Getting Started](#getting_started)
-- [Deployment](#deployment)
+- [Android app deployment](#appdev)
+- [Web frontend deployment](#webdev)
 
 ## Getting Started <a name = "getting_started"></a>
 
@@ -27,7 +33,7 @@ These instructions will get you a copy of the project up and running on your loc
 git clone https://github.com/Gopher-Industries/Nutrihelp
 ```
 
-<h2 align="center">> Android app deployment </h2>
+<h2 align="center" name = "appdev">> Android app deployment </h2> <a name = "appdev"></a>
 
 ### Prerequisites
 
@@ -73,7 +79,7 @@ After you have installed all the dependencies, to run the application use:
 npx expo start --android 
 ```
 
-<h2 align="center">> Web Frontend deployment </h2>
+<h2 align="center">> Web Frontend deployment </h2> <a name = "webdev"></a>
 
 ### Getting Started with the web frontend. 
 
