@@ -17,6 +17,7 @@ import UserProfilePage from './routes/UI-Only-Pages/UserProfilePage/userprofile'
 import Home from './routes/Home/Home';
 import DietaryRequirements from './routes/UI-Only-Pages/DietaryRequirements/Nutrition-Snacks';
 import Menu from './routes/UI-Only-Pages/Menu/Menu';
+import Recipe from './components/Recipe';
 
 function App() {
 
@@ -66,6 +67,8 @@ function App() {
           <Route path='userProfile' element={<UserProfilePage />} />
           <Route path='dietaryRequirements' element={<DietaryRequirements />} />
           <Route path='menu' element={<Menu />} />
+          <Route path='recipe' element={<Recipe />} />
+
         </Route>
       </Routes>
     </Router>
