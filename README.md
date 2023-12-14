@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=300px height=160x src="https://github.com/Gopher-Industries/Nutrihelp/blob/master/web-frontend/public/images/logos_black.png?raw=true" alt="Project logo"></a>
+ <img width=350px height=160x src="https://i.imgur.com/UAoO8sl.png" alt="Project logo"></a>
 </p>
 
 <!-- <img width=200px height=200px src="https://avatars.githubusercontent.com/u/100745757?s=200&v=4" alt="Project logo"></a>-->
