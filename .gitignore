@@ -1,4 +1,4 @@
-Team-TaskforceX/node_modules
-node_modules
-web-frontend/node_modules
+.vscode
+.idea
+**/node_modules/
 
