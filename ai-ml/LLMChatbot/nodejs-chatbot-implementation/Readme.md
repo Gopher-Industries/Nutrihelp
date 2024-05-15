@@ -7,46 +7,33 @@ This project is a simple chatbot interface that integrates a Node.js server with
 
 1. Clone the repository:
 
-sh
 git clone <repository-url>
 cd <repository-directory>
 
 
 2. Install Node.js dependencies:
 
-sh
 npm install
 
 
 3. Ensure you have Python installed and the required packages:
 
-sh
 pip install openai
 
 
 ## Configuration
 
-1. Update the `pythonExecutablePath` in `server.js` to the path of your Python executable:
-
-javascript:server.js
-startLine: 18
-endLine: 18
+1. Update the `pythonExecutablePath` in `server.js` to the path of your Python executable
 
 
-2. Add your OpenAI API key in `chatbot.py`:
-python:chatbot.py
-startLine: 5
-endLine: 5
-
+2. Add your OpenAI API key in `chatbot.py`
 
 
 ## Usage
 
 1. Start the Node.js server:
 
-sh
 node server.js
-
 
 2. Open your browser and navigate to `http://localhost:3000`.
 
