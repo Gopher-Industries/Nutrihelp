@@ -1,0 +1,98 @@
+/* Basic page styling */
+body {
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background-color: #9370db;
+  color: white;
+  padding: 40px;
+  border-radius: 60px;
+  text-align: center;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #9370db;
+  font-weight: bold;
+}
+
+main {
+  padding: 20px;
+}
+
+section h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+ul.notification-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul.notification-list li {
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+aside {
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+footer {
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+/* Custom styling for notification actions */
+#markAsRead {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+#delete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+#moreInfo {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+/* Styling for settings */
+footer p {
+  margin: 0;
+}
+
+/* Responsive layout for mobile devices */
+@media (max-width: 768px) {
+  aside {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+  }
+}
