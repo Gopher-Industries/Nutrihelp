@@ -33,3 +33,8 @@ The mobile application, built using React Native.
 ### NutriHelp API
 The backend infrastructure, implemented in Node.js.
 - [github.com/Gopher-Industries/Nutrihelp-api](https://github.com/Gopher-Industries/Nutrihelp-api)
+
+### NutriHelp AI
+AI service for the NutriHelp project. It exposes machine learning model predictions through a FastAPI server, allowing other services (e.g., Backend) to send data and receive results.
+- [github.com/Gopher-Industries/NutriHelp-AI](https://github.com/Gopher-Industries/NutriHelp-AI)
+
