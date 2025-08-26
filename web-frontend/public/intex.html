@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NutriHelp Notifications</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Include your CSS file for styling -->
+  </head>
+  <body>
+    <header>
+      <h1>NutriHelp</h1>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="#all">All </a></li>
+        <li><a href="#unread">Unread </a></li>
+        <li><a href="#unseen">Unseen </a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section id="all">
+        <h2>All Notifications</h2>
+        <ul class="notification-list">
+          <!-- Populate with notifications using JavaScript -->
+        </ul>
+      </section>
+
+      <section id="unread">
+        <h2>Unread Notifications</h2>
+        <ul class="notification-list">
+          <!-- Populate with unread notifications using JavaScript -->
+        </ul>
+      </section>
+
+      <section id="unseen">
+        <h2>Unseen Notifications</h2>
+        <ul class="notification-list">
+          <!-- Populate with unseen notifications using JavaScript -->
+        </ul>
+      </section>
+    </main>
+
+    <aside>
+      <h2>Notification Actions</h2>
+      <button id="markAsRead">Mark as Read</button>
+      <button id="delete">Delete</button>
+      <button id="moreInfo">More Info</button>
+    </aside>
+
+    <footer>
+      <h2>Settings</h2>
+      <p>
+        Notification Preferences:
+        <input type="checkbox" id="notificationPreferences" />
+      </p>
+      <p>
+        Email Notifications: <input type="checkbox" id="emailNotifications" />
+      </p>
+      <p>Notification Sound: <input type="text" id="notificationSound" /></p>
+    </footer>
+
+    <script src="script.js"></script>
+    <!-- Include your JavaScript file for functionality -->
+  </body>
+</html>
